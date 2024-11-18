@@ -11,7 +11,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <a href="{{ route('sell.my.property') }}">
+            <a href="{{route('form.step1')}}">
                 <img src="{{ asset('frontend/assets/images/banner/sell_banner1.png') }}" alt="" class="img-fluid">
             </a>
         </div>
@@ -41,7 +41,7 @@
                 </p>
                 <p class="text-dark text-justify mt-2 mb-2">Ready to sell fast!</p>
                 <div>
-                    <a href="{{ route('sell.my.property') }}" class="theme-btn btn-one">Click here to sell your property</a>
+                    <a href="{{route('form.step1')}}" class="theme-btn btn-one">Click here to sell your property</a>
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
         <div>
             <p class="text-white display-6 mb-4" style="font-size: 1.3rem">List Your Property Now and Find the Right Buyer
                 in Just 5 Days!</p>
-            <a href="{{ route('sell.my.property') }}" class="theme-btn btn-one">Click here to sell your property</a>
+            <a href="{{route('form.step1')}}" class="theme-btn btn-one">Click here to sell your property</a>
         </div>
     </div>
 @endsection

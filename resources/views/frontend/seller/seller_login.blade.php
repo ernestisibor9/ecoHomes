@@ -30,6 +30,13 @@
     <link href="{{ asset('frontend/assets/css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('frontend/assets/css/responsive.css') }}" rel="stylesheet">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+
+
 </head>
 
 
@@ -390,7 +397,7 @@
                                             </div>
                                         </form>
                                         <div class="othre-text">
-                                            <p>Already have an account? <a href="signin.html">Sign in</a></p>
+                                            <p>Don't have an account? <a href="{{route('seller.signup')}}">Sign up</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -587,6 +594,31 @@
 
     <!-- main-js -->
     <script src="{{ asset('frontend/assets/js/script.js') }}"></script>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    @if (Session::has('message'))
+        var type = "{{ Session::get('alert-type', 'info') }}"
+        switch (type) {
+            case 'info':
+                toastr.info(" {{ Session::get('message') }} ");
+                break;
+
+            case 'success':
+                toastr.success(" {{ Session::get('message') }} ");
+                break;
+
+            case 'warning':
+                toastr.warning(" {{ Session::get('message') }} ");
+                break;
+
+            case 'error':
+                toastr.error(" {{ Session::get('message') }} ");
+                break;
+        }
+    @endif
+</script>
 
 </body><!-- End of .page_wrapper -->
 

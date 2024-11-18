@@ -22,42 +22,18 @@
             transition: width 0.5s ease-in-out;
         }
     </style>
-
     <style>
-        /* Progress bar container */
         .progress {
-            height: 30px;
-            /* Height of the progress bar */
+            height: 20px;
             border-radius: 10px;
-            background-color: #f0f0f0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            overflow: hidden;
         }
 
-        /* Progress bar itself */
-        .progress-bar {
-            height: 100%;
-            border-radius: 10px;
-            background: linear-gradient(to right, #00c6ff, #0072ff);
-            transition: width 0.5s ease-out;
+        .progress-bar-custom {
+            background: linear-gradient(to right, #4caf50, #81c784);
+            /* Green gradient */
             color: white;
-            text-align: center;
             font-weight: bold;
-            line-height: 20px;
-            /* Vertically center text */
-            padding: 0 10px;
-            /* To make sure text is not flush with edges */
-        }
-
-        /* Add hover effect to progress bar */
-        .progress-bar:hover {
-            opacity: 0.9;
-            cursor: pointer;
-        }
-
-        /* Optional: Add a little shadow to the progress bar */
-        .progress-bar.animated {
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
     </style>
 
@@ -86,149 +62,28 @@
     <div class="container-fluid mb-5 mt-5">
         <div class="row justify-content-center">
             <div class="col-md-9">
-                <div class="progress">
-                    <div class="progress-bar" id="progressBar" style="width: {{ ($currentStep / 4) * 100 }}%;">
-                        {{ ($currentStep / 4) * 100 }}% Complete</div>
-                </div>
 
                 <div class="card shadow p-3">
-                    <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3>
-                    <div class="card-body">
-                        <form action="{{ route('next.form.route', ['step' => $currentStep]) }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <div class="row g-3 mb-3">
-                                <div class="col-12 col-md-6">
-                                    <label for="">FirstName</label>
-                                    <input type="text"
-                                        class="form-control
-                                    @error('firstname')is-invalid @enderror"
-                                        placeholder="First Name" aria-label="First name" required name="firstname">
-                                    @error('firstname')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <label for="">LastName</label>
-                                    <input type="text"
-                                        class="form-control
-                                    @error('lastname')is-invalid @enderror"
-                                        placeholder="Last Name" aria-label="Last name" name="lastname" required>
-                                    @error('lastname')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12 col-md-6">
-                                    <label for="">Email</label>
-                                    <input type="email"
-                                        class="form-control
-                                     @error('email')is-invalid @enderror"
-                                        placeholder="Email" aria-label="Email" name="email" required>
-                                    @error('email')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <label for="">Phone</label>
-                                    <input type="text"
-                                        class="form-control
-                                    @error('phone')is-invalid @enderror "
-                                        placeholder="Phone" aria-label="Phone" name="phone" required>
-                                    @error('phone')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-6">
-                                    <label for="">Upload Photos <span class="text-danger">(max_size: 1MB, file type:
-                                            jpeg,png,jpg,gif)
-                                        </span></label>
-                                    <input type="file" name="multi_img[]"
-                                        class="form-control
-                                     @error('multi_img.*')is-invalid @enderror"
-                                        id="multiImg" multiple>
-                                    @error('multi_img.*')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    <div class="mb-2 mt-2">
-                                        <div class="row" id="preview_img"></div>
-                                    </div>
-                                </div>
+                    {{-- <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3> --}}
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 25%;"
+                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
 
-                                <div class="col-6">
-                                    <label for="">Upload Video <span class="text-danger">(max_size: 5MB, file type:
-                                        mp4,avi,mkv,mov,wmv)
-                                        </span></label>
-                                    <input type="file" name="video" id=""
-                                        class="form-control
-                                     @error('video')is-invalid @enderror" accept="video/*">
-                                    @error('video')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12">
-                                    <label for="">Country</label>
-                                    <select name="country_id"
-                                        class="form-control see
-                                     @error('country_id')is-invalid @enderror "
-                                        required style="display: block">
-                                        <option value="">Select Country</option>
-                                        @foreach ($countries as $country)
-                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('country_id')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12 col-md-6" id="select-state-group" style="display: none;">
-                                    <label for="">State/County</label>
-                                    <select name="state_id"
-                                        class="form-control see
-                                    @error('state_id')is-invalid @enderror "
-                                        required style="display: block">
-                                        {{-- <option value="">Select State</option> --}}
-                                    </select>
-                                    @error('state_id')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-12 col-md-6" id="select-city-group" style="display: none;">
-                                    <label for="">City/Town</label>
-                                    <select name="city_id" class="form-control see" required style="display: block">
-                                        {{-- <option value="">Select City</option> --}}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12" id="postal-code-group" style="display: none;">
-                                    <label for="">Postal Code</label>
-                                    <input type="text" class="form-control" name="postal_code"
-                                        placeholder="Enter your postal code">
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <label for="" class="mt-2">Property Description
-                                    <span class="text-danger">(minimum of 100 characters)</span>
-                                </label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" required></textarea>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                {{-- <div class="form-group message-btn">
-                                    <button type="submit" class="theme-btn btn-one">Sell</button>
-                                </div> --}}
-                                <div class="d-grid gap-2 form-group message-btn">
-                                    <button class="theme-btn btn-one" type="submit" id="nextButton">Next</button>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="card-body">
+                        <div>
+                            <h2>Your Submission Progress</h2>
+                            <p>Current Step: {{ $progress->current_step }}</p>
+                            <p>Status: {{ $progress->status }}</p>
+
+                            @if ($progress->status == 'approved')
+                                <a href="{{ route('form.step2') }}">Proceed to Step 2</a>
+                            @elseif($progress->status == 'rejected')
+                                <p>Your submission has been rejected. Please contact support.</p>
+                            @else
+                                <p>Your submission is pending approval.</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -360,7 +215,7 @@
             });
         });
     </script>
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const progressBar = document.querySelector('#progressBar');
             const totalSteps = 4; // Total number of steps
@@ -401,5 +256,5 @@
                 });
             }
         });
-    </script>
+    </script> --}}
 @endsection

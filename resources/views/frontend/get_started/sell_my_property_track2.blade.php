@@ -23,40 +23,43 @@
         }
     </style>
 
-<style>
-    /* Progress bar container */
-    .progress {
-        height: 30px; /* Height of the progress bar */
-        border-radius: 10px;
-        background-color: #f0f0f0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-    }
+    <style>
+        /* Progress bar container */
+        .progress {
+            height: 30px;
+            /* Height of the progress bar */
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
 
-    /* Progress bar itself */
-    .progress-bar {
-        height: 100%;
-        border-radius: 10px;
-        background: linear-gradient(to right, #00c6ff, #0072ff);
-        transition: width 0.5s ease-out;
-        color: white;
-        text-align: center;
-        font-weight: bold;
-        line-height: 20px; /* Vertically center text */
-        padding: 0 10px; /* To make sure text is not flush with edges */
-    }
+        /* Progress bar itself */
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            transition: width 0.5s ease-out;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            line-height: 20px;
+            /* Vertically center text */
+            padding: 0 10px;
+            /* To make sure text is not flush with edges */
+        }
 
-    /* Add hover effect to progress bar */
-    .progress-bar:hover {
-        opacity: 0.9;
-        cursor: pointer;
-    }
+        /* Add hover effect to progress bar */
+        .progress-bar:hover {
+            opacity: 0.9;
+            cursor: pointer;
+        }
 
-    /* Optional: Add a little shadow to the progress bar */
-    .progress-bar.animated {
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    }
-</style>
+        /* Optional: Add a little shadow to the progress bar */
+        .progress-bar.animated {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 
 
     <!-- Page Title -->
@@ -72,7 +75,7 @@
                 <h1>Sell Property</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li>Prequalificatio My Property</li>
+                    <li>Sell My Property</li>
                 </ul>
             </div>
         </div>
@@ -84,13 +87,15 @@
         <div class="row justify-content-center">
             <div class="col-md-9">
                 <div class="progress">
-                    <div class="progress-bar" id="progressBar" style="width: {{ ($currentStep / 4) * 100 }}%;">{{ ($currentStep / 4) * 100 }}% Complete</div>
+                    <div class="progress-bar" id="progressBar" style="width: {{ ($currentStep / 4) * 100 }}%;">
+                        {{ ($currentStep / 4) * 100 }}% Complete</div>
                 </div>
-                <button id="nextButton">Next Step</button>
+
                 <div class="card shadow p-3">
-                    <h3 class="card-title text-center pt-2">PREQUALIFICATION TO SELL PROPERTY</h3>
+                    <h3 class="card-title text-center pt-2">SECOND FILL THE FORM TO SELL PROPERTY</h3>
                     <div class="card-body">
-                        <form action="{{ route('next.form.route', ['step' => $currentStep]) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('next.form.route', ['step' => $currentStep]) }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6">
@@ -137,7 +142,7 @@
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
-                                <div class="col-12">
+                                <div class="col-6">
                                     <label for="">Upload Photos <span class="text-danger">(max_size: 1MB, file type:
                                             jpeg,png,jpg,gif)
                                         </span></label>
@@ -148,9 +153,21 @@
                                     @error('multi_img.*')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
+                                    <div class="mb-2 mt-2">
+                                        <div class="row" id="preview_img"></div>
+                                    </div>
                                 </div>
-                                <div class="mb-2 mt-2">
-                                    <div class="row" id="preview_img"></div>
+
+                                <div class="col-6">
+                                    <label for="">Upload Video <span class="text-danger">(max_size: 5MB, file type:
+                                        mp4,avi,mkv,mov,wmv)
+                                        </span></label>
+                                    <input type="file" name="video" id=""
+                                        class="form-control
+                                     @error('video')is-invalid @enderror" accept="video/*">
+                                    @error('video')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
@@ -198,7 +215,9 @@
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
-                                <label for="" class="mt-2">Property Description</label>
+                                <label for="" class="mt-2">Property Description
+                                    <span class="text-danger">(minimum of 100 characters)</span>
+                                </label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" required></textarea>
                             </div>
                             <div class="row g-3 mb-3">
@@ -206,7 +225,7 @@
                                     <button type="submit" class="theme-btn btn-one">Sell</button>
                                 </div> --}}
                                 <div class="d-grid gap-2 form-group message-btn">
-                                    <button class="theme-btn btn-one" id="nextButton" type="submit">Next</button>
+                                    <button class="theme-btn btn-one" type="submit" id="nextButton">Next</button>
                                 </div>
                             </div>
                         </form>
@@ -342,46 +361,45 @@
         });
     </script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const progressBar = document.querySelector('#progressBar');
-    const totalSteps = 4; // Total number of steps
-    let currentStep = {{ $currentStep ?? 1 }}; // Default to step 1 if not provided
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBar = document.querySelector('#progressBar');
+            const totalSteps = 4; // Total number of steps
+            let currentStep = {{ $currentStep ?? 1 }}; // Default to step 1 if not provided
 
-    // Function to update the progress bar
-    function updateProgressBar(step) {
-        const percentage = (step / totalSteps) * 100;
-        progressBar.style.width = `${percentage}%`;
-        progressBar.textContent = `${Math.round(percentage)}% Complete`;
+            // Function to update the progress bar
+            function updateProgressBar(step) {
+                const percentage = (step / totalSteps) * 100;
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${Math.round(percentage)}% Complete`;
 
-        // Add animated class for smooth transition
-        progressBar.classList.add('animated');
+                // Add animated class for smooth transition
+                progressBar.classList.add('animated');
 
-        // Remove animation class after transition to prevent multiple triggers
-        setTimeout(function() {
-            progressBar.classList.remove('animated');
-        }, 500); // Match the duration of the transition
-    }
+                // Remove animation class after transition to prevent multiple triggers
+                setTimeout(function() {
+                    progressBar.classList.remove('animated');
+                }, 500); // Match the duration of the transition
+            }
 
-    // Initial update on page load
-    updateProgressBar(currentStep);
-
-    // Handle button click to move to the next step
-    const nextButton = document.querySelector('#nextButton');
-    if (nextButton) {
-        nextButton.addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent form submission to control flow
-
-            // Increment the current step (ensure it doesn't exceed total steps)
-            currentStep = Math.min(currentStep + 1, totalSteps);
-
-            // Update the progress bar
+            // Initial update on page load
             updateProgressBar(currentStep);
 
-            // Optionally, submit the form via AJAX or proceed with regular form submission
-            document.querySelector('form').submit();  // If using regular form submission
-        });
-    }
-});
+            // Handle button click to move to the next step
+            const nextButton = document.querySelector('#nextButton');
+            if (nextButton) {
+                nextButton.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent form submission to control flow
 
+                    // Increment the current step (ensure it doesn't exceed total steps)
+                    currentStep = Math.min(currentStep + 1, totalSteps);
+
+                    // Update the progress bar
+                    updateProgressBar(currentStep);
+
+                    // Optionally, submit the form via AJAX or proceed with regular form submission
+                    document.querySelector('form').submit(); // If using regular form submission
+                });
+            }
+        });
     </script>
 @endsection

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sell_my_properties', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->unsigned();
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email');
@@ -22,8 +23,12 @@ return new class extends Migration
             $table->string('city_id')->nullable();
             $table->string('postal_code')->nullable();
             $table->string('multi_img')->nullable();
+            // $table->string('video')->nullable();
             $table->text('description')->nullable();
-            $table->string('progress')->default('0');
+            $table->enum('status', ['approved', 'rejected', 'pending'])->default('pending');
+            $table->foreign('user_id')
+                   ->references('id')->on('users')
+                   ->onDelete('cascade');
             $table->timestamps();
         });
     }

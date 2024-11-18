@@ -86,15 +86,15 @@
     <div class="container-fluid mb-5 mt-5">
         <div class="row justify-content-center">
             <div class="col-md-9">
-                <div class="progress">
+                {{-- <div class="progress">
                     <div class="progress-bar" id="progressBar" style="width: {{ ($currentStep / 4) * 100 }}%;">
                         {{ ($currentStep / 4) * 100 }}% Complete</div>
-                </div>
+                </div> --}}
 
                 <div class="card shadow p-3">
                     <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3>
                     <div class="card-body">
-                        <form action="{{ route('next.form.route', ['step' => $currentStep]) }}" method="POST"
+                        <form action="{{route('form.submit1')}}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row g-3 mb-3">
@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <label for="">Upload Photos <span class="text-danger">(max_size: 1MB, file type:
                                             jpeg,png,jpg,gif)
                                         </span></label>
@@ -158,7 +158,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-6">
+                                {{-- <div class="col-6">
                                     <label for="">Upload Video <span class="text-danger">(max_size: 5MB, file type:
                                         mp4,avi,mkv,mov,wmv)
                                         </span></label>
@@ -168,7 +168,7 @@
                                     @error('video')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="row g-3 mb-3">
                                 <div class="col-12">
@@ -360,7 +360,7 @@
             });
         });
     </script>
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const progressBar = document.querySelector('#progressBar');
             const totalSteps = 4; // Total number of steps
@@ -401,5 +401,5 @@
                 });
             }
         });
-    </script>
+    </script> --}}
 @endsection

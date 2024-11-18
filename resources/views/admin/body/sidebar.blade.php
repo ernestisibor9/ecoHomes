@@ -106,10 +106,17 @@
             </ul>
         </li>
         <li>
-            <a href="{{route('manage.sellers')}}">
+            <a href="{{route('all.seller')}}">
                 <div class="parent-icon"><i class='bx bx-code-alt'></i>
                 </div>
                 <div class="menu-title">Manage Sellers</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('all.seller.progress')}}">
+                <div class="parent-icon"><i class='bx bx-code-alt'></i>
+                </div>
+                <div class="menu-title">Manage User Progress</div>
             </a>
         </li>
         <li class="menu-label">Forms & Tables</li>

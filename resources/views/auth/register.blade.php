@@ -368,11 +368,20 @@
                                         <form action="{{ route('register') }}" method="post" class="default-form">
                                             @csrf
                                             <div class="form-group">
-                                                <label>Seller name</label>
+                                                <label>Name</label>
                                                 <input type="text" name="name" required=""
                                                     class="form-control
                                                 @error('name')is-invalid @enderror">
                                                 @error('name')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Phone</label>
+                                                <input type="text" name="phone" required=""
+                                                    class="form-control
+                                                @error('phone')is-invalid @enderror">
+                                                @error('phone')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>

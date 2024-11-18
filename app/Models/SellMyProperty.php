@@ -10,4 +10,11 @@ class SellMyProperty extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function country(){
+        return $this->belongsTo(Country::class, 'country_id' ,'id');
+    }
+    public function state(){
+        return $this->belongsTo(State::class, 'state_id' ,'id');
+    }
 }
