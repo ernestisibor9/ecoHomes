@@ -66,23 +66,26 @@
                 <div class="card shadow p-3">
                     {{-- <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3> --}}
                     <div class="progress">
-                        <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 25%;"
-                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                        <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 50%;"
+                            aria-valuenow="50
+                            " aria-valuemin="0" aria-valuemax="100">50%</div>
                     </div>
 
                     <div class="card-body">
-                        <div>
-                            <h2>Your Submission Progress</h2>
-                            <p>Current Step: {{ $progress->current_step }}</p>
-                            <p>Status: {{ $progress->status }}</p>
-
-                            @if ($progress->status == 'approved')
-                                <a href="{{ route('form.step2') }}">Proceed to Step 2</a>
+                        <div class="text-center" style="line-height: 30px;">
+                            <h3>Pre-Qualification stage</h3>
+                            <p class="text-dark">Current Step: 2/4</p>
+                            <p class="text-dark">Status: {{ Str::ucfirst($progress->status) }}</p>
+                            <p class="text-dark">We will contact you soon</p>
+                            <p class="text-dark">
+                                @if ($progress->status == 'approved')
+                                <a href="{{ route('form.step2') }}">Proceed to Step 3</a>
                             @elseif($progress->status == 'rejected')
-                                <p>Your submission has been rejected. Please contact support.</p>
+                                <p class="text-danger">Your submission has been rejected. Please contact support.</p>
                             @else
-                                <p>Your submission is pending approval.</p>
+                                <p class="text-dark">Your submission is pending approval. We will contact you soon</p>
                             @endif
+                            </p>
                         </div>
                     </div>
                 </div>

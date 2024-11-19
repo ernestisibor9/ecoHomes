@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class StatusMail extends Mailable
+class StatusMail3 extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -36,10 +36,10 @@ class StatusMail extends Mailable
      */
     public function content(): Content
     {
-        $status = $this->data;
+        $status3 = $this->data;
         return new Content(
-            view: 'mail.status',
-            with: ['status' => $this->data]
+            view: 'mail.status3',
+            with: ['status3' => $this->data]
         );
     }
 

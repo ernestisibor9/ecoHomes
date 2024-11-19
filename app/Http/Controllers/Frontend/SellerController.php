@@ -27,7 +27,7 @@ class SellerController extends Controller
     // SellerDashboard
     public function SellerDashboard()
     {
-        return view('frontend.seller.seller_dashboard');
+        return view('frontend.seller.index');
     }
 
     // Store Seller

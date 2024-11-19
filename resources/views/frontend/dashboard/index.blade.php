@@ -6,13 +6,9 @@
     Cedar - Seller Dashboard
 @endsection
 
-{{-- @php
-    $registeredStudents = App\Models\User::where('role', 'user')->get();
-    $enrollStudents = App\Models\Payment::latest()->get();
-    $totalCourses = App\Models\Course::latest()->get();
-    $blogPost = App\Models\BlogPost::latest()->get();
-    $payment = App\Models\Payment::latest()->get();
-@endphp --}}
+@php
+    $userProgress = App\Models\userProgress::latest()->get();
+@endphp
 
 
 <div class="page-content">

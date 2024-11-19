@@ -17,25 +17,34 @@ class OwnerPropertyController extends Controller
     // Step 1: Property form
     public function showStep1Form()
     {
+        $progress = UserProgress::where('user_id', auth()->id())->first();
         $countries = Country::get();
         $notification = array(
             'message' => 'Please login to sell properties',
             'alert-type' => 'warning',
         );
         if (Auth::check()) {
-            return view('frontend.owner_property.step1', compact('countries'));
+            return view('frontend.owner_property.step1', compact('countries', 'progress'));
         } else {
             return redirect()->route('seller.login')->with($notification);
         }
     }
     public function showStep2Form()
     {
+        $progress = UserProgress::where('user_id', auth()->id())->first();
+
+    // Only set status to 'pending' if no status is already set (i.e., it's null)
+    if ($progress && $progress->status === null) {
+        $progress->status = 'pending';  // Set the status to 'pending' if it's null
+        $progress->save();  // Save the status change to the database
+    }
+
         $notification = array(
             'message' => 'Please login to sell properties',
             'alert-type' => 'warning',
         );
         if (Auth::check()) {
-            return view('frontend.owner_property.step2');
+            return view('frontend.owner_property.step2', compact('progress'));
         } else {
             return redirect()->route('seller.login')->with($notification);
         }
@@ -44,6 +53,7 @@ class OwnerPropertyController extends Controller
     // SubmitStep
     public function SubmitStep1(Request $request)
     {
+        $progress = UserProgress::where('user_id', auth()->id())->first();
         $request->validate([
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
@@ -97,7 +107,7 @@ class OwnerPropertyController extends Controller
             try {
                 Mail::to([$request->email, 'ernestisibor9@gmail.com'])->send(new SellerMail([
                     'Subject' => 'Thank you for using our platform to sell your property.',
-                    'Message' => 'We appreciate your request to sell your property on our platform.'
+                    'Message' => 'Your submission is pending approval. We will contact you soon'
                 ]));
             } catch (\Exception $e) {
                 // Log or handle the error
@@ -131,6 +141,26 @@ class OwnerPropertyController extends Controller
         );
         if (Auth::check()) {
             return view('frontend.owner_property.status', compact('progress'));
+        } else {
+            return redirect()->route('seller.login')->with($notification);
+        }
+    }
+    // ShowStep3Form
+    public function showStep3Form()
+    {
+        $progress = UserProgress::where('user_id', auth()->id())->first();
+    // Only set status to 'pending' if no status is already set (i.e., it's null)
+    if ($progress && $progress->status === null) {
+        $progress->status = 'pending';  // Set the status to 'pending' if it's null
+        $progress->save();  // Save the status change to the database
+    }
+
+        $notification = array(
+            'message' => 'Please login to sell properties',
+            'alert-type' => 'warning',
+        );
+        if (Auth::check()) {
+            return view('frontend.owner_property.step3', compact('progress'));
         } else {
             return redirect()->route('seller.login')->with($notification);
         }

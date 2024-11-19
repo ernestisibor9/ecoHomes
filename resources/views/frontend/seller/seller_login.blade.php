@@ -48,7 +48,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
         <!-- preloader -->
-        <div class="loader-wrap">
+        {{-- <div class="loader-wrap">
             <div class="preloader">
                 <div class="preloader-close"><i class="far fa-times"></i></div>
                 <div id="handle-preloader" class="handle-preloader">
@@ -83,7 +83,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- preloader end -->
 
 

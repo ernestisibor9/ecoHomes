@@ -49,19 +49,19 @@
                                     <td>
                                         <div class="btn-group">
                                             @if ($property->status === 'pending')
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'approved']) }}"
+                                                <a href="{{ route('change.status3', ['id' => $property->id, 'status' => 'approved']) }}"
                                                    class="btn btn-success">Approve</a>
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'rejected']) }}"
+                                                <a href="{{ route('change.status3', ['id' => $property->id, 'status' => 'rejected']) }}"
                                                    class="btn btn-danger">Reject</a>
                                             @elseif ($property->status === 'approved')
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'pending']) }}"
+                                                <a href="{{ route('change.status3', ['id' => $property->id, 'status' => 'pending']) }}"
                                                    class="btn btn-warning">Pending</a>
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'rejected']) }}"
+                                                <a href="{{ route('change.status3', ['id' => $property->id, 'status' => 'rejected']) }}"
                                                    class="btn btn-danger">Reject</a>
                                             @elseif ($property->status === 'rejected')
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'approved']) }}"
+                                                <a href="{{ route('change.status3', ['id' => $property->id, 'status' => 'approved']) }}"
                                                    class="btn btn-success">Approve</a>
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'pending']) }}"
+                                                <a href="{{ route('change.status3', ['id' => $property->id, 'status' => 'pending']) }}"
                                                    class="btn btn-warning">Pending</a>
                                             @endif
                                         </div>

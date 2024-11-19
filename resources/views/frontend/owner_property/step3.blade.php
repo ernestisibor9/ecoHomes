@@ -22,21 +22,20 @@
             transition: width 0.5s ease-in-out;
         }
     </style>
+    <style>
+        .progress {
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-<style>
-    .progress {
-        height: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .progress-bar-custom {
-        background: linear-gradient(to right, #4caf50, #81c784);
-        /* Green gradient */
-        color: white;
-        font-weight: bold;
-    }
-</style>
+        .progress-bar-custom {
+            background: linear-gradient(to right, #4caf50, #81c784);
+            /* Green gradient */
+            color: white;
+            font-weight: bold;
+        }
+    </style>
 
 
     <!-- Page Title -->
@@ -63,154 +62,21 @@
     <div class="container-fluid mb-5 mt-5">
         <div class="row justify-content-center">
             <div class="col-md-9">
-                {{-- <div class="progress">
-                    <div class="progress-bar" id="progressBar" style="width: {{ ($currentStep / 4) * 100 }}%;">
-                        {{ ($currentStep / 4) * 100 }}% Complete</div>
-                </div> --}}
 
                 <div class="card shadow p-3">
-                    <div class="progress mt-2 mb-3">
-                        <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 25%;"
-                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    {{-- <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3> --}}
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 100%;"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
                     </div>
-                    <p class="text-dark">Current Step: 1/4</p>
-                    <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3>
-                    <div class="card-body">
-                        <form action="{{route('form.submit1')}}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <div class="row g-3 mb-3">
-                                <div class="col-12 col-md-6">
-                                    <label for="">FirstName</label>
-                                    <input type="text"
-                                        class="form-control
-                                    @error('firstname')is-invalid @enderror"
-                                        placeholder="First Name" aria-label="First name" required name="firstname">
-                                    @error('firstname')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <label for="">LastName</label>
-                                    <input type="text"
-                                        class="form-control
-                                    @error('lastname')is-invalid @enderror"
-                                        placeholder="Last Name" aria-label="Last name" name="lastname" required>
-                                    @error('lastname')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12 col-md-6">
-                                    <label for="">Email</label>
-                                    <input type="email"
-                                        class="form-control
-                                     @error('email')is-invalid @enderror"
-                                        placeholder="Email" aria-label="Email" name="email" required>
-                                    @error('email')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <label for="">Phone</label>
-                                    <input type="text"
-                                        class="form-control
-                                    @error('phone')is-invalid @enderror "
-                                        placeholder="Phone" aria-label="Phone" name="phone" required>
-                                    @error('phone')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12">
-                                    <label for="">Upload Photos <span class="text-danger">(max_size: 1MB, file type:
-                                            jpeg,png,jpg,gif)
-                                        </span></label>
-                                    <input type="file" name="multi_img[]"
-                                        class="form-control
-                                     @error('multi_img.*')is-invalid @enderror"
-                                        id="multiImg" multiple>
-                                    @error('multi_img.*')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    <div class="mb-2 mt-2">
-                                        <div class="row" id="preview_img"></div>
-                                    </div>
-                                </div>
 
-                                {{-- <div class="col-6">
-                                    <label for="">Upload Video <span class="text-danger">(max_size: 5MB, file type:
-                                        mp4,avi,mkv,mov,wmv)
-                                        </span></label>
-                                    <input type="file" name="video" id=""
-                                        class="form-control
-                                     @error('video')is-invalid @enderror" accept="video/*">
-                                    @error('video')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div> --}}
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12">
-                                    <label for="">Country</label>
-                                    <select name="country_id"
-                                        class="form-control see
-                                     @error('country_id')is-invalid @enderror "
-                                        required style="display: block">
-                                        <option value="">Select Country</option>
-                                        @foreach ($countries as $country)
-                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('country_id')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12 col-md-6" id="select-state-group" style="display: none;">
-                                    <label for="">State/County</label>
-                                    <select name="state_id"
-                                        class="form-control see
-                                    @error('state_id')is-invalid @enderror "
-                                        required style="display: block">
-                                        {{-- <option value="">Select State</option> --}}
-                                    </select>
-                                    @error('state_id')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="col-12 col-md-6" id="select-city-group" style="display: none;">
-                                    <label for="">City/Town</label>
-                                    <select name="city_id" class="form-control see" required style="display: block">
-                                        {{-- <option value="">Select City</option> --}}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-12" id="postal-code-group" style="display: none;">
-                                    <label for="">Postal Code</label>
-                                    <input type="text" class="form-control" name="postal_code"
-                                        placeholder="Enter your postal code">
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <label for="" class="mt-2">Property Description
-                                    <span class="text-danger">(minimum of 100 characters)</span>
-                                </label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" required></textarea>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                {{-- <div class="form-group message-btn">
-                                    <button type="submit" class="theme-btn btn-one">Sell</button>
-                                </div> --}}
-                                <div class="d-grid gap-2 form-group message-btn">
-                                    <button class="theme-btn btn-one" type="submit" id="nextButton">Next</button>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="card-body">
+                        <div class="text-center" style="line-height: 30px;">
+                            <h3>Final stage</h3>
+                            <p class="text-dark">Current Step: 4/4</p>
+                            <p>Congratulations! You have gotten to the final stage</p>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

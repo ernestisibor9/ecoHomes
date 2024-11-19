@@ -61,9 +61,14 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('/all/seller', 'AllSeller')->name('all.seller');
         Route::get('/all/seller/progress', 'AllSellerProgress')->name('all.seller.progress');
         Route::get('/change/status/{id}/{status}', 'ChangeStatus')->name('change.status');
-        Route::get('/change/statuss/{id}', 'ChangeStatus2')->name('change.status2');
-          // Admin approve route
-          Route::post('/admin/approve/{userId}', 'AdminApprove')->name('admin.properties.update');
+        Route::get('/change/statuss/{id}/{status}', 'ChangeStatus2')->name('change.status2');
+        Route::post('/admin/approve/{userId}', 'AdminApprove')->name('admin.properties.update');
+
+
+        // Route::get('/all/seller3', 'AllSeller3')->name('all.seller3');
+        Route::get('/all/seller3/progress3', 'AllSellerProgress3')->name('all.seller3.progress3');
+        Route::get('/change/statuss3/{id}/{status}', 'ChangeStatus3')->name('change.status3');
+        Route::post('/admin/approve3/{userId}', 'AdminApprove3')->name('admin.properties.update3');
     });
 
     // Property Type Route for Admin
@@ -149,10 +154,9 @@ Route::middleware(['auth', 'roles:seller'])->group(function () {
 
 
 // Seller2 Route
-
 Route::get('/property/step1', [OwnerPropertyController::class, 'showStep1Form'])->name('form.step1');
 Route::get('/property/step2', [OwnerPropertyController::class, 'showStep2Form'])->name('form.step2');
-
+Route::get('/property/step3', [OwnerPropertyController::class, 'showStep3Form'])->name('form.step3');
 
 // Step 1 Form Submission Route
 // This route processes the form submission from Step 1
