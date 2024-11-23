@@ -166,4 +166,19 @@ class LocationController extends Controller
         // Regular form submission if not AJAX
         return redirect()->route('next.form.route2', ['step' => $nextStep])->with('success', 'Form submitted successfully!');
     }
+
+    // ReachMillionDetails
+    public function ReachMillionDetails(){
+        return view('frontend.get_started.reach_million_details');
+    }
+
+    // ExpertSolutionDetails
+    public function ExpertSolutionDetails(){
+        return view('frontend.get_started.expert_solution_details');
+    }
+
+    // SimpleProcessDetails
+    public function SimpleProcessDetails(){
+        return view('frontend.get_started.simple_process_details');
+    }
 }
