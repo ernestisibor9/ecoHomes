@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
-    <title>Realshed - HTML 5 Template Preview</title>
+    <title>EcoHomesshed - HTML 5 Template Preview</title>
 
     <!-- Fav Icon -->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
@@ -48,29 +48,29 @@
                     <div class="animation-preloader">
                         <div class="spinner"></div>
                         <div class="txt-loading">
-                            <span data-text-preloader="r" class="letters-loading">
-                                r
-                            </span>
                             <span data-text-preloader="e" class="letters-loading">
                                 e
                             </span>
-                            <span data-text-preloader="a" class="letters-loading">
-                                a
+                            <span data-text-preloader="c" class="letters-loading">
+                                c
                             </span>
-                            <span data-text-preloader="l" class="letters-loading">
-                                l
-                            </span>
-                            <span data-text-preloader="s" class="letters-loading">
-                                s
+                            <span data-text-preloader="o" class="letters-loading">
+                                o
                             </span>
                             <span data-text-preloader="h" class="letters-loading">
                                 h
                             </span>
+                            <span data-text-preloader="o" class="letters-loading">
+                                o
+                            </span>
+                            <span data-text-preloader="m" class="letters-loading">
+                                m
+                            </span>
                             <span data-text-preloader="e" class="letters-loading">
                                 e
                             </span>
-                            <span data-text-preloader="d" class="letters-loading">
-                                d
+                            <span data-text-preloader="s" class="letters-loading">
+                                s
                             </span>
                         </div>
                     </div>
@@ -159,104 +159,7 @@
                                     <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
                                         <ul class="navigation clearfix">
                                             <li class="current "><a href="{{ url('/') }}"><span>Home</span></a>
-                                                {{-- <ul>
-                                                    <li><a href="index.html">Main Home</a></li>
-                                                    <li><a href="index-2.html">Home Modern</a></li>
-                                                    <li><a href="index-3.html">Home Map</a></li>
-                                                    <li><a href="index-4.html">Home Half Map</a></li>
-                                                    <li><a href="index-5.html">Home Agent</a></li>
-                                                    <li><a href="index-onepage.html">OnePage Home</a></li>
-                                                    <li><a href="index-rtl.html">RTL Home</a></li>
-                                                    <li class="dropdown"><a href="index.html">Header Style</a>
-                                                        <ul>
-                                                            <li><a href="index.html">Header Style 01</a></li>
-                                                            <li><a href="index-2.html">Header Style 02</a></li>
-                                                            <li><a href="index-3.html">Header Style 03</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul> --}}
-                                            </li>
-                                            {{-- <li><a href="#"><span>About</span></a></li> --}}
-                                            {{-- <li class="dropdown"><a href="index.html"><span>Listing</span></a>
-                                                <ul>
-                                                    <li><a href="agents-list.html">Agents List</a></li>
-                                                    <li><a href="agents-grid.html">Agents Grid</a></li>
-                                                    <li><a href="agents-details.html">Agent Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="dropdown"><a href="index.html"><span>Property</span></a>
-                                                <ul>
-                                                    <li><a href="property-list.html">Property List</a></li>
-                                                    <li><a href="property-grid.html">Property Grid</a></li>
-                                                    <li><a href="property-list-2.html">Property List Full View</a></li>
-                                                    <li><a href="property-grid-2.html">Property Grid Full View</a></li>
-                                                    <li><a href="property-list-3.html">Property List Half View</a></li>
-                                                    <li><a href="property-grid-3.html">Property Grid Half View</a></li>
-                                                    <li><a href="property-details.html">Property Details 01</a></li>
-                                                    <li><a href="property-details-2.html">Property Details 02</a></li>
-                                                    <li><a href="property-details-3.html">Property Details 03</a></li>
-                                                    <li><a href="property-details-4.html">Property Details 04</a></li>
-                                                </ul>
-                                            </li> --}}
-                                            {{-- <li class="dropdown"><a href="index.html"><span>Pages</span></a>
-                                                <div class="megamenu">
-                                                    <div class="row clearfix">
-                                                        <div class="col-xl-4 column">
-                                                            <ul>
-                                                                <li><h4>Pages</h4></li>
-                                                                <li><a href="about.html">About Us</a></li>
-                                                                <li><a href="services.html">Our Services</a></li>
-                                                                <li><a href="faq.html">Faq's Page</a></li>
-                                                                <li><a href="pricing.html">Pricing Table</a></li>
-                                                                <li><a href="compare-roperties.html">Compare Properties</a></li>
-                                                                <li><a href="categories.html">Categories Page</a></li>
-                                                                <li><a href="career.html">Career Opportunity</a></li>
-                                                                <li><a href="testimonials.html">Testimonials</a></li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="col-xl-4 column">
-                                                            <ul>
-                                                                <li><h4>Pages</h4></li>
-                                                                <li><a href="gallery.html">Our Gallery</a></li>
-                                                                <li><a href="profile.html">My Profile</a></li>
-                                                                <li><a href="signin.html">Sign In</a></li>
-                                                                <li><a href="signup.html">Sign Up</a></li>
-                                                                <li><a href="error.html">404</a></li>
-                                                                <li><a href="agents-list.html">Agents List</a></li>
-                                                                <li><a href="agents-grid.html">Agents Grid</a></li>
-                                                                <li><a href="agents-details.html">Agent Details</a></li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="col-xl-4 column">
-                                                            <ul>
-                                                                <li><h4>Pages</h4></li>
-                                                                <li><a href="blog-1.html">Blog 01</a></li>
-                                                                <li><a href="blog-2.html">Blog 02</a></li>
-                                                                <li><a href="blog-3.html">Blog 03</a></li>
-                                                                <li><a href="blog-details.html">Blog Details</a></li>
-                                                                <li><a href="agency-list.html">Agency List</a></li>
-                                                                <li><a href="agency-grid.html">Agency Grid</a></li>
-                                                                <li><a href="agency-details.html">Agency Details</a></li>
-                                                                <li><a href="contact.html">Contact Us</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li> --}}
-                                            {{-- <li class="dropdown"><a href="index.html"><span>Agency</span></a>
-                                                <ul>
-                                                    <li><a href="agency-list.html">Agency List</a></li>
-                                                    <li><a href="agency-grid.html">Agency Grid</a></li>
-                                                    <li><a href="agency-details.html">Agency Details</a></li>
-                                                </ul>
-                                            </li> --}}
                                             <li class=""><a href="index.html"><span>Blog</span></a>
-                                                {{-- <ul>
-                                                    <li><a href="blog-1.html">Blog 01</a></li>
-                                                    <li><a href="blog-2.html">Blog 02</a></li>
-                                                    <li><a href="blog-3.html">Blog 03</a></li>
-                                                    <li><a href="blog-details.html">Blog Details</a></li>
-                                                </ul> --}}
                                             </li>
                                             <li><a href="contact.html"><span>Contact</span></a></li>
                                         </ul>
@@ -336,7 +239,7 @@
                 <div class="content-box clearfix">
                     <h1>Sign In</h1>
                     <ul class="bread-crumb clearfix">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="{{url('/')}}">Home</a></li>
                         <li>Sign In</li>
                     </ul>
                 </div>
@@ -390,39 +293,14 @@
                                             </div>
                                         </form>
                                         <div class="othre-text">
-                                            <p>Already have an account? <a href="signin.html">Sign in</a></p>
+                                            <p>Don't have an account? <a href="{{route('register')}}">Sign up</a></p>
+                                        </div>
+                                        <div class="othre-text">
+                                            <a href="{{ route('password.email') }}" class="btn-text">Forgot
+                                                password?</a>
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="tab" id="tab-2">
-                                    <div class="inner-box">
-                                        <h4>Sign up</h4>
-                                        <form action="signin.html" method="post" class="default-form">
-                                            <div class="form-group">
-                                                <label>User name</label>
-                                                <input type="text" name="name" required="">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Email address</label>
-                                                <input type="email" name="email" required="">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>New Password</label>
-                                                <input type="password" name="name" required="">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Confirm Password</label>
-                                                <input type="password" name="name" required="">
-                                            </div>
-                                            <div class="form-group message-btn">
-                                                <button type="submit" class="theme-btn btn-one">Sign up</button>
-                                            </div>
-                                        </form>
-                                        <div class="othre-text">
-                                            <p>Already have an account? <a href="signin.html">Sign in</a></p>
-                                        </div>
-                                    </div>
-                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -543,7 +421,7 @@
                         <figure class="footer-logo"><a href="index.html"><img src="assets/images/footer-logo.png"
                                     alt=""></a></figure>
                         <div class="copyright pull-left">
-                            <p><a href="index.html">Realshed</a> &copy; 2021 All Right Reserved</p>
+                            <p><a href="index.html">EcoHomesshed</a> &copy; 2021 All Right Reserved</p>
                         </div>
                         <ul class="footer-nav pull-right clearfix">
                             <li><a href="index.html">Terms of Service</a></li>

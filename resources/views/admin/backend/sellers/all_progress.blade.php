@@ -26,7 +26,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>UserID</th>
+                                <th>Property Owner</th>
                                 <th>Current Step</th>
                                 <th>Actions</th>
                             </tr>
@@ -35,7 +35,7 @@
                             @foreach ($properties as $key => $property)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $property->user_id }}</td>
+                                    <td>{{ $property->user->name }}</td>
                                     <td>{{ $property->current_step }}</td>
                                     <td>
                                         @if ($property->status == 'approved')

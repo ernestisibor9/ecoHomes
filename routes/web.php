@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\AmenitiesController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
 use App\Http\Controllers\Backend\SellerController as BackendSellerController;
+use App\Http\Controllers\Frontend\BookPropertyController;
 use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\OwnerPropertyController;
 use App\Http\Controllers\Frontend\SellerController;
@@ -26,16 +27,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [UserController::class, 'Index'])->name('index');
 Route::group(["middleware" => "prevent-back-history"], function () {
 
-    Route::get('/', [UserController::class, 'Index'])->name('index');
-    // Route::get('/', function () {
-    //     return view('welcome');
-    // });
+    Route::middleware(['auth', 'roles:user', 'verified'])->group(function () {
+        Route::get('/dashboard', [UserController::class, 'UserDashboard'])->name('dashboard');
+        Route::get('/user/logout', [UserController::class, 'UserLogout'])->name('user.logout');
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+        // Seller2 Route
+        Route::get('/property/step1', [OwnerPropertyController::class, 'showStep1Form'])->name('form.step1');
+        Route::get('/property/step2', [OwnerPropertyController::class, 'showStep2Form'])->name('form.step2');
+        Route::get('/property/step3', [OwnerPropertyController::class, 'showStep3Form'])->name('form.step3');
+
+        // Step 1 Form Submission Route
+        // This route processes the form submission from Step 1
+        Route::post('/property/step1', [OwnerPropertyController::class, 'submitStep1'])->name('form.submit1');
+        // Status Page for User Progress
+        Route::get('/status', [OwnerPropertyController::class, 'showStatusPage'])->name('status.page');
+
+        // Book Search Page
+        Route::get('/book/search', [BookPropertyController::class, 'BookSearch'])->name('book.search');
+    });
+
+    // Route::get('/dashboard', function () {
+    //     return view('dashboard');
+    // })->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::middleware('auth')->group(function () {
         // Location controller
@@ -105,11 +121,14 @@ Route::group(["middleware" => "prevent-back-history"], function () {
             Route::post('/update/property', 'UpdateProperty')->name('update.property');
             Route::get('/delete/property/{id}', 'PropertyDelete')->name('property.delete');
 
+            Route::get('/get-states/ajax/{countryId}', 'GetStates');
+            Route::get('/get-cities/ajax/{stateId}', 'GetCities');
+
             Route::post('/update/property/thumbnail', 'UpdatePropertyThumbnail')->name('update.property.thumbnail');
             Route::post('/update/property/multiimg', 'UpdatePropertyMultiImg')->name('update.property.multiimg');
             Route::get('/delete/multiimages/property/{id}', 'PropertyMultiDelete')->name('property.multiimg.delete');
             Route::get('/details/property/{id}', 'DetailsProperty')->name('property.details');
-            Route::get('/change/status/{id}', 'ChangeStatus')->name('change.status');
+            Route::get('/change/property/status/{id}', 'ChangeStatus')->name('change.property.status');
         });
     });
 
@@ -126,10 +145,23 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         ->middleware(RedirectIfAuthenticated::class);
 
     // Sell My Property Details
-     Route::get('/sell/my/property/details', [LocationController::class, 'SellMyPropertyDetails'])->name('sell.my.property.details');
+    Route::get('/sell/my/property/details', [LocationController::class, 'SellMyPropertyDetails'])->name('sell.my.property.details');
+
+    // Book My Property Details
+    Route::get('/book/my/property/details', [LocationController::class, 'BookMyPropertyDetails'])->name('book.my.property.details');
+
 
     // Reach million Details
     Route::get('/reach/million/details', [LocationController::class, 'ReachMillionDetails'])->name('reach.million.details');
+
+    // trusted.owner.details
+    Route::get('/trusted/owner/details', [LocationController::class, 'TrustedOwnerDetails'])->name('trusted.owner.details');
+
+    // unmatched.variety.details
+    Route::get('/unmatched/variety/details', [LocationController::class, 'UnmatchedVarietyDetails'])->name('unmatched.variety.details');
+
+    // smart.search.details
+    Route::get('/smart/search/details', [LocationController::class, 'SmartSearchDetails'])->name('smart.search.details');
 
     // Expert solution details
     Route::get('/expert/solution/details', [LocationController::class, 'ExpertSolutionDetails'])->name('expert.solution.details');
@@ -159,17 +191,4 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::get('/seller/profile', [SellerController::class, 'SellerProfile'])->name('seller.profile');
         Route::post('/seller/profile/store', [SellerController::class, 'SellerProfileStore'])->name('seller.profile.store');
     });
-
-
-    // Seller2 Route
-    Route::get('/property/step1', [OwnerPropertyController::class, 'showStep1Form'])->name('form.step1');
-    Route::get('/property/step2', [OwnerPropertyController::class, 'showStep2Form'])->name('form.step2');
-    Route::get('/property/step3', [OwnerPropertyController::class, 'showStep3Form'])->name('form.step3');
-
-    // Step 1 Form Submission Route
-    // This route processes the form submission from Step 1
-    Route::post('/property/step1', [OwnerPropertyController::class, 'submitStep1'])->name('form.submit1');
-
-    // Status Page for User Progress
-    Route::get('/status', [OwnerPropertyController::class, 'showStatusPage'])->name('status.page');
 });

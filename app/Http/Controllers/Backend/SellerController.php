@@ -88,27 +88,37 @@ class SellerController extends Controller
             $statusId->save();
         }
 
-        if($statusId->status == 'approved') {
+        if ($statusId->status == 'approved') {
             $data = [
                 'Message' => 'Your property submission has been approved. Please proceed to the next step.',
                 // 'link' => route('form.step2')
             ];
-            Mail::to($email)->send(new StatusMail($data));
+            $notification = array(
+                'message' => 'Property Type Created Successfully',
+                'alert-type' => 'error'
+            );
+            if ($email) {
+                Mail::to($email)->send(new StatusMail($data));
+            } else {
+                // Handle the error (e.g., log it or return a response)
+                return redirect()->back()->with($notification);
+            }
+            // Mail::to($email)->send(new StatusMail($data));
         }
-        if($statusId->status == 'rejected') {
-            $data = [
-                'Message' => 'Your property submission has been rejected. Please contact support.',
-                // 'link' => route('form.step2')
-            ];
-            Mail::to($email)->send(new StatusMail($data));
-        }
-        if($statusId->status == 'pending') {
-            $data = [
-                'Message' => 'Your property submission is pending.',
-                // 'link' => route('form.step2')
-            ];
-            Mail::to($email)->send(new StatusMail($data));
-        }
+        // if ($statusId->status == 'rejected') {
+        //     $data = [
+        //         'Message' => 'Your property submission has been rejected. Please contact support.',
+        //         // 'link' => route('form.step2')
+        //     ];
+        //     Mail::to($email)->send(new StatusMail($data));
+        // }
+        // if ($statusId->status == 'pending') {
+        //     $data = [
+        //         'Message' => 'Your property submission is pending.',
+        //         // 'link' => route('form.step2')
+        //     ];
+        //     Mail::to($email)->send(new StatusMail($data));
+        // }
 
         $statusId->save();
 
@@ -142,40 +152,39 @@ class SellerController extends Controller
         return view('admin.backend.sellers.all_progress3', compact('properties'));
     }
 
-        // Change Status
-        public function ChangeStatus3($id, $status)
-        {
-            // Fetch the UserProgress record and the associated user
-            $statusId = UserProgress::with('user')->findOrFail($id);
+    // Change Status
+    public function ChangeStatus3($id, $status)
+    {
+        // Fetch the UserProgress record and the associated user
+        $statusId = UserProgress::with('user')->findOrFail($id);
 
-            // Access the email from the related user
-            $email = $statusId->user->email; // Assuming 'user' relationship is correctly defined and 'email' exists in the User model
+        // Access the email from the related user
+        $email = $statusId->user->email; // Assuming 'user' relationship is correctly defined and 'email' exists in the User model
 
 
-            // Update the status
-            if (in_array($status, ['pending', 'approved', 'rejected'])) {
-                $statusId->status = $status;
-                if ($statusId->status == 'approved') {
-                    $statusId->current_step = 'step3';
-                    $statusId->save();
-                }
-
+        // Update the status
+        if (in_array($status, ['pending', 'approved', 'rejected'])) {
+            $statusId->status = $status;
+            if ($statusId->status == 'approved') {
+                $statusId->current_step = 'step3';
                 $statusId->save();
             }
 
-            $data = [
-                'Message' => 'Your property submission has been approved. Please proceed to Step 3.',
-                'link' => route('form.step3')
-            ];
-
-            Mail::to($email)->send(new StatusMail($data));
             $statusId->save();
-
-            $notification = array(
-                'message' => 'Status Changed to ' .  ucfirst($statusId->status),
-                'alert-type' => 'success'
-            );
-            return redirect()->back()->with($notification);
         }
 
+        $data = [
+            'Message' => 'Your property submission has been approved. Please proceed to Step 3.',
+            'link' => route('form.step3')
+        ];
+
+        Mail::to($email)->send(new StatusMail($data));
+        $statusId->save();
+
+        $notification = array(
+            'message' => 'Status Changed to ' .  ucfirst($statusId->status),
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
 }

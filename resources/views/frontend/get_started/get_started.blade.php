@@ -12,7 +12,7 @@
             <div class="col-md-4 d-flex flex-column gy-5">
                 <a href="{{route('sell.my.property.details')}}" class="btn btn-success rounded-pill mb-4 p-2">Sell My Property</a>
                 <a href="{{route('sell.my.property')}}" class="btn btn-success rounded-pill mb-4 p-2">Advertise My Property</a>
-                <a href="{{route('sell.my.property')}}" class="btn btn-success rounded-pill mb-4 p-2">Book A Property</a>
+                <a href="{{route('book.my.property.details')}}" class="btn btn-success rounded-pill mb-4 p-2">Book A Property</a>
                 {{-- <a href="{{route('next.form.route',  ['step' => 1])}}" class="btn btn-primary rounded-pill mb-4 p-2">Sell My Property</a>
                 <a href="{{route('form.step1')}}" class="btn btn-danger rounded-pill mb-4 p-2">Sell My Property</a> --}}
             </div>

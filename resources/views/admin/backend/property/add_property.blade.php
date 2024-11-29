@@ -33,8 +33,12 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label for="input2" class="form-label">Price </label>
-                            <input type="text" class="form-control" name="price" id="" required>
+                            <label for="input2" class="form-label">Lowest Price </label>
+                            <input type="text" class="form-control" name="lowest_price" id="" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="input2" class="form-label">Maximum Price </label>
+                            <input type="text" class="form-control" name="maximum_price" id="" required>
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Property Amenities </label>
@@ -99,31 +103,42 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6">
-                            <label for="input8" class="form-label">City </label>
-                            <input type="text" class="form-control" name="city" id="" required>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-12">
+                                <label for="">Country</label>
+                                <select name="country_id"
+                                    class="form-control see
+                                 @error('country_id')is-invalid @enderror "
+                                    required style="display: block">
+                                    <option value="">Select Country</option>
+                                    @foreach ($countries as $country)
+                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('country_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="input9" class="form-label">Country </label>
-                            <select id="input9" class="form-select" name="country">
-                                <option selected="">Select Country</option>
-                                <option value="usa">USA</option>
-                                <option value="uk">UK</option>
-                                <option value="nigeria">Nigeria</option>
-                                <option value="brazil">Brazil</option>
-                                <option value="france">France</option>
-                                <option value="germany">Germany</option>
-                                <option value="canada">Canada</option>
-                                <option value="spain">Spain</option>
-                                <option value="italy">Italy</option>
-                                <option value="portugal">Portugal</option>
-                                <option value="argentina">Argentina</option>
-                                <option value="switzerland">Switzerland</option>
-                                <option value="china">China</option>
-                                <option value="japan">Japan</option>
-                                <option value="south-korea">South Korea</option>
-                                <option value="south-africa">South Africa</option>
-                            </select>
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-6" id="select-state-group" style="display: none;">
+                                <label for="">State/County</label>
+                                <select name="state_id"
+                                    class="form-control see
+                                @error('state_id')is-invalid @enderror "
+                                    required style="display: block">
+                                    {{-- <option value="">Select State</option> --}}
+                                </select>
+                                @error('state_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-12 col-md-6" id="select-city-group" style="display: none;">
+                                <label for="">City/Town</label>
+                                <select name="city_id" class="form-control see" required style="display: block">
+                                    {{-- <option value="">Select City</option> --}}
+                                </select>
+                            </div>
                         </div>
                         <div class="col-md-12">
                             <label for="input11" class="form-label">Address </label>
@@ -155,82 +170,7 @@
 
                         <!----------------Facility start--------------------------->
 
-                        <div class="row add_item">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="facility_name" class="form-label">Facilities </label>
-                                    <select name="facility_name[]" id="facility_name" class="form-control">
-                                        <option value="">Select Facility</option>
-                                        <option value="Hospital">Hospital</option>
-                                        <option value="SuperMarket">Super Market</option>
-                                        <option value="School">School</option>
-                                        <option value="Entertainment">Entertainment</option>
-                                        <option value="Pharmacy">Pharmacy</option>
-                                        <option value="Airport">Airport</option>
-                                        <option value="Railways">Railways</option>
-                                        <option value="Bus Stop">Bus Stop</option>
-                                        <option value="Beach">Beach</option>
-                                        <option value="Mall">Mall</option>
-                                        <option value="Bank">Bank</option>
-                                    </select>
-                                </div>
-                            </div>
-                            {{-- <div class="col-md-4">
-                                  <div class="mb-3">
-                                        <label for="distance" class="form-label"> Distance </label>
-                                        <input type="text" name="distance[]" id="distance" class="form-control" placeholder="Distance (Km)">
-                                  </div>
-                            </div> --}}
-                            <div class="form-group col-md-4" style="padding-top: 30px;">
-                                <a class="btn btn-success addeventmore"><i class="fa fa-plus-circle"></i> Add
-                                    More..</a>
-                            </div>
-                        </div> <!---end row-->
 
-                        <!----------------Facility end---------------------------->
-
-
-                        <!----------------Facility hidden start---------------------------------------->
-                        <!--========== Start of add multiple class with ajax ==============-->
-                        <div style="visibility: hidden">
-                            <div class="whole_extra_item_add" id="whole_extra_item_add">
-                                <div class="whole_extra_item_delete" id="whole_extra_item_delete">
-                                    <div class="container mt-2">
-                                        <div class="row">
-
-                                            <div class="form-group col-md-4">
-                                                <label for="facility_name">Facilities</label>
-                                                <select name="facility_name[]" id="facility_name"
-                                                    class="form-control">
-                                                    <option value="">Select Facility</option>
-                                                    <option value="Hospital">Hospital</option>
-                                                    <option value="SuperMarket">Super Market</option>
-                                                    <option value="School">School</option>
-                                                    <option value="Entertainment">Entertainment</option>
-                                                    <option value="Pharmacy">Pharmacy</option>
-                                                    <option value="Airport">Airport</option>
-                                                    <option value="Railways">Railways</option>
-                                                    <option value="Bus Stop">Bus Stop</option>
-                                                    <option value="Beach">Beach</option>
-                                                    <option value="Mall">Mall</option>
-                                                    <option value="Bank">Bank</option>
-                                                </select>
-                                            </div>
-                                            {{-- <div class="form-group col-md-4">
-                   <label for="distance">Distance</label>
-                   <input type="text" name="distance[]" id="distance" class="form-control" placeholder="Distance (Km)">
-                </div> --}}
-                                            <div class="form-group col-md-4" style="padding-top: 20px">
-                                                <span class="btn btn-success btn-sm addeventmore"><i
-                                                        class="fa fa-plus-circle">Add</i></span>
-                                                <span class="btn btn-danger btn-sm removeeventmore"><i
-                                                        class="fa fa-minus-circle">Remove</i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!----------------Facility hidden end--------------------------------------->
 
@@ -366,5 +306,98 @@
     });
 </script>
 <!-- End Validate js -->
+
+
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+
+    $(document).ready(function() {
+        $('select[name="country_id"]').on('change', function() {
+            var country_id = $(this).val();
+            // Add IDs of African countries here
+            var africanCountries = [3, 6, 23, 28, 34, 37, 39, 41, 49, 50, 53,
+                59, 64, 66, 67, 69, 79, 80, 83, 92, 93, 113, 122, 123, 124, 130,
+                131, 134, 139, 140, 148, 149, 151, 159, 160, 170, 182, 192, 194,
+                195, 201, 202, 204, 207, 210, 216, 218, 222, 227, 245, 246
+            ];
+            if (country_id) {
+                console.log("Fetching states for country ID:", country_id); // Log the country ID
+                $.ajax({
+                    url: "{{ url('/get-states/ajax') }}/" + country_id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data); // Log the response data
+                        $('select[name="state_id"]').empty().append(
+                            '<option value="">Select State</option>');
+
+                        if (data.length > 0) {
+                            $('#select-state-group').show();
+                            $.each(data, function(key, value) {
+                                $('select[name="state_id"]').append(
+                                    '<option value="' + value.id + '">' + value
+                                    .name + '</option>'
+                                );
+                            });
+                        } else {
+                            $('select[name="state_id"]').append(
+                                '<option value="">No states available</option>');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error: ' + textStatus + ': ' + errorThrown);
+                    }
+                });
+            } else {
+                alert('Please select a country');
+            }
+            // Show or hide the postal code field
+            if (africanCountries.includes(parseInt(country_id))) {
+                $('#postal-code-group').hide(); // Hide if African country
+            } else {
+                $('#postal-code-group').show(); // Show if non-African country
+            }
+        });
+
+
+        // City
+        $('select[name="state_id"]').on('change', function() {
+            let state_id = $(this).val();
+            if (state_id) {
+                $.ajax({
+                    url: "{{ url('/get-cities/ajax') }}/" + state_id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data); // Log the response data
+                        $('select[name="city_id"]').empty().append(
+                            '<option value="">Select City</option>');
+                        if (data.length > 0) {
+                            $('#select-city-group').show();
+                            $.each(data, function(key, value) {
+                                $('select[name="city_id"]').append(
+                                    '<option value="' + value.id + '">' + value
+                                    .name + '</option>');
+                            });
+                        } else {
+                            $('select[name="city_id"]').append(
+                                '<option value="">No cities available</option>');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error: ' + textStatus + ': ' + errorThrown);
+                    }
+                });
+            } else {
+                $('select[name="city_id"]').empty().append('<option value="">Select City</option>');
+            }
+        });
+    });
+</script>
 
 @endsection

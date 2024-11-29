@@ -22,6 +22,8 @@
                             <th>Name</th>
                             <th>Property Type</th>
                             <th>Property Status</th>
+                            <th>Country</th>
+                            <th>State/County</th>
                             <th>City</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -35,7 +37,9 @@
                                 <td>{{ $property->property_name }}</td>
                                 <td>{{ $property->type->type_name }}</td>
                                 <td>{{ $property->property_status}}</td>
-                                <td>{{ $property->city}}</td>
+                                <td>{{ $property->country->name}}</td>
+                                <td>{{ $property->state->name}}</td>
+                                <td>{{ $property->city->name}}</td>
                                 <td>
                                     @if ($property->status === '1')
                                         <span class="badge rounded-pill bg-success">Active</span>
@@ -44,7 +48,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('change.status', $property->id) }}" class="btn btn-{{ $property->status === '0' ? 'success': 'danger'  }}">{{ $property->status === '0' ? 'Active' : 'Inactive'  }} </a> &nbsp;
+                                    <a href="{{ route('change.property.status', $property->id) }}" class="btn btn-{{ $property->status === '0' ? 'success': 'danger'  }}">{{ $property->status === '0' ? 'Active' : 'Inactive'  }} </a> &nbsp;
                                     <a href="{{ route('property.details', $property->id) }}" title="Edit"
                                         class="btn btn-warning">Details</a>
                                     <a href="{{ route('property.edit', $property->id) }}" title="Edit"

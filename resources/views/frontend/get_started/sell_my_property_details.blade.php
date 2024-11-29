@@ -55,6 +55,13 @@
             </div>
         </div>
     </div>
+    <div class="container-fluid mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <img src="{{ asset('frontend/assets/images/banner/sell_fast.png') }}" alt="" class="img-fluid">
+            </div>
+        </div>
+    </div>
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-6">
@@ -108,7 +115,7 @@
             </div>
         </div>
     </div>
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <img src="{{ asset('frontend/assets/images/banner/sell_banner2.jpg') }}" alt="" class="img-fluid">
@@ -121,6 +128,25 @@
             <p class="text-white display-6 mb-4" style="font-size: 1.3rem">List Your Property Now and Find the Right Buyer
                 in Just 5 Days!</p>
             <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+        </div>
+    </div>
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="display-4 text-success" style="font-weight: bold">Sell Your Property</h1>
+                <h1 class="display-4 mb-4 " style="font-weight: bold">Seamlessly Today!</h1>
+                <p class="text-dark" style="font-size: 1.3rem;">
+                    Join thousands of property owners and connect with
+                </p>
+                <p class="pb-2"></p>
+                <p class="text-dark" style="font-size: 1.3rem;">ready buyers. Simple, fast, and secure.</p>
+                <p class="mt-4">
+                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+                </p>
+            </div>
+            <div class="col-md-6 image-container">
+                <img src="{{ asset('frontend/assets/images/animate/80223.jpg') }}" alt="" class="img-fluid">
+            </div>
         </div>
     </div>
 @endsection

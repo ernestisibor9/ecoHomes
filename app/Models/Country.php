@@ -12,8 +12,13 @@ class Country extends Model
     protected $guarded = [];
 
 
-    // public function states()
-    // {
-    //     return $this->hasMany(State::class);
-    // }
+    public function states()
+    {
+        return $this->hasMany(State::class);
+    }
+
+    public function property()
+    {
+        return $this->hasMany(Property::class);
+    }
 }

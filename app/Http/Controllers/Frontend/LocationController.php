@@ -55,7 +55,6 @@ class LocationController extends Controller
         } else {
             return redirect()->route('seller.login')->with($notification);
         }
-
     }
 
     // SubmitStep
@@ -139,7 +138,6 @@ class LocationController extends Controller
             ];
             return redirect()->back()->with($notification);
         }
-
     }
 
 
@@ -168,17 +166,38 @@ class LocationController extends Controller
     }
 
     // ReachMillionDetails
-    public function ReachMillionDetails(){
+    public function ReachMillionDetails()
+    {
         return view('frontend.get_started.reach_million_details');
     }
 
     // ExpertSolutionDetails
-    public function ExpertSolutionDetails(){
+    public function ExpertSolutionDetails()
+    {
         return view('frontend.get_started.expert_solution_details');
     }
 
     // SimpleProcessDetails
-    public function SimpleProcessDetails(){
+    public function SimpleProcessDetails()
+    {
         return view('frontend.get_started.simple_process_details');
+    }
+
+    // BookMyPropertyDetails
+    public function BookMyPropertyDetails()
+    {
+        return view('frontend.get_started.book_my_property_details');
+    }
+    // TrustedOwnerDetails
+    public function TrustedOwnerDetails(){
+        return view('frontend.get_started.trusted_owner_details');
+    }
+    // UnmatchedVarietyDetails
+    public function UnmatchedVarietyDetails(){
+        return view('frontend.get_started.unmatched_variety_details');
+    }
+    // SmartSearchDetails
+    public function SmartSearchDetails(){
+        return view('frontend.get_started.smart_search_details');
     }
 }

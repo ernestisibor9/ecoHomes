@@ -113,7 +113,7 @@
             <div class="col-md-4 content">
                 <div class="card shadow">
                     <div class="card-body">
-                        <h3 class="card-title">Sell Your Property</h3>
+                        <h3 class="card-title">Sell My Property</h3>
                         <p class="card-text pb-2">
                             Sell your property at a lower price and build a strong brand with our expert team.
                         </p>
@@ -131,7 +131,7 @@
                             You can book and secure your dream property now. It's as simple and hassle-free.
                         </p>
                         <div class="button-box">
-                            <a href="{{ route('get.started') }}" class="theme-btn btn-one">Get Started</a>
+                            <a href="{{ route('book.my.property.details') }}" class="theme-btn btn-one">Get Started</a>
                         </div>
                     </div>
                 </div>

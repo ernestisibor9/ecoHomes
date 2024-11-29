@@ -26,7 +26,7 @@ class OwnerPropertyController extends Controller
         if (Auth::check()) {
             return view('frontend.owner_property.step1', compact('countries', 'progress'));
         } else {
-            return redirect()->route('seller.login')->with($notification);
+            return redirect()->route('login')->with($notification);
         }
     }
     public function showStep2Form()
@@ -46,7 +46,7 @@ class OwnerPropertyController extends Controller
         if (Auth::check()) {
             return view('frontend.owner_property.step2', compact('progress'));
         } else {
-            return redirect()->route('seller.login')->with($notification);
+            return redirect()->route('login')->with($notification);
         }
     }
     // Step 2: Property form
@@ -74,12 +74,6 @@ class OwnerPropertyController extends Controller
                 $filename = date('YmdHi') . $img->getClientOriginalName();
                 $img->move(public_path('upload/sell_property/'), $filename);
                 $save_url = 'upload/sell_property/' . $filename;
-
-                // Video
-                // $video = $request->file('video');
-                // $filename = time() . '.' . $video->getClientOriginalName();
-                // $video->move(public_path('upload/sell_property/video/'), $filename);
-                // $save_video = 'upload/sell_property/video/' . $filename;
 
                 SellMyProperty::create([
                     'user_id' => auth()->id(),
@@ -142,7 +136,7 @@ class OwnerPropertyController extends Controller
         if (Auth::check()) {
             return view('frontend.owner_property.status', compact('progress'));
         } else {
-            return redirect()->route('seller.login')->with($notification);
+            return redirect()->route('login')->with($notification);
         }
     }
     // ShowStep3Form
@@ -162,7 +156,7 @@ class OwnerPropertyController extends Controller
         if (Auth::check()) {
             return view('frontend.owner_property.step3', compact('progress'));
         } else {
-            return redirect()->route('seller.login')->with($notification);
+            return redirect()->route('login')->with($notification);
         }
     }
 }

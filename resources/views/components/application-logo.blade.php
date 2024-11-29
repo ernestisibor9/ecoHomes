@@ -3,4 +3,4 @@
 </svg> --}}
 
 
-<img src="{{ asset('backend\assets\images\logoo2.png') }}" alt="Your Logo" >
+<img src="{{asset('frontend/assets/images/logo-2.png')}}" alt="Your Logo" >

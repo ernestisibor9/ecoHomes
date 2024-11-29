@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Amenities;
+use App\Models\City;
+use App\Models\Country;
 use App\Models\Facility;
 use App\Models\MultiImage;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Models\State;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,9 +21,10 @@ class PropertyController extends Controller
     // AddProperty
     public function AddProperty()
     {
+        $countries = Country::get();
         $propertyTypes = PropertyType::latest()->get();
         $amenities = Amenities::latest()->get();
-        return view('admin.backend.property.add_property', compact('propertyTypes', 'amenities'));
+        return view('admin.backend.property.add_property', compact('propertyTypes', 'amenities', 'countries'));
     }
     // AllProperty
     public function AllProperty()
@@ -57,7 +61,8 @@ class PropertyController extends Controller
             'property_slug' => Str::slug($request->property_name),
             'property_code' => $pcode,
             'property_status' => $request->property_status,
-            'price' => $request->price,
+            'lowest_price' => $request->lowest_price,
+            'maximum_price' => $request->maximum_price,
 
             'short_description' => $request->short_desc,
             'long_description' => $request->long_desc,
@@ -67,8 +72,9 @@ class PropertyController extends Controller
             'property_video' => $request->property_video,
 
             'address' => $request->address,
-            'city' => $request->city,
-            'country' => $request->country,
+            'country_id' => $request->country_id,
+            'state_id' => $request->state_id,
+            'city_id' => $request->city_id,
             'featured' => $request->featured,
             'hot' => $request->hot,
 
@@ -282,5 +288,15 @@ class PropertyController extends Controller
             'alert-type'=>'success'
         );
         return redirect()->back()->with($notification);
+    }
+    public function GetStates($countryId)
+    {
+        $states = State::where('country_id', $countryId)->get();
+        return json_encode($states);
+    }
+    public function GetCities($stateId)
+    {
+        $cities = City::where('state_id', $stateId)->get();
+        return json_encode($cities);
     }
 }

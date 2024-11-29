@@ -22,27 +22,6 @@ class Role
         } elseif ($userRole === 'admin' && $role === 'user') {
             return redirect('/admin/dashboard');
         }
-        elseif ($userRole === 'seller' && $role === 'user') {
-            return redirect('/seller/dashboard');
-        }
-        elseif ($userRole === 'admin' && $role === 'seller') {
-            return redirect('/admin/dashboard');
-        }
-        elseif ($userRole === 'admin' && $role !== 'admin') {
-            return redirect('/admin/dashboard');
-        }
-        elseif ($userRole === 'seller' && $role !== 'seller') {
-            return redirect('/seller/dashboard');
-        }
-        elseif ($userRole === 'user' && $role === 'admin') {
-            return redirect('/dashboard');
-        }
-        elseif ($userRole === 'user' && $role === 'seller') {
-            return redirect('/dashboard');
-        }
-        elseif ($userRole === 'seller' && $role === 'user') {
-            return redirect('/seller/dashboard');
-        }
         return $next($request);
     }
 }
