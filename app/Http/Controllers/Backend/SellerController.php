@@ -90,8 +90,9 @@ class SellerController extends Controller
 
         if ($statusId->status == 'approved') {
             $data = [
-                'Message' => 'Your property submission has been approved. Please proceed to the next step.',
-                // 'link' => route('form.step2')
+                'Subject' => "Property Status",
+                'Message' => 'Thank you for choosing EcoHomes as your trusted property platform. <br/> Your property submission has been approved. <br/> One of our expert will reach out to you soon. <br/> Please proceed to the next step.',
+                'link' => route('form.step2')
             ];
             $notification = array(
                 'message' => 'Property Type Created Successfully',
@@ -103,22 +104,22 @@ class SellerController extends Controller
                 // Handle the error (e.g., log it or return a response)
                 return redirect()->back()->with($notification);
             }
-            // Mail::to($email)->send(new StatusMail($data));
+            Mail::to($email)->send(new StatusMail($data));
         }
-        // if ($statusId->status == 'rejected') {
-        //     $data = [
-        //         'Message' => 'Your property submission has been rejected. Please contact support.',
-        //         // 'link' => route('form.step2')
-        //     ];
-        //     Mail::to($email)->send(new StatusMail($data));
-        // }
-        // if ($statusId->status == 'pending') {
-        //     $data = [
-        //         'Message' => 'Your property submission is pending.',
-        //         // 'link' => route('form.step2')
-        //     ];
-        //     Mail::to($email)->send(new StatusMail($data));
-        // }
+        if ($statusId->status == 'rejected') {
+            $data = [
+                'Subject' => "Property Status",
+                'Message' => 'Thank you for choosing EcoHomes as your trusted property platform. <br/> Your property submission has been rejected. <br/>One of our expert will reach out to you soon.',
+            ];
+            Mail::to($email)->send(new StatusMail($data));
+        }
+        if ($statusId->status == 'pending') {
+            $data = [
+                'Subject' => "Property Status",
+                'Message' => 'Your property submission is pending.',
+            ];
+            Mail::to($email)->send(new StatusMail($data));
+        }
 
         $statusId->save();
 
@@ -174,6 +175,7 @@ class SellerController extends Controller
         }
 
         $data = [
+            'Subject' => "Property Status",
             'Message' => 'Your property submission has been approved. Please proceed to Step 3.',
             'link' => route('form.step3')
         ];

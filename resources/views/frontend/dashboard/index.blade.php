@@ -18,33 +18,36 @@
                         <h3>Welcome {{ $profileData->name }}</h3>
                         <h3>
                             @if (!empty($userProgress))
-                                <h3><strong>STATUS:</strong> &nbsp;&nbsp;&nbsp; {{ ucfirst($userProgress->status) }}</h3>
+                                <h3><strong>PROPERTY STATUS:</strong> &nbsp;&nbsp;&nbsp; {{ ucfirst($userProgress->current_step) }}</h3>
                             @else
-                                <h4><strong>STATUS:</strong> &nbsp;&nbsp;&nbsp; No record yet for tracking </h4>
+                                <h4><strong>PROPERTY STATUS:</strong> &nbsp;&nbsp;&nbsp; No record yet for tracking </h4>
                             @endif
                         </h3>
                         <ul class="post-info clearfix">
                             <li class="author-box">
                                 <figure class="author-thumb"><img src="assets/images/news/author-1.jpg" alt="">
                                 </figure>
-                                <h5><a href="blog-details.html">Eva Green</a></h5>
+                                <h5><a href="blog-details.html">{{ $profileData->role }}</a></h5>
                             </li>
-                            <li>April 10, 2020</li>
+                            <li>December 2, 2024</li>
                         </ul>
 
 
                         <form action="signin.html" method="post" class="default-form">
                             <div class="form-group">
-                                <label>Agent name</label>
-                                <input type="text" name="name" required="">
+                                <label>Name</label>
+                                <input type="text" name="name"
+                                value="{{ $profileData->name }}" readonly>
                             </div>
                             <div class="form-group">
                                 <label>Email address</label>
-                                <input type="email" name="email" required="">
+                                <input type="email" name="email"
+                                value="{{ $profileData->email }}" readonly>
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
-                                <input type="password" name="name" required="">
+                                <label>Role</label>
+                                <input type="text" name="name" required=""
+                                value="{{ $profileData->role }}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="formFile" class="form-label">Default file input

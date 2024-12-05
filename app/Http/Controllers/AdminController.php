@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -12,7 +13,12 @@ class AdminController extends Controller
     // AdminDashboard
     public function AdminDashboard()
     {
-        return view('admin.index');
+        $notifications = DB::select("SELECT users.id, users.name, users.email, COUNT(is_read)
+        AS unread FROM users LEFT JOIN messages ON users.id = messages.from AND messages.is_read
+        = 0 WHERE users.id = ".Auth::id()." GROUP BY users.id, users.name, users.email");
+        // dd($notification);
+        // exit();
+        return view('admin.index', compact('notifications'));
     }
     // Admin Login
     public function AdminLogin()

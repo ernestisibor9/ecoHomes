@@ -41,73 +41,12 @@
 
 
         <!-- preloader -->
-        <div class="loader-wrap">
-            <div class="preloader">
-                <div class="preloader-close"><i class="far fa-times"></i></div>
-                <div id="handle-preloader" class="handle-preloader">
-                    <div class="animation-preloader">
-                        <div class="spinner"></div>
-                        <div class="txt-loading">
-                            <span data-text-preloader="e" class="letters-loading">
-                                e
-                            </span>
-                            <span data-text-preloader="c" class="letters-loading">
-                                c
-                            </span>
-                            <span data-text-preloader="o" class="letters-loading">
-                                o
-                            </span>
-                            <span data-text-preloader="h" class="letters-loading">
-                                h
-                            </span>
-                            <span data-text-preloader="o" class="letters-loading">
-                                o
-                            </span>
-                            <span data-text-preloader="m" class="letters-loading">
-                                m
-                            </span>
-                            <span data-text-preloader="e" class="letters-loading">
-                                e
-                            </span>
-                            <span data-text-preloader="s" class="letters-loading">
-                                s
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <!-- preloader end -->
 
 
         <!-- switcher menu -->
-        <div class="switcher">
-            <div class="switch_btn">
-                <button><i class="fas fa-palette"></i></button>
-            </div>
-            <div class="switch_menu">
-                <!-- color changer -->
-                <div class="switcher_container">
-                    <ul id="styleOptions" title="switch styling">
-                        <li>
-                            <a href="javascript: void(0)" data-theme="green" class="green-color"></a>
-                        </li>
-                        <li>
-                            <a href="javascript: void(0)" data-theme="pink" class="pink-color"></a>
-                        </li>
-                        <li>
-                            <a href="javascript: void(0)" data-theme="violet" class="violet-color"></a>
-                        </li>
-                        <li>
-                            <a href="javascript: void(0)" data-theme="crimson" class="crimson-color"></a>
-                        </li>
-                        <li>
-                            <a href="javascript: void(0)" data-theme="orange" class="orange-color"></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+
         <!-- end switcher menu -->
 
 
@@ -294,6 +233,8 @@
                                         </form>
                                         <div class="othre-text">
                                             <p>Don't have an account? <a href="{{route('register')}}">Sign up</a></p>
+                                            <p><a href="{{route('expert.solution.details')}}">Click here </a> to connect with our experts</p>
+                                            <p>Or contact us directly via +234 806 014 3255</p>
                                         </div>
                                         <div class="othre-text">
                                             <a href="{{ route('password.email') }}" class="btn-text">Forgot
@@ -457,6 +398,11 @@
     <script src="{{ asset('frontend/assets/js/jQuery.style.switcher.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/product-filter.js') }}"></script>
+
+    <!-- Chatling plugins -->
+    <script> window.chtlConfig = { chatbotId: "6294155724" } </script>
+    <script async data-id="6294155724" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
+    <!--Chatling plugins--->
 
     <!-- map script -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-CE0deH3Jhj6GN4YvdCFZS7DpbXexzGU"></script>

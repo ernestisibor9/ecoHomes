@@ -37,10 +37,10 @@
         style="background-image: url('{{ asset('frontend/assets/images/banner/banner_details.png') }}');">
         <div class="auto-container">
             <div class="content-box clearfix">
-                <h1>Expert Solution</h1>
+                <h1>Expert Support</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li>Expert Solution Details</li>
+                    <li>Expert Support Details</li>
                 </ul>
             </div>
         </div>
@@ -58,7 +58,7 @@
                 <p class="pb-2"></p>
                 <p class="text-dark" style="font-size: 1.1rem;">advice based on your preferences, budget, and goals.</p>
                 <p class="mt-4">
-                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+                    <button id="activateChatbot" class="theme-btn btn-one">Connect to our expert</button>
                 </p>
             </div>
             <div class="col-md-6 image-container">
@@ -80,7 +80,8 @@
                     delivering exceptional results and ensuring peace of mind.
                 </p>
                 <p class="text-dark">
-                    Ready to find your dream property or sell your current one? Let our Expert Solutions turn your vision into reality.
+                    Ready to find your dream property or sell your current one? Let our Expert Solutions turn your vision
+                    into reality.
                 </p>
                 <div class="text-center mt-5">
                     <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
@@ -96,4 +97,22 @@
             <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
         </div>
     </div>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+      document.getElementById("activateChatbot").addEventListener("click", function () {
+        var Tawk_API = Tawk_API || {},
+            Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"),
+                s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/674c11462480f5b4f5a6570f/1ie0i6vqs';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    });
+    </script>
+    <!--End of Tawk.to Script-->
 @endsection

@@ -256,7 +256,7 @@
                 if (country_id) {
                     console.log("Fetching states for country ID:", country_id); // Log the country ID
                     $.ajax({
-                        url: "{{ url('/get-states/ajax') }}/" + country_id,
+                        url: "{{ url('/get-states-location/ajax') }}/" + country_id,
                         type: "GET",
                         dataType: "json",
                         success: function(data) {
@@ -298,7 +298,7 @@
                 let state_id = $(this).val();
                 if (state_id) {
                     $.ajax({
-                        url: "{{ url('/get-cities/ajax') }}/" + state_id,
+                        url: "{{ url('/get-cities-location/ajax') }}/" + state_id,
                         type: "GET",
                         dataType: "json",
                         success: function(data) {

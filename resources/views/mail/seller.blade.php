@@ -379,7 +379,7 @@
 </div>
 <div class="bee-col bee-col-2 bee-col-w8">
 <div class="bee-block bee-block-1 bee-paragraph">
-<p><strong>Hello Sir/Ma </strong><br/><strong> {{$seller['Subject']}} </strong></p>
+<p><strong>Hello </strong><br/><strong> {{$seller['Subject']}} </strong></p>
 <p> {{$seller['Message']}}</p>
 </div>
 <div class="bee-block bee-block-2 bee-button"></div>

@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="{{ asset('backend/assets/css/header-colors.css') }}" />
     <link href="{{ asset('backend/assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <title>@yield('title')</title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <script src="https://cdn.tiny.cloud/1/bs6au1qu048pnog0s5m4f5jbdfqhbl6bx2k4cz9vnkhwhl25/tinymce/6/tinymce.min.js"
@@ -94,7 +95,6 @@
     <script src="{{ asset('backend/assets/js/app.js') }}"></script>
     <script src="{{asset('backend/assets/plugins/select2/js/select2-custom.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
     <script>
         new PerfectScrollbar(".app-container")
     </script>

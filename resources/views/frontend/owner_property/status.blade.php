@@ -73,13 +73,17 @@
 
                     <div class="card-body">
                         <div class="text-center" style="line-height: 30px;">
-                            <h3>Pre-Qualification stage</h3>
-                            <p class="text-dark">Current Step: 2/4</p>
-                            <p class="text-dark">Status: {{ Str::ucfirst($progress->status) }}</p>
+                            <h3>Verification Stage</h3>
+                            <p class="text-dark"><strong>Current Step:</strong> 2/4</p>
+                            <p class="text-dark"><strong>Status:</strong> {{ $progress !== null ? Str::ucfirst($progress->status) : 'User not found'}}</p>
                             <p class="text-dark">We will contact you soon</p>
                             <p class="text-dark">
                                 @if ($progress->status == 'approved')
-                                <a href="{{ route('form.step2') }}">Proceed to Step 3</a>
+                                {{-- <a href="{{ route('form.step2') }}">Proceed to Step 3</a> --}}
+                                <div class="d-grid gap-2 form-group message-btn mt-4">
+                                    <a href="{{asset('frontend/assets/document/terms_condition.pdf')}}" class="theme-btn btn-one" target="_blank">
+                                        Download and fill the Terms and Conditions</a>
+                                </div>
                             @elseif($progress->status == 'rejected')
                                 <p class="text-danger">Your submission has been rejected. Please contact support.</p>
                             @else

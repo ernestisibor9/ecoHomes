@@ -38,7 +38,7 @@
     }
 
     .content .card {
-        background-color: rgba(0, 0, 0, 0.9);
+        background-color: rgba(0, 0, 0, 0.7);
         /* background-color: rgba(255, 255, 255, 0.9); */
         border-radius: 15px;
         overflow: hidden;

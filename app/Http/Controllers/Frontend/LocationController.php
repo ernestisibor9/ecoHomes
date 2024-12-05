@@ -22,13 +22,13 @@ class LocationController extends Controller
         return view('frontend.get_started.sell_my_property', compact('countries'));
     }
     //
-    public function GetStates($countryId)
+    public function GetStatesLocation($countryId)
     {
         $states = State::where('country_id', $countryId)->get();
         return json_encode($states);
     }
 
-    public function GetCities($stateId)
+    public function GetCitiesLocation($stateId)
     {
         $cities = City::where('state_id', $stateId)->get();
         return json_encode($cities);
@@ -110,8 +110,8 @@ class LocationController extends Controller
 
             try {
                 Mail::to([$request->email, 'ernestisibor9@gmail.com'])->send(new SellerMail([
-                    'Subject' => 'Thank you for using our platform to sell your property.',
-                    'Message' => 'We appreciate your request to sell your property on our platform.'
+                    'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.',
+                    'Message' => 'One of our expert will reach out to you soon.'
                 ]));
             } catch (\Exception $e) {
                 // Log or handle the error

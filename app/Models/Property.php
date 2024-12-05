@@ -29,4 +29,8 @@ class Property extends Model
     {
         return $this->belongsTo(City::class);
     }
+    public function amenity()
+    {
+        return $this->hasMany(Amenities::class);
+    }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Backend\AmenitiesController;
+use App\Http\Controllers\Backend\NotificationController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
 use App\Http\Controllers\Backend\SellerController as BackendSellerController;
@@ -44,9 +45,34 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::post('/property/step1', [OwnerPropertyController::class, 'submitStep1'])->name('form.submit1');
         // Status Page for User Progress
         Route::get('/status', [OwnerPropertyController::class, 'showStatusPage'])->name('status.page');
+        // Upload Properties
+        Route::get('/upload/property/docs', [OwnerPropertyController::class, 'uploadProperty'])->name('upload.property');
+        Route::post('/store/upload/property/docs', [OwnerPropertyController::class, 'storeUploadProperty'])->name('store.upload.property');
+
 
         // Book Search Page
-        Route::get('/book/search', [BookPropertyController::class, 'BookSearch'])->name('book.search');
+        Route::controller(BookPropertyController::class)->group(function () {
+            Route::get('/book/search',  'BookSearch')->name('book.search');
+            Route::get('/get-states-book/ajax/{countryId}', 'GetStatesBook');
+            Route::get('/get-cities-book/ajax/{stateId}', 'GetCitiesBook');
+            Route::get('/properties/filter', 'BookPropertyFilter')->name('properties.filter');
+        });
+
+        // Location controller
+        Route::controller(LocationController::class)->group(function () {
+            Route::get('/sell/my/property', 'SellMyProperty')->name('sell.my.property');
+            Route::get('/get-states-location/ajax/{countryId}', 'GetStatesLocation');
+            Route::get('/get-cities-location/ajax/{stateId}', 'GetCitiesLocation');
+            Route::get('/sell/my/property/details', 'SellMyPropertyDetails')->name('sell.my.property.details');
+        });
+
+         // trusted.owner.details
+    Route::get('/trusted/owner/details', [LocationController::class, 'TrustedOwnerDetails'])->name('trusted.owner.details');
+           // unmatched.variety.details
+    Route::get('/unmatched/variety/details', [LocationController::class, 'UnmatchedVarietyDetails'])->name('unmatched.variety.details');
+
+    // smart.search.details
+    Route::get('/smart/search/details', [LocationController::class, 'SmartSearchDetails'])->name('smart.search.details');
     });
 
     // Route::get('/dashboard', function () {
@@ -130,6 +156,13 @@ Route::group(["middleware" => "prevent-back-history"], function () {
             Route::get('/details/property/{id}', 'DetailsProperty')->name('property.details');
             Route::get('/change/property/status/{id}', 'ChangeStatus')->name('change.property.status');
         });
+
+        // Notifications
+        Route::controller(NotificationController::class)->group(function () {
+            Route::get('/notifications', 'Notifications')->name('notifications.index');
+            Route::get('/notifications/{id}/mark-as-read', 'MarkAsRead')->name('notifications.markAsRead');
+            Route::get('/notifications/mark-all-as-read', 'MarkAllAsRead')->name('notifications.markAllAsRead');
+        });
     });
 
 
@@ -155,13 +188,13 @@ Route::group(["middleware" => "prevent-back-history"], function () {
     Route::get('/reach/million/details', [LocationController::class, 'ReachMillionDetails'])->name('reach.million.details');
 
     // trusted.owner.details
-    Route::get('/trusted/owner/details', [LocationController::class, 'TrustedOwnerDetails'])->name('trusted.owner.details');
+   // Route::get('/trusted/owner/details', [LocationController::class, 'TrustedOwnerDetails'])->name('trusted.owner.details');
 
     // unmatched.variety.details
-    Route::get('/unmatched/variety/details', [LocationController::class, 'UnmatchedVarietyDetails'])->name('unmatched.variety.details');
+    //Route::get('/unmatched/variety/details', [LocationController::class, 'UnmatchedVarietyDetails'])->name('unmatched.variety.details');
 
     // smart.search.details
-    Route::get('/smart/search/details', [LocationController::class, 'SmartSearchDetails'])->name('smart.search.details');
+    //Route::get('/smart/search/details', [LocationController::class, 'SmartSearchDetails'])->name('smart.search.details');
 
     // Expert solution details
     Route::get('/expert/solution/details', [LocationController::class, 'ExpertSolutionDetails'])->name('expert.solution.details');

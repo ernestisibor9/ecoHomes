@@ -41,42 +41,7 @@
 
 
         <!-- preloader -->
-        <div class="loader-wrap">
-            <div class="preloader">
-                <div class="preloader-close"><i class="far fa-times"></i></div>
-                <div id="handle-preloader" class="handle-preloader">
-                    <div class="animation-preloader">
-                        <div class="spinner"></div>
-                        <div class="txt-loading">
-                            <span data-text-preloader="e" class="letters-loading">
-                                e
-                            </span>
-                            <span data-text-preloader="c" class="letters-loading">
-                                c
-                            </span>
-                            <span data-text-preloader="o" class="letters-loading">
-                                o
-                            </span>
-                            <span data-text-preloader="h" class="letters-loading">
-                                h
-                            </span>
-                            <span data-text-preloader="o" class="letters-loading">
-                                o
-                            </span>
-                            <span data-text-preloader="m" class="letters-loading">
-                                m
-                            </span>
-                            <span data-text-preloader="e" class="letters-loading">
-                                e
-                            </span>
-                            <span data-text-preloader="s" class="letters-loading">
-                                s
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <!-- preloader end -->
 
 
@@ -88,13 +53,14 @@
 
 
         <!--Page Title-->
-        <section class="page-title centred" style="background-image: url('{{asset('frontend/assets/images/banner/banner_dash.png')}}');">
+        <section class="page-title centred"
+            style="background-image: url('{{ asset('frontend/assets/images/banner/banner_dash.png') }}');">
             <div class="auto-container">
                 <div class="content-box clearfix">
-                    <h1>User Profile </h1>
+                    <h1>User Dashboard </h1>
                     <ul class="bread-crumb clearfix">
-                        <li><a href="{{url('/')}}">Home</a></li>
-                        <li>User Profile </li>
+                        <li><a href="{{ url('/') }}">Home</a></li>
+                        <li>User Dashboard </li>
                     </ul>
                 </div>
             </div>
@@ -108,18 +74,10 @@
                 <div class="row clearfix">
 
 
-
-
-
-
-
-
-
                     @include('frontend.dashboard.body.sidebar')
 
 
                     @yield('userdashboard')
-
 
 
                 </div>
@@ -142,8 +100,7 @@
                         <div class="form-inner">
                             <form action="contact.html" method="post" class="subscribe-form">
                                 <div class="form-group">
-                                    <input type="email" name="email" placeholder="Enter your email"
-                                        required="">
+                                    <input type="email" name="email" placeholder="Enter your email" required="">
                                     <button type="submit">Subscribe Now</button>
                                 </div>
                             </form>
@@ -251,13 +208,21 @@
         <!-- main-footer end -->
 
 
-
         <!--Scroll to top-->
         <button class="scroll-top scroll-to-target" data-target="html">
             <span class="fal fa-angle-up"></span>
         </button>
     </div>
 
+    <!-- Chatling plugins -->
+    <script>
+        window.chtlConfig = {
+            chatbotId: "6294155724"
+        }
+    </script>
+    <script async data-id="6294155724" id="chatling-embed-script" type="text/javascript"
+        src="https://chatling.ai/js/embed.js"></script>
+    <!--Chatling plugins--->
 
     <!-- jequery plugins -->
     <script src="{{ asset('frontend/assets/js/jquery.js') }}"></script>
@@ -274,6 +239,7 @@
     <script src="{{ asset('frontend/assets/js/jQuery.style.switcher.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/product-filter.js') }}"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
     <!-- main-js -->
     <script src="{{ asset('frontend/assets/js/script.js') }}"></script>

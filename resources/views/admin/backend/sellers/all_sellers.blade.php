@@ -31,8 +31,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Country</th>
-                                <th>State</th>
-                                <th>Status</th>
+                                <th>Reference ID</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -45,8 +44,8 @@
                                     <td>{{ $property->email }}</td>
                                     <td>{{ $property->phone }}</td>
                                     <td>{{ $property->country->name }}</td>
-                                    <td>{{ $property->state->name }}</td>
-                                    <td>
+                                    <td>{{ $property->reference_no }}</td>
+                                    {{-- <td>
                                         @if ($property->status == 'approved')
                                             <span class="badge rounded-pill bg-success">Approved</span>
                                         @elseif($property->status == 'pending')
@@ -54,7 +53,7 @@
                                         @else
                                             <span class="badge rounded-pill bg-danger">Rejected</span>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         {{-- <div class="d-flex">
                                             <a href="{{ route('change.status', ['id' => $property->id, 'status' => 'approved']) }}"
@@ -65,11 +64,15 @@
                                                 class="btn btn-danger">Rejected</a>
 
                                         </div> --}}
-                                        <a href="{{ route('change.status2', $property->id) }}"
+                                        {{-- <a href=""
                                             class="btn btn-{{ $property->status === 'pending' ? 'success' : 'warning' }}">{{ $property->status === 'pending' ? 'Approve' : 'Pending' }}
-                                        </a> &nbsp;
-                                        <div>
+                                        </a> &nbsp; --}}
+                                        {{-- <div>
 
+                                        </div> --}}
+                                        <div class="d-flex">
+                                            <a href="" class="btn btn-primary">Edit</a>
+                                            <a href="" class="btn btn-danger" id="delete">Delete</a>
                                         </div>
                                     </td>
                                 </tr>

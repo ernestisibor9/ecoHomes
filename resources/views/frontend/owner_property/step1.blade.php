@@ -1,14 +1,9 @@
 @extends('frontend.master')
 
 @section('home')
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script> --}}
+   @php
+        $propertyTypes = App\Models\PropertyType::orderBy('type_name', 'asc')->get();
+   @endphp
     <style>
         .see {
             display: block !important;
@@ -37,6 +32,23 @@
         font-weight: bold;
     }
 </style>
+
+<style>
+    #loading-spinner {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
 
 
     <!-- Page Title -->
@@ -76,26 +88,30 @@
                     <p class="text-dark">Current Step: 1/4</p>
                     <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3>
                     <div class="card-body">
-                        <form action="{{route('form.submit1')}}" method="POST"
+                        <form action="{{route('form.submit1')}}" id="wordCountForm" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6">
-                                    <label for="">FirstName</label>
+                                    <label for="">FirstName <span class="text-danger"> *
+                                    </span></label>
                                     <input type="text"
                                         class="form-control
                                     @error('firstname')is-invalid @enderror"
-                                        placeholder="First Name" aria-label="First name" required name="firstname">
+                                        placeholder="First Name" aria-label="First name"
+                                        required name="firstname"  value="{{ old('firstname') }}">
                                     @error('firstname')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <label for="">LastName</label>
+                                    <label for="">LastName <span class="text-danger"> *
+                                    </span></label>
                                     <input type="text"
                                         class="form-control
                                     @error('lastname')is-invalid @enderror"
-                                        placeholder="Last Name" aria-label="Last name" name="lastname" required>
+                                        placeholder="Last Name" aria-label="Last name"
+                                        name="lastname" required  value="{{ old('lastname') }}">
                                     @error('lastname')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -103,35 +119,77 @@
                             </div>
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6">
-                                    <label for="">Email</label>
+                                    <label for="">Property Type <span class="text-danger"> *
+                                    </span></label>
+                                    <select name="property_id"
+                                        class="form-control see
+                                     @error('property_id')is-invalid @enderror "
+                                        required style="display: block">
+                                        <option value="">Select Property</option>
+                                        @foreach ($propertyTypes as $propertyType)
+                                            <option value="{{ $propertyType->id }}"
+                                                {{ old('property_id') == $propertyType->id ? 'selected' : '' }}>{{ $propertyType->type_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('property_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="">Video <span class="text-danger"> *
+                                    </span> <span class="text-danger">(The video resolution must be at least 1920x1080)</span></label>
+                                    <input type="file" class="form-control see @error('video')is-invalid @enderror"
+                                            name="video" id="" accept="video/mp4, video/mkv, video/avi"
+                                             required  value="{{ old('video') }}">
+                                    @error('video')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-12 col-md-6">
+                                    <label for="">Email <span class="text-danger"> *
+                                    </span></label>
                                     <input type="email"
                                         class="form-control
                                      @error('email')is-invalid @enderror"
-                                        placeholder="Email" aria-label="Email" name="email" required>
+                                        placeholder="Email" aria-label="Email" name="email"
+                                        required  value="{{ old('email') }}">
                                     @error('email')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <label for="">Phone</label>
+                                    <label for="">Phone <span class="text-danger"> *
+                                    </span></label>
                                     <input type="text"
                                         class="form-control
                                     @error('phone')is-invalid @enderror "
-                                        placeholder="Phone" aria-label="Phone" name="phone" required>
+                                        placeholder="Phone" aria-label="Phone"
+                                        name="phone" required  value="{{ old('phone') }}">
                                     @error('phone')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
+                                <label for="" class="mt-2">Enter Amenities (separated by commas):  <span class="text-danger"> *
+                                </span>
+                                </label>
+                                <textarea class="form-control" id="amenities" rows="3"
+                                 name="amenities" required >{{ old('amenities') }}</textarea>
+                            </div>
+                            <div class="row g-3 mb-3">
                                 <div class="col-12">
-                                    <label for="">Upload Photos <span class="text-danger">(max_size: 1MB, file type:
+                                    <label for="">Upload Photos <span class="text-danger"> *
+                                    </span><span class="text-danger">(max_size: 1MB, file type:
                                             jpeg,png,jpg,gif)
                                         </span></label>
                                     <input type="file" name="multi_img[]"
                                         class="form-control
                                      @error('multi_img.*')is-invalid @enderror"
-                                        id="multiImg" multiple>
+                                        id="multiImg" multiple
+                                         required>
                                     @error('multi_img.*')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -140,28 +198,20 @@
                                     </div>
                                 </div>
 
-                                {{-- <div class="col-6">
-                                    <label for="">Upload Video <span class="text-danger">(max_size: 5MB, file type:
-                                        mp4,avi,mkv,mov,wmv)
-                                        </span></label>
-                                    <input type="file" name="video" id=""
-                                        class="form-control
-                                     @error('video')is-invalid @enderror" accept="video/*">
-                                    @error('video')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div> --}}
                             </div>
                             <div class="row g-3 mb-3">
                                 <div class="col-12">
-                                    <label for="">Country</label>
+                                    <label for="">Country <span class="text-danger"> *
+                                    </span></label>
                                     <select name="country_id"
                                         class="form-control see
                                      @error('country_id')is-invalid @enderror "
-                                        required style="display: block">
+                                        required style="display: block"
+                                       >
                                         <option value="">Select Country</option>
                                         @foreach ($countries as $country)
-                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                            <option value="{{ $country->id }}"
+                                                >{{ $country->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('country_id')
@@ -171,11 +221,13 @@
                             </div>
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6" id="select-state-group" style="display: none;">
-                                    <label for="">State/County</label>
+                                    <label for="">State/County <span class="text-danger"> *
+                                    </span></label>
                                     <select name="state_id"
                                         class="form-control see
                                     @error('state_id')is-invalid @enderror "
-                                        required style="display: block">
+                                        required style="display: block"
+                                        value="{{ old('state_id') }}">
                                         {{-- <option value="">Select State</option> --}}
                                     </select>
                                     @error('state_id')
@@ -183,34 +235,56 @@
                                     @enderror
                                 </div>
                                 <div class="col-12 col-md-6" id="select-city-group" style="display: none;">
-                                    <label for="">City/Town</label>
-                                    <select name="city_id" class="form-control see" required style="display: block">
+                                    <label for="">City/Town <span class="text-danger"> *
+                                    </span></label>
+                                    <select name="city_id" class="form-control see" required
+                                    style="display: block"  value="{{ old('city_id') }}">
                                         {{-- <option value="">Select City</option> --}}
                                     </select>
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
                                 <div class="col-12" id="postal-code-group" style="display: none;">
-                                    <label for="">Postal Code</label>
+                                    <label for="">Postal Code <span class="text-danger"> *
+                                    </span></label>
                                     <input type="text" class="form-control" name="postal_code"
-                                        placeholder="Enter your postal code">
+                                        placeholder="Enter your postal code"
+                                        value="{{ old('postal_code') }}">
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
-                                <label for="" class="mt-2">Property Description
-                                    <span class="text-danger">(minimum of 100 characters)</span>
+                                <label for="" class="mt-2">Address
+                                    <span class="text-danger"> *
+                                    </span>
                                 </label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" required></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"
+                                name="address" required  >{{ old('address') }}</textarea>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <label for="" class="mt-2">Property Description <span class="text-danger"> *
+                                </span>
+                                    <p class="text-danger" id="wordCountMessage" style="color: red; display: none;">
+                                        Your content must be at least 60 words.
+                                    </p>
+                                    <p id="wordCountDisplay"></p>
+                                </label>
+                                <textarea class="form-control" id="description" rows="3" name="description"
+                                 required  >{{ old('description') }}</textarea>
                             </div>
                             <div class="row g-3 mb-3">
                                 {{-- <div class="form-group message-btn">
                                     <button type="submit" class="theme-btn btn-one">Sell</button>
                                 </div> --}}
                                 <div class="d-grid gap-2 form-group message-btn">
-                                    <button class="theme-btn btn-one" type="submit" id="nextButton">Next</button>
+                                    <button class="theme-btn btn-one" type="submit" id="nextButton">Submit</button>
                                 </div>
                             </div>
                         </form>
+                        <!-- Spinner -->
+<div id="loading-spinner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <img src="{{ asset('spinner.gif') }}" alt="Loading..." style="width: 100px; height: 100px;">
+</div>
+
                     </div>
                 </div>
             </div>
@@ -238,7 +312,7 @@
                 if (country_id) {
                     console.log("Fetching states for country ID:", country_id); // Log the country ID
                     $.ajax({
-                        url: "{{ url('/get-states/ajax') }}/" + country_id,
+                        url: "{{ url('/get-states-location/ajax') }}/" + country_id,
                         type: "GET",
                         dataType: "json",
                         success: function(data) {
@@ -280,7 +354,7 @@
                 let state_id = $(this).val();
                 if (state_id) {
                     $.ajax({
-                        url: "{{ url('/get-cities/ajax') }}/" + state_id,
+                        url: "{{ url('/get-cities-location/ajax') }}/" + state_id,
                         type: "GET",
                         dataType: "json",
                         success: function(data) {
@@ -342,46 +416,51 @@
             });
         });
     </script>
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const progressBar = document.querySelector('#progressBar');
-            const totalSteps = 4; // Total number of steps
-            let currentStep = {{ $currentStep ?? 1 }}; // Default to step 1 if not provided
 
-            // Function to update the progress bar
-            function updateProgressBar(step) {
-                const percentage = (step / totalSteps) * 100;
-                progressBar.style.width = `${percentage}%`;
-                progressBar.textContent = `${Math.round(percentage)}% Complete`;
+    <script>
+        const textarea = document.getElementById('description');
+        const wordCountMessage = document.getElementById('wordCountMessage');
+        const wordCountDisplay = document.getElementById('wordCountDisplay');
 
-                // Add animated class for smooth transition
-                progressBar.classList.add('animated');
+        textarea.addEventListener('input', () => {
+            const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0);
+            const wordCount = words.length;
 
-                // Remove animation class after transition to prevent multiple triggers
-                setTimeout(function() {
-                    progressBar.classList.remove('animated');
-                }, 500); // Match the duration of the transition
-            }
+            // Display word count
+            wordCountDisplay.textContent = `Word Count: ${wordCount}`;
 
-            // Initial update on page load
-            updateProgressBar(currentStep);
-
-            // Handle button click to move to the next step
-            const nextButton = document.querySelector('#nextButton');
-            if (nextButton) {
-                nextButton.addEventListener('click', function(e) {
-                    e.preventDefault(); // Prevent form submission to control flow
-
-                    // Increment the current step (ensure it doesn't exceed total steps)
-                    currentStep = Math.min(currentStep + 1, totalSteps);
-
-                    // Update the progress bar
-                    updateProgressBar(currentStep);
-
-                    // Optionally, submit the form via AJAX or proceed with regular form submission
-                    document.querySelector('form').submit(); // If using regular form submission
-                });
+            // Signal if words are less than 60
+            if (wordCount < 60) {
+                wordCountMessage.style.display = 'block';
+            } else {
+                wordCountMessage.style.display = 'none';
             }
         });
-    </script> --}}
+
+        document.getElementById('wordCountForm').addEventListener('submit', function (event) {
+            const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0);
+            if (words.length < 60) {
+                event.preventDefault(); // Prevent form submission
+                alert('Please enter at least 100 words before submitting.');
+            }
+        });
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form'); // Select your form element
+        const spinner = document.getElementById('loading-spinner');
+
+        form.addEventListener('submit', function () {
+            spinner.style.display = 'flex'; // Show the spinner (Flexbox for centering)
+        });
+    });
+
+    form.addEventListener('submit', function () {
+    document.querySelector('button[type="submit"]').disabled = true;
+    spinner.style.display = 'flex';
+});
+
+</script>
+
 @endsection

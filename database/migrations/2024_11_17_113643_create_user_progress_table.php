@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_progress', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unsigned();
-            $table->integer('current_step')->default(1);
+            $table->string('current_step');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->foreign('user_id')
                    ->references('id')->on('users')

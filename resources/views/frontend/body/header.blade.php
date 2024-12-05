@@ -1,3 +1,11 @@
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+const pusher = new Pusher('01d01f2b254eac705136', {
+    cluster: 'eu',
+    forceTLS: true,
+});
+</script>
+
         <!-- main header -->
         <header class="main-header ">
             <!-- header-top -->

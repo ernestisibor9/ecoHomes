@@ -44,7 +44,7 @@ class PropertyController extends Controller
         $amenities = implode(',', $amen); // Add a comma to separate it and convert to array to string
 
         $pcode = IdGenerator::generate(['table' => 'properties', 'field' =>
-        'property_code', 'length' => 5, 'prefix'=>'PC']);
+        'property_code', 'length' => 5, 'prefix' => 'PC']);
 
 
         // Without Imagick 700 x 800
@@ -104,15 +104,15 @@ class PropertyController extends Controller
         }
 
         // Facility
-        $facilities = Count($request->facility_name);
-        if($facilities != NULL) {
-            for($i=0;$i<$facilities;$i++){
-                $fcount = new Facility();
-                $fcount->property_id = $property_id;
-                $fcount->facility_name = $request->facility_name[$i];
-                $fcount->save();
-            }
-        }
+        // $facilities = Count($request->facility_name);
+        // if($facilities != NULL) {
+        //     for($i=0;$i<$facilities;$i++){
+        //         $fcount = new Facility();
+        //         $fcount->property_id = $property_id;
+        //         $fcount->facility_name = $request->facility_name[$i];
+        //         $fcount->save();
+        //     }
+        // }
 
         $notification = array(
             'message' => 'Property Inserted Successfully',
@@ -130,7 +130,7 @@ class PropertyController extends Controller
 
         $multiImages = MultiImage::where('property_id', $id)->get();
 
-        $amenities= Amenities::latest()->get();
+        $amenities = Amenities::latest()->get();
         $propertyTypes = PropertyType::latest()->get();
 
         return view('admin.backend.property.edit_property', compact('property', 'multiImages', 'propertyTypes', 'amenities', 'property_amen'));
@@ -143,15 +143,15 @@ class PropertyController extends Controller
 
         $pid = $request->id;
 
-            Property::findOrFail($pid)->update([
+        Property::findOrFail($pid)->update([
             'ptype_id' => $request->ptype_id,
             'amenities_id' => $amenities,
             'property_name' => $request->property_name,
             'property_slug' => Str::slug($request->property_name),
 
             'property_status' => $request->property_status,
-            'price' => $request->price,
-
+            'lowest_price' => $request->lowest_price,
+            'maximum_price' => $request->maximum_price,
             'short_description' => $request->short_desc,
             'long_description' => $request->long_desc,
             'bedrooms' => $request->bedrooms,
@@ -160,12 +160,12 @@ class PropertyController extends Controller
             'property_video' => $request->property_video,
 
             'address' => $request->address,
-            'city' => $request->city,
-            'country' => $request->country,
+            // 'city' => $request->city,
+            // 'country' => $request->country,
             'featured' => $request->featured,
             'hot' => $request->hot,
             'updated_at' => Carbon::now(),
-            ]);
+        ]);
         $notification = array(
             'message' => 'Property Updated Successfully',
             'alert-type' => 'success'
@@ -173,7 +173,8 @@ class PropertyController extends Controller
         return redirect()->route('all.property')->with($notification);
     }
     // UpdatePropertyThumbnail
-    public function UpdatePropertyThumbnail(Request $request){
+    public function UpdatePropertyThumbnail(Request $request)
+    {
         $pro_id = $request->id;
         $oldImage = $request->old_img;
 
@@ -183,7 +184,7 @@ class PropertyController extends Controller
 
         $save_url = 'upload/property/thumbnail/' . $filename;
 
-        if(file_exists($oldImage)){
+        if (file_exists($oldImage)) {
             unlink($oldImage);
         }
         Property::findOrFail($pro_id)->update([
@@ -197,7 +198,8 @@ class PropertyController extends Controller
         return redirect()->back()->with($notification);
     }
     // UpdatePropertyMultiImg
-    public function UpdatePropertyMultiImg(Request $request){
+    public function UpdatePropertyMultiImg(Request $request)
+    {
         $imgs = $request->multi_img;
 
         foreach ($imgs as $id => $img) {
@@ -221,7 +223,8 @@ class PropertyController extends Controller
         }
     }
     // PropertyMultiDelete
-    public function PropertyMultiDelete($id){
+    public function PropertyMultiDelete($id)
+    {
         $oldImg = MultiImage::findOrFail($id);
         unlink($oldImg->photo_name);
 
@@ -234,16 +237,17 @@ class PropertyController extends Controller
         return redirect()->back()->with($notification);
     }
     // PropertyDelete
-    public function PropertyDelete($id){
+    public function PropertyDelete($id)
+    {
         $property = Property::findOrFail($id);
         $oldImage = $property->property_thumbnail;
 
-        if(file_exists($oldImage)){
+        if (file_exists($oldImage)) {
             unlink($oldImage);
         }
 
         $images = MultiImage::where('property_id', $id)->get();
-        foreach ($images as $image){
+        foreach ($images as $image) {
             unlink($image->photo_name);
             MultiImage::where('property_id', $id)->delete();
         }
@@ -251,8 +255,8 @@ class PropertyController extends Controller
 
 
         $notification = array(
-           'message' => 'Property Deleted Successfully',
-            'alert-type' =>'success'
+            'message' => 'Property Deleted Successfully',
+            'alert-type' => 'success'
         );
         return redirect()->route('all.property')->with($notification);
     }
@@ -266,26 +270,26 @@ class PropertyController extends Controller
 
         $multiImages = MultiImage::where('property_id', $id)->get();
 
-        $amenities= Amenities::latest()->get();
+        $amenities = Amenities::latest()->get();
         $propertyTypes = PropertyType::latest()->get();
 
         return view('admin.backend.property.details_property', compact('property', 'multiImages', 'propertyTypes', 'amenities', 'property_amen'));
     }
-       // Change Status
-       public function ChangeStatus($id){
+    // Change Status
+    public function ChangeStatus($id)
+    {
         $statusId = Property::findOrFail($id);
 
-        if($statusId->status === '0'){
+        if ($statusId->status === '0') {
             $statusId->status = '1';
-        }
-        else{
+        } else {
             $statusId->status = '0';
         }
         $statusId->save();
 
         $notification = array(
-            'message'=> 'Status updated to successfully',
-            'alert-type'=>'success'
+            'message' => 'Status updated to successfully',
+            'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
     }

@@ -34,7 +34,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 </head>
 
@@ -44,7 +44,16 @@
 <body>
 
     <div class="boxed_wrapper">
+        @php
+            $excludedRoutes = [
+                'login', // route names
+                'register',
+                'form.step1',
+                'status.page'
+            ];
+        @endphp
         <!-- preloader -->
+        @if (!in_array(Route::currentRouteName(), $excludedRoutes))
         <div class="loader-wrap">
             <div class="preloader">
                 <div class="preloader-close"><i class="far fa-times"></i></div>
@@ -81,6 +90,7 @@
                 </div>
             </div>
         </div>
+        @endif
         <!-- preloader end -->
 
         <!-- main header -->
@@ -120,6 +130,17 @@
     <script src="{{ asset('frontend/assets/js/jQuery.style.switcher.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/jquery.paroller.min.js') }}"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+    <!-- Chatling plugins -->
+    <script>
+        window.chtlConfig = {
+            chatbotId: "6294155724"
+        }
+    </script>
+    <script async data-id="6294155724" id="chatling-embed-script" type="text/javascript"
+        src="https://chatling.ai/js/embed.js"></script>
+    <!--Chatling plugins--->
 
 
     <!-- main-js -->

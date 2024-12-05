@@ -27,7 +27,7 @@ class StatusMail3 extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Property Notifications',
+            subject: 'Property Status',
         );
     }
 

@@ -60,22 +60,8 @@
                 </li>
             </ul>
         </li>
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Sellers</div>
-            </a>
-            <ul>
-                <li> <a href="component-alerts.html"><i class='bx bx-radio-circle'></i>All Sellers</a>
-                </li>
-                <li> <a href="component-accordions.html"><i class='bx bx-radio-circle'></i>Accordions</a>
-                </li>
-                <li> <a href="component-badges.html"><i class='bx bx-radio-circle'></i>Badges</a>
-                </li>
-            </ul>
-        </li>
-        <li>
+
+        {{-- <li>
             <a class="has-arrow" href="javascript:;">
                 <div class="parent-icon"><i class="bx bx-repeat"></i>
                 </div>
@@ -89,7 +75,7 @@
                 <li> <a href="content-text-utilities.html"><i class='bx bx-radio-circle'></i>Text Utilities</a>
                 </li>
             </ul>
-        </li>
+        </li> --}}
         <li>
             <a class="has-arrow" href="javascript:;">
                 <div class="parent-icon"> <i class="bx bx-donate-blood"></i>
@@ -107,7 +93,7 @@
         </li>
         <li>
             <a href="{{route('all.seller')}}">
-                <div class="parent-icon"><i class='bx bx-code-alt'></i>
+                <div class="parent-icon"><i class="bx bx-user-circle"></i>
                 </div>
                 <div class="menu-title">Manage Sellers</div>
             </a>
@@ -116,14 +102,14 @@
             <a href="{{route('all.seller.progress')}}">
                 <div class="parent-icon"><i class='bx bx-code-alt'></i>
                 </div>
-                <div class="menu-title">Manage Step 1-2</div>
+                <div class="menu-title">Step Status</div>
             </a>
         </li>
         <li>
-            <a href="user-profile.html">
+            <a href="{{ route('admin.profile') }}">
                 <div class="parent-icon"><i class="bx bx-user-circle"></i>
                 </div>
-                <div class="menu-title">User Profile</div>
+                <div class="menu-title">Admin Profile</div>
             </a>
         </li>
         @else
