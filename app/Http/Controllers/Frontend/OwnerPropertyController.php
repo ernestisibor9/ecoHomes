@@ -11,6 +11,7 @@ use App\Models\SellMyProperty;
 use App\Models\UserProgress;
 use Carbon\Carbon;
 use App\Mail\SellerMail;
+use App\Models\Consent;
 use App\Models\Message;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
@@ -59,7 +60,7 @@ class OwnerPropertyController extends Controller
     public function SubmitStep1(Request $request)
     {
         // Validate inputs
-       $validator = $request->validate([
+        $validator = $request->validate([
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
             'email' => 'required|email|unique:sell_my_properties,email',
@@ -70,13 +71,12 @@ class OwnerPropertyController extends Controller
             'city_id' => 'required',
             'amenities' => 'required',
             'address' => 'required|string|max:255',
-            // 'postal_code' => 'nullable|string|max:20',
             'multi_img' => 'required|array',
             'multi_img.*' => 'image|mimes:jpeg,png,jpg,gif|max:1048',
-            'video' => 'required|file|mimetypes:video/mp4,video/mkv,video/avi|max:51200',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/mkv,video/avi|max:51200',
             'description' => ['required', function ($attribute, $value, $fail) {
                 $wordCount = str_word_count(strip_tags($value));
-                if ($wordCount < 60) {
+                if ($wordCount < 32) {
                     $fail("The $attribute must contain at least 100 words.");
                 }
             }],
@@ -87,14 +87,17 @@ class OwnerPropertyController extends Controller
             'table' => 'sell_my_properties',
             'field' => 'reference_no',
             'length' => 8,
-            'prefix' => 'SELL'
+            'prefix' => 'SELL',
         ]);
 
-        // Process video file
-        $video = $request->file('video');
-        $filename = time() . '.' . $video->getClientOriginalName();
-        $video->move(public_path('upload/property_video/'), $filename);
-        $save_video = 'upload/property_video/' . $filename;
+        // Process video file if uploaded
+        $save_video = null; // Default to null
+        if ($request->hasFile('video')) {
+            $video = $request->file('video');
+            $filename = time() . '.' . $video->getClientOriginalName();
+            $video->move(public_path('upload/property_video/'), $filename);
+            $save_video = 'upload/property_video/' . $filename;
+        }
 
         // Process images
         $image_urls = [];
@@ -125,9 +128,9 @@ class OwnerPropertyController extends Controller
             'postal_code' => $request->postal_code,
             'reference_no' => $reference_no,
             'description' => $request->description,
-            'amenities' => json_encode(array_map('trim', explode(',', $request->amenities))), // Save as JSON
+            'amenities' => json_encode(array_map('trim', explode(',', $request->amenities))),
             'multi_img' => $images_json,
-            'video' => $save_video,
+            'video' => $save_video, // Save the video path or null
             'status' => 'pending',
             'created_at' => Carbon::now(),
         ]);
@@ -141,8 +144,8 @@ class OwnerPropertyController extends Controller
         // Send email notification
         try {
             Mail::to($request->email)->send(new SellerMail([
-                'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.',
-                'Message' => 'Your submission is pending approval. <br/> One of our expert will reach out to you soon..',
+                'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.<br/>',
+                'Message' => 'Your submission is pending approval. <br/> One of our expert will reach out to you soon.',
             ]));
         } catch (\Exception $e) {
             // Log error for debugging purposes
@@ -245,4 +248,54 @@ class OwnerPropertyController extends Controller
 
         return response()->json(['path' => 'upload/property_image/' . $filename]);
     }
+
+    // termsConditions
+    public function termsConditions()
+    {
+        return view('frontend.terms_conditions.terms_conditions');
+    }
+    // Agree
+    public function agreePage()
+{
+    return view('frontend.terms_conditions.consent'); // Replace 'agree' with the name of your Blade view.
+}
+// storeConsent
+public function storeConsent(Request $request)
+{
+    // Validate the consent form inputs
+    $request->validate([
+        'consent_pdf' => 'required|mimes:pdf|max:1048',
+    ]);
+    // Process the consent PDF file
+    $pdfPath = $request->file('consent_pdf');
+        $filename = date('YmdHi') . $pdfPath->getClientOriginalName();
+        $pdfPath->move(public_path('upload/conse'), $filename);
+
+    // Store the consent information in the database
+    Consent::create([
+        'user_id' => auth()->id(),
+        'consent_pdf' => $filename, // Replace 1 with the value that corresponds to 'accepted' in your database
+    ]);
+
+        // Update the UserProgress table
+        $userProgress = UserProgress::where('user_id', auth()->id())->first();
+
+        if ($userProgress) {
+            $userProgress->current_step = 'step3'; // Update to the appropriate step
+            $userProgress->save();
+        } else {
+            // If no record exists, create a new one
+            // UserProgress::create([
+            //     'user_id' => auth()->id(),
+            //     'current_step' => 'step2', // Set the appropriate step
+            // ]);
+        }
+
+    $notification = array(
+        'message' => 'You have successfully uploaded the consent form. We will get in touch with you',
+        'alert-type' => 'success',
+    );
+    return redirect()->route('dashboard')->with($notification);
+}
+
 }

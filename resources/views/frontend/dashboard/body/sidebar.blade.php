@@ -13,7 +13,7 @@
             <div class="post-inner">
                 <div class="post">
                     <figure class="post-thumb"><a href="blog-details.html">
-                            <img src="assets/images/news/post-1.jpg" alt=""></a></figure>
+                            <img src="{{asset('frontend/assets/images/avaterme.jpeg')}}" alt=""></a></figure>
                     <h5><a href="blog-details.html">{{$profileData->name}} </a></h5>
                     <p>{{$profileData->email}} </p>
                 </div>

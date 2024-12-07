@@ -42,7 +42,7 @@
                 <h1>Sell Property</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li>Sell My Property</li>
+                    <li>Market Property</li>
                 </ul>
             </div>
         </div>

@@ -110,7 +110,7 @@ class LocationController extends Controller
 
             try {
                 Mail::to([$request->email, 'ernestisibor9@gmail.com'])->send(new SellerMail([
-                    'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.',
+                    'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.\n',
                     'Message' => 'One of our expert will reach out to you soon.'
                 ]));
             } catch (\Exception $e) {

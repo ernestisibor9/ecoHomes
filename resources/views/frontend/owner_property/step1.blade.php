@@ -64,7 +64,7 @@
                 <h1>Sell Property</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li>Sell My Property</li>
+                    <li>Market Property</li>
                 </ul>
             </div>
         </div>
@@ -86,7 +86,7 @@
                             aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
                     </div>
                     <p class="text-dark">Current Step: 1/4</p>
-                    <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3>
+                    <h3 class="card-title text-center pt-2">FILL THE FORM TO MARKET YOUR PROPERTY</h3>
                     <div class="card-body">
                         <form action="{{route('form.submit1')}}" id="wordCountForm" method="POST"
                             enctype="multipart/form-data">
@@ -136,11 +136,11 @@
                                     @enderror
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <label for="">Video <span class="text-danger"> *
+                                    <label for="">Video <span class="text-danger">
                                     </span> <span class="text-danger">(The video resolution must be at least 1920x1080)</span></label>
                                     <input type="file" class="form-control see @error('video')is-invalid @enderror"
                                             name="video" id="" accept="video/mp4, video/mkv, video/avi"
-                                             required  value="{{ old('video') }}">
+                                             value="{{ old('video') }}">
                                     @error('video')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -264,7 +264,7 @@
                                 <label for="" class="mt-2">Property Description <span class="text-danger"> *
                                 </span>
                                     <p class="text-danger" id="wordCountMessage" style="color: red; display: none;">
-                                        Your content must be at least 60 words.
+                                        Your content must be at least 32 words.
                                     </p>
                                     <p id="wordCountDisplay"></p>
                                 </label>

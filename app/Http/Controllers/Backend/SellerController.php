@@ -91,7 +91,7 @@ class SellerController extends Controller
         if ($statusId->status == 'approved') {
             $data = [
                 'Subject' => "Property Status",
-                'Message' => 'Thank you for choosing EcoHomes as your trusted property platform. <br/> Your property submission has been approved. <br/> One of our expert will reach out to you soon. <br/> Please proceed to the next step.',
+                'Message' => 'Thank you for choosing EcoHomes as your trusted property platform. <br/><br/> Your property submission has been approved. <br/> One of our expert will reach out to you soon. <br/> Please proceed to the next step.',
                 'link' => route('form.step2')
             ];
             $notification = array(
@@ -109,7 +109,7 @@ class SellerController extends Controller
         if ($statusId->status == 'rejected') {
             $data = [
                 'Subject' => "Property Status",
-                'Message' => 'Thank you for choosing EcoHomes as your trusted property platform. <br/> Your property submission has been rejected. <br/>One of our expert will reach out to you soon.',
+                'Message' => '<br/>Thank you for choosing EcoHomes as your trusted property platform. <br/><br/> <span style="color:red;">Your property submission has been rejected.</span><br/> <br/>One of our expert will reach out to you soon<br/>.',
             ];
             Mail::to($email)->send(new StatusMail($data));
         }
@@ -176,7 +176,7 @@ class SellerController extends Controller
 
         $data = [
             'Subject' => "Property Status",
-            'Message' => 'Your property submission has been approved. Please proceed to Step 3.',
+            'Message' => 'Your property submission has been approved. <br/><br/> Please proceed to Step 3.',
             'link' => route('form.step3')
         ];
 

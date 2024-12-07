@@ -379,8 +379,11 @@
 </div>
 <div class="bee-col bee-col-2 bee-col-w8">
 <div class="bee-block bee-block-1 bee-paragraph">
-<p><strong>Hello </strong><br/><strong> {{$status['Subject']}} </strong></p>
-<p> {{$status['Message']}}</p>
+    <?php
+                        $message = $status['Message'];
+                        ?>
+<p><strong>Hello </strong><br/></p>
+<p>{!! nl2br($message) !!}</p>
 <p>
     @if(isset($status['link']))
     <p><a href="{{ $status['link'] }}">Proceed to Next Step</a></p>
@@ -545,3 +548,7 @@
 </div>
 </body>
 </html>
+<?php
+// Set headers for HTML email
+$headers = "MIME-Version: 1.0" . "\r\n";
+$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";

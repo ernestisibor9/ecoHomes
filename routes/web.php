@@ -49,6 +49,14 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::get('/upload/property/docs', [OwnerPropertyController::class, 'uploadProperty'])->name('upload.property');
         Route::post('/store/upload/property/docs', [OwnerPropertyController::class, 'storeUploadProperty'])->name('store.upload.property');
 
+        // Terms and Conditions routes
+        Route::get('/terms/conditions', [OwnerPropertyController::class, 'termsConditions'])->name('terms.conditions');
+        Route::get('/agree-page', [OwnerPropertyController::class, 'agreePage'])->name('agree.page');
+
+        // Consent routes
+        Route::post('/store/consent/pdf', [OwnerPropertyController::class, 'storeConsent'])->name('store.consent');
+
+
 
         // Book Search Page
         Route::controller(BookPropertyController::class)->group(function () {

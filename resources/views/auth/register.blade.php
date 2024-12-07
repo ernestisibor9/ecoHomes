@@ -84,8 +84,8 @@
                         <div class="main-box">
                             <div class="logo-box">
                                 <figure class="logo"><a href="index.html"><img
-                                            src="{{ asset('frontend/assets/images/logo-2.png') }}"
-                                            alt=""></a></figure>
+                                            src="{{ asset('frontend/assets/images/logo-2.png') }}" alt=""></a>
+                                </figure>
                             </div>
                             <div class="menu-area clearfix">
                                 <!--Mobile Navigation Toggler-->
@@ -118,8 +118,8 @@
                         <div class="main-box">
                             <div class="logo-box">
                                 <figure class="logo"><a href="index.html"><img
-                                            src="{{ asset('frontend/assets/images/logo-2.png') }}"
-                                            alt=""></a></figure>
+                                            src="{{ asset('frontend/assets/images/logo-2.png') }}" alt=""></a>
+                                </figure>
                             </div>
                             <div class="menu-area clearfix">
                                 <nav class="main-menu clearfix">
@@ -259,8 +259,9 @@
                                             </div>
                                         </form>
                                         <div class="othre-text">
-                                            <p>Already have an account? <a href="{{route('login')}}">Sign in</a></p>
-                                            <p><a href="{{route('expert.solution.details')}}">Click here </a> to connect with our experts</p>
+                                            <p>Already have an account? <a href="{{ route('login') }}">Sign in</a></p>
+                                            <p><a href="{{ route('expert.solution.details') }}">Click here </a> to
+                                                connect with our experts</p>
                                             <p>Or contact us directly via +234 806 014 3255</p>
                                         </div>
                                     </div>
@@ -434,10 +435,21 @@
         </button>
     </div>
 
-    <!-- Chatling plugins -->
-    <script> window.chtlConfig = { chatbotId: "6294155724" } </script>
-    <script async data-id="6294155724" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
-    <!--Chatling plugins--->
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {},
+            Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"),
+                s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/674c11462480f5b4f5a6570f/1ie0i6vqs';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
 
     <!-- jequery plugins -->
     <script src="{{ asset('frontend/assets/js/jquery.js') }}"></script>

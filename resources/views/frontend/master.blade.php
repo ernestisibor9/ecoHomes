@@ -49,47 +49,47 @@
                 'login', // route names
                 'register',
                 'form.step1',
-                'status.page'
+                'status.page',
             ];
         @endphp
         <!-- preloader -->
         @if (!in_array(Route::currentRouteName(), $excludedRoutes))
-        <div class="loader-wrap">
-            <div class="preloader">
-                <div class="preloader-close"><i class="far fa-times"></i></div>
-                <div id="handle-preloader" class="handle-preloader">
-                    <div class="animation-preloader">
-                        <div class="spinner"></div>
-                        <div class="txt-loading">
-                            <span data-text-preloader="e" class="letters-loading">
-                                e
-                            </span>
-                            <span data-text-preloader="c" class="letters-loading">
-                                c
-                            </span>
-                            <span data-text-preloader="o" class="letters-loading">
-                                o
-                            </span>
-                            <span data-text-preloader="h" class="letters-loading">
-                                h
-                            </span>
-                            <span data-text-preloader="o" class="letters-loading">
-                                o
-                            </span>
-                            <span data-text-preloader="m" class="letters-loading">
-                                m
-                            </span>
-                            <span data-text-preloader="e" class="letters-loading">
-                                e
-                            </span>
-                            <span data-text-preloader="s" class="letters-loading">
-                                s
-                            </span>
+            <div class="loader-wrap">
+                <div class="preloader">
+                    <div class="preloader-close"><i class="far fa-times"></i></div>
+                    <div id="handle-preloader" class="handle-preloader">
+                        <div class="animation-preloader">
+                            <div class="spinner"></div>
+                            <div class="txt-loading">
+                                <span data-text-preloader="e" class="letters-loading">
+                                    e
+                                </span>
+                                <span data-text-preloader="c" class="letters-loading">
+                                    c
+                                </span>
+                                <span data-text-preloader="o" class="letters-loading">
+                                    o
+                                </span>
+                                <span data-text-preloader="h" class="letters-loading">
+                                    h
+                                </span>
+                                <span data-text-preloader="o" class="letters-loading">
+                                    o
+                                </span>
+                                <span data-text-preloader="m" class="letters-loading">
+                                    m
+                                </span>
+                                <span data-text-preloader="e" class="letters-loading">
+                                    e
+                                </span>
+                                <span data-text-preloader="s" class="letters-loading">
+                                    s
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         @endif
         <!-- preloader end -->
 
@@ -132,15 +132,21 @@
     <script src="{{ asset('frontend/assets/js/jquery.paroller.min.js') }}"></script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-    <!-- Chatling plugins -->
-    <script>
-        window.chtlConfig = {
-            chatbotId: "6294155724"
-        }
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {},
+            Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"),
+                s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/674c11462480f5b4f5a6570f/1ie0i6vqs';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
     </script>
-    <script async data-id="6294155724" id="chatling-embed-script" type="text/javascript"
-        src="https://chatling.ai/js/embed.js"></script>
-    <!--Chatling plugins--->
+    <!--End of Tawk.to Script-->
 
 
     <!-- main-js -->

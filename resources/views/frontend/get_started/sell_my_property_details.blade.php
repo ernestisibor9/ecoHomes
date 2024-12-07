@@ -39,7 +39,7 @@
     <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <h1 class="display-4 text-success" style="font-weight: bold">Sell Your Property</h1>
+                <h1 class="display-4 text-success" style="font-weight: bold">Market Your Property</h1>
                 <h1 class="display-4 mb-4 " style="font-weight: bold">Seamlessly Today!</h1>
                 <p class="text-dark" style="font-size: 1.3rem;">
                     Join thousands of property owners and connect with
@@ -47,7 +47,7 @@
                 <p class="pb-2"></p>
                 <p class="text-dark" style="font-size: 1.3rem;">ready buyers. Simple, fast, and secure.</p>
                 <p class="mt-4">
-                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to market your property</a>
                 </p>
             </div>
             <div class="col-md-6 image-container">
@@ -71,7 +71,7 @@
             </div>
             <div class="col-md-6 d-flex flex-column gy-5">
 
-                <h1 class="display-6 text-success" style="font-weight: bold">Sell Your Property</h1>
+                <h1 class="display-6 text-success" style="font-weight: bold">Market Your Property</h1>
                 <h1 class="display-6 mb-4 " style="font-weight: bold">Within 5 Days!</h1>
                 <h2 class="display-6 mb-4" style="font-weight: bold">Fast, Easy, and Profitable!</h2>
                 <p class="text-dark text-justify mt-2">
@@ -81,7 +81,7 @@
                 </p>
                 <p class="text-dark text-justify mt-2 mb-4">Ready to sell fast!</p>
                 <div>
-                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to market your property</a>
                 </div>
             </div>
         </div>
@@ -127,13 +127,13 @@
         <div>
             <p class="text-white display-6 mb-4" style="font-size: 1.3rem">List Your Property Now and Find the Right Buyer
                 in Just 5 Days!</p>
-            <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+            <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to market your property</a>
         </div>
     </div>
     <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <h1 class="display-4 text-success" style="font-weight: bold">Sell Your Property</h1>
+                <h1 class="display-4 text-success" style="font-weight: bold">Market Your Property</h1>
                 <h1 class="display-4 mb-4 " style="font-weight: bold">Seamlessly Today!</h1>
                 <p class="text-dark" style="font-size: 1.3rem;">
                     Join thousands of property owners and connect with
@@ -141,7 +141,7 @@
                 <p class="pb-2"></p>
                 <p class="text-dark" style="font-size: 1.3rem;">ready buyers. Simple, fast, and secure.</p>
                 <p class="mt-4">
-                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to market your property</a>
                 </p>
             </div>
             <div class="col-md-6 image-container">

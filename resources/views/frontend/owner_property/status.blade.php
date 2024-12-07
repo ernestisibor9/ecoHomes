@@ -51,7 +51,7 @@
                 <h1>Sell Property</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li>Sell My Property</li>
+                    <li>Market Property</li>
                 </ul>
             </div>
         </div>
@@ -80,9 +80,10 @@
                             <p class="text-dark">
                                 @if ($progress->status == 'approved')
                                 {{-- <a href="{{ route('form.step2') }}">Proceed to Step 3</a> --}}
+                                <h6 class="text-center fw-bold">Go to</h6>
                                 <div class="d-grid gap-2 form-group message-btn mt-4">
-                                    <a href="{{asset('frontend/assets/document/terms_condition.pdf')}}" class="theme-btn btn-one" target="_blank">
-                                        Download and fill the Terms and Conditions</a>
+                                    <a href="{{route('terms.conditions')}}" class="theme-btn btn-one" target="_blank">
+                                        Terms and Conditions</a>
                                 </div>
                             @elseif($progress->status == 'rejected')
                                 <p class="text-danger">Your submission has been rejected. Please contact support.</p>

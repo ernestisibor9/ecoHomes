@@ -32,7 +32,7 @@
                 <h1>Sell Property</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li>Sell My Property</li>
+                    <li>Market Property</li>
                 </ul>
             </div>
         </div>
@@ -44,7 +44,7 @@
         <div class="row justify-content-center">
             <div class="col-md-9">
                 <div class="card shadow p-3">
-                    <h3 class="card-title text-center pt-2">FILL THE FORM TO SELL PROPERTY</h3>
+                    <h3 class="card-title text-center pt-2">FILL THE FORM TO MARKET YOUR PROPERTY</h3>
                     <div class="card-body">
                         <form action="{{route('store.sell.my.property')}}" method="post" enctype="multipart/form-data">
                             @csrf

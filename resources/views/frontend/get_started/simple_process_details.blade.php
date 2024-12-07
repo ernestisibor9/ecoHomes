@@ -84,7 +84,7 @@
                     satisfaction and engagement.
                 </p>
                 <div class="text-center mt-5">
-                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+                    <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to market your property</a>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
         <div>
             <p class="text-white display-6 mb-4" style="font-size: 1.3rem">List Your Property Now and Find the Right Buyer
                 in Just 5 Days!</p>
-            <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to sell your property</a>
+            <a href="{{ route('form.step1') }}" class="theme-btn btn-one">Click here to market your property</a>
         </div>
     </div>
 @endsection
