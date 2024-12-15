@@ -12,7 +12,10 @@ use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\SellMyProperty;
 use App\Models\State;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use GeoIp2\Database\Reader;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -42,8 +45,8 @@ class BookPropertyController extends Controller
             // dd($request->ptype_id);
             // exit;
         }
-        if ($request->filled('lowest_price')) {
-            $query->where('lowest_price', $request->lowest_price);
+        if ($request->filled('price')) {
+            $query->where('price', $request->price);
         }
         if ($request->filled('maximum_price')) {
             $query->where('maximum_price', $request->maximum_price);
@@ -84,7 +87,7 @@ class BookPropertyController extends Controller
     public function ListAllProperty()
     {
         // Fetch paginated properties
-        $sortedData2 = Property::where('status', '1')->paginate(4); // Paginate properties with 2 items per page
+        $sortedData2 = Property::where('status', '1')->paginate(6); // Paginate properties with 2 items per page
 
         // Fetch additional data for filtering (status, types, etc.)
         $propertyStatusRent = Property::where('property_status', 'rent')->get();
@@ -95,9 +98,9 @@ class BookPropertyController extends Controller
             ->distinct()
             ->orderBy('bedrooms', 'asc')
             ->get();
-        $priceLowest = Property::select('lowest_price')
+        $priceLowest = Property::select('price')
             ->distinct()
-            ->orderBy('lowest_price', 'asc')
+            ->orderBy('price', 'asc')
             ->get();
         $priceMax = Property::select('maximum_price')
             ->distinct()
@@ -108,6 +111,42 @@ class BookPropertyController extends Controller
             ->orderBy('property_status', 'asc')
             ->get();
         $countries = Country::get();
+
+        $currency = 'USD'; // Default currency
+
+        // Fetch user's IP and location details
+        $ip = request()->ip(); // Get user IP address
+
+        // Handle local IP (127.0.0.1 or ::1)
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // For local development, assume Nigeria (NGN) as the default currency
+            return $this->handleLocalRequestList(
+                $sortedData2,
+                $propertyStatusRent,
+                $propertyStatusSell,
+                $propertyStatusBuy,
+                $propertyTypes,
+                $countries,
+                $propertyRooms,
+                $priceLowest,
+                $priceMax,
+                $propertyStatus,
+                $currency
+            );
+        }
+
+        try {
+            // Path to the GeoLite2 database
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+
+            // Retrieve country name and currency code (if available)
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+        } catch (\Exception $e) {
+            // Log the error and use default currency
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
 
         // Return the combined paginated data to the view
         return view('frontend.book.list_all_property', compact(
@@ -120,9 +159,47 @@ class BookPropertyController extends Controller
             'propertyRooms',
             'priceLowest',
             'priceMax',
-            'propertyStatus'
+            'propertyStatus',
+            'currency'
         ));
     }
+
+    //
+
+    public function handleLocalRequestList(
+        $sortedData2,
+        $propertyStatusRent,
+        $propertyStatusSell,
+        $propertyStatusBuy,
+        $propertyTypes,
+        $countries,
+        $propertyRooms,
+        $priceLowest,
+        $priceMax,
+        $propertyStatus,
+        $currency
+    ) {
+        $currency = 'NGN'; // Default currency for local development
+
+        if ($sortedData2) {
+            return view('frontend.book.list_all_property', compact(
+                'sortedData2',
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency'
+            ));
+        }
+
+        abort(404, 'Property not found');
+    }
+
 
     public function GetStatesBook($countryId)
     {
@@ -148,9 +225,9 @@ class BookPropertyController extends Controller
             ->distinct()
             ->orderBy('bedrooms', 'asc')
             ->get();
-        $priceLowest = Property::select('lowest_price')
+        $priceLowest = Property::select('price')
             ->distinct()
-            ->orderBy('lowest_price', 'asc')
+            ->orderBy('price', 'asc')
             ->get();
         $priceMax = Property::select('maximum_price')
             ->distinct()
@@ -190,8 +267,8 @@ class BookPropertyController extends Controller
             $query->where('bedrooms', '<=', $request->bedrooms);
         }
 
-        if ($request->filled('lowest_price')) {
-            $query->where('lowest_price', '>=', $request->lowest_price);
+        if ($request->filled('price')) {
+            $query->where('price', '>=', $request->price);
         }
 
         if ($request->filled('maximum_price')) {
@@ -204,7 +281,44 @@ class BookPropertyController extends Controller
         });
 
         // Get the filtered properties
-        $paginatedData = $query->paginate(4);
+        $paginatedData = $query->paginate(6);
+
+        $currency = 'USD'; // Default currency
+
+        // Fetch user's IP and location details
+        $ip = request()->ip(); // Get user IP address
+
+        // Handle local IP (127.0.0.1 or ::1)
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // For local development, assume Nigeria (NGN) as the default currency
+            return $this->handleLocalRequestBook(
+                $paginatedData,
+                $propertyStatusRent,
+                $propertyStatusSell,
+                $propertyStatusBuy,
+                $propertyTypes,
+                $countries,
+                $propertyRooms,
+                $priceLowest,
+                $priceMax,
+                $propertyStatus,
+                $currency
+            );
+        }
+
+        try {
+            // Path to the GeoLite2 database
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+
+            // Retrieve country name and currency code (if available)
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+        } catch (\Exception $e) {
+            // Log the error and use default currency
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
+
 
         // Return the view with the paginated data
         return view('frontend.book.list_book_property', compact(
@@ -217,9 +331,46 @@ class BookPropertyController extends Controller
             'priceLowest',
             'priceMax',
             'propertyStatus',
+            'currency',
             'paginatedData',  // Use paginated data here
         ));
     }
+
+    //
+    public function handleLocalRequestBook(
+        $paginatedData,
+        $propertyStatusRent,
+        $propertyStatusSell,
+        $propertyStatusBuy,
+        $propertyTypes,
+        $countries,
+        $propertyRooms,
+        $priceLowest,
+        $priceMax,
+        $propertyStatus,
+        $currency
+    ) {
+        $currency = 'NGN'; // Default currency for local development
+
+        if ($paginatedData) {
+            return view('frontend.book.list_book_property', compact(
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency',
+                'paginatedData',
+            ));
+        }
+
+        abort(404, 'Property not found');
+    }
+
 
 
     // filterStatusProperties
@@ -234,9 +385,9 @@ class BookPropertyController extends Controller
             ->distinct()
             ->orderBy('bedrooms', 'asc')
             ->get();
-        $priceLowest = Property::select('lowest_price')
+        $priceLowest = Property::select('price')
             ->distinct()
-            ->orderBy('lowest_price', 'asc')
+            ->orderBy('price', 'asc')
             ->get();
         $priceMax = Property::select('maximum_price')
             ->distinct()
@@ -262,7 +413,44 @@ class BookPropertyController extends Controller
         });
 
         // Get the filtered properties
-        $paginatedData = $query->paginate(4);
+        $paginatedData = $query->paginate(6);
+
+
+        $currency = 'USD'; // Default currency
+
+        // Fetch user's IP and location details
+        $ip = request()->ip(); // Get user IP address
+
+        // Handle local IP (127.0.0.1 or ::1)
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // For local development, assume Nigeria (NGN) as the default currency
+            return $this->handleLocalRequestStatus(
+                $paginatedData,
+                $propertyStatusRent,
+                $propertyStatusSell,
+                $propertyStatusBuy,
+                $propertyTypes,
+                $countries,
+                $propertyRooms,
+                $priceLowest,
+                $priceMax,
+                $propertyStatus,
+                $currency
+            );
+        }
+
+        try {
+            // Path to the GeoLite2 database
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+
+            // Retrieve country name and currency code (if available)
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+        } catch (\Exception $e) {
+            // Log the error and use default currency
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
 
 
         // Return the view with paginated data and other variables
@@ -276,10 +464,47 @@ class BookPropertyController extends Controller
             'priceLowest',
             'priceMax',
             'propertyStatus',
+            'currency',
             'paginatedData'  // Use the paginated data here
         ));
     }
     // filterTypeProperties
+    //
+
+    public function handleLocalRequestStatus(
+        $paginatedData,
+        $propertyStatusRent,
+        $propertyStatusSell,
+        $propertyStatusBuy,
+        $propertyTypes,
+        $countries,
+        $propertyRooms,
+        $priceLowest,
+        $priceMax,
+        $propertyStatus,
+        $currency
+    ) {
+        $currency = 'NGN'; // Default currency for local development
+
+        if ($paginatedData) {
+            return view('frontend.book.list_properties_status', compact(
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency',
+                'paginatedData',
+            ));
+        }
+
+        abort(404, 'Property not found');
+    }
+
 
     public function filterTypeProperties(Request $request)
     {
@@ -292,9 +517,9 @@ class BookPropertyController extends Controller
             ->distinct()
             ->orderBy('bedrooms', 'asc')
             ->get();
-        $priceLowest = Property::select('lowest_price')
+        $priceLowest = Property::select('price')
             ->distinct()
-            ->orderBy('lowest_price', 'asc')
+            ->orderBy('price', 'asc')
             ->get();
         $priceMax = Property::select('maximum_price')
             ->distinct()
@@ -321,7 +546,45 @@ class BookPropertyController extends Controller
         });
 
         // Get the filtered properties
-        $paginatedData = $query->get();
+        // Get the filtered properties with pagination
+        $paginatedData = $query->paginate(6);
+
+        $currency = 'USD'; // Default currency
+
+        // Fetch user's IP and location details
+        $ip = request()->ip(); // Get user IP address
+
+        // Handle local IP (127.0.0.1 or ::1)
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // For local development, assume Nigeria (NGN) as the default currency
+            return $this->handleLocalRequestTypes(
+                $paginatedData,
+                $propertyStatusRent,
+                $propertyStatusSell,
+                $propertyStatusBuy,
+                $propertyTypes,
+                $countries,
+                $propertyRooms,
+                $priceLowest,
+                $priceMax,
+                $propertyStatus,
+                $currency
+            );
+        }
+
+        try {
+            // Path to the GeoLite2 database
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+
+            // Retrieve country name and currency code (if available)
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+        } catch (\Exception $e) {
+            // Log the error and use default currency
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
+
 
         // Return the view with paginated data and other variables
         return view('frontend.book.list_properties_type', compact(
@@ -334,10 +597,44 @@ class BookPropertyController extends Controller
             'paginatedData',  // Use paginated data here
             'propertyStatusRent',
             'propertyStatusBuy',
-            'propertyStatusSell'
+            'propertyStatusSell',
+            'currency',
         ));
     }
     //
+    public function handleLocalRequestTypes(
+        $paginatedData,
+        $propertyStatusRent,
+        $propertyStatusSell,
+        $propertyStatusBuy,
+        $propertyTypes,
+        $countries,
+        $propertyRooms,
+        $priceLowest,
+        $priceMax,
+        $propertyStatus,
+        $currency
+    ) {
+        $currency = 'NGN'; // Default currency for local development
+
+        if ($paginatedData) {
+            return view('frontend.book.list_properties_type', compact(
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency',
+                'paginatedData',
+            ));
+        }
+
+        abort(404, 'Property not found');
+    }
     // SearchBookProperty
     public function SearchPriceProperty(Request $request)
     {
@@ -345,65 +642,72 @@ class BookPropertyController extends Controller
         $propertyStatusBuy = Property::where('property_status', 'buy')->get();
         $propertyStatusSell = Property::where('property_status', 'sell')->get();
         $propertyTypes = PropertyType::orderBy('type_name', 'asc')->get();
-        $propertyRooms = Property::select('bedrooms')
-            ->distinct()
-            ->orderBy('bedrooms', 'asc')
-            ->get();
-        $priceLowest = Property::select('lowest_price')
-            ->distinct()
-            ->orderBy('lowest_price', 'asc')
-            ->get();
-        $priceMax = Property::select('maximum_price')
-            ->distinct()
-            ->orderBy('maximum_price', 'asc')
-            ->get();
-        $propertyStatus = Property::select('property_status')
-            ->distinct()
-            ->orderBy('property_status', 'asc')
-            ->get();
+        $propertyRooms = Property::select('bedrooms')->distinct()->orderBy('bedrooms', 'asc')->get();
+        $priceLowest = Property::select('price')->distinct()->orderBy('price', 'asc')->get();
+        $priceMax = Property::select('price')->distinct()->orderBy('price', 'desc')->get(); // Adjusted to query `price`
+        $propertyStatus = Property::select('property_status')->distinct()->orderBy('property_status', 'asc')->get();
         $countries = Country::get();
 
         $query = Property::query();
 
+        // Filter by property type, location, and other fields
         if ($request->filled('ptype_id')) {
             $query->where('ptype_id', $request->ptype_id);
         }
-
         if ($request->filled('country_id')) {
             $query->where('country_id', $request->country_id);
         }
-
         if ($request->filled('state_id')) {
             $query->where('state_id', $request->state_id);
         }
-
         if ($request->filled('city_id')) {
             $query->where('city_id', $request->city_id);
         }
-
         if ($request->filled('property_status')) {
             $query->where('property_status', $request->property_status);
         }
-
         if ($request->filled('bedrooms')) {
             $query->where('bedrooms', '<=', $request->bedrooms);
         }
 
-        if ($request->filled('minimum_price')) {
-            $query->where('lowest_price', '>=', $request->minimum_price);
+        // Adjust price filtering
+        if ($request->filled('price') && $request->filled('maximum_price')) {
+            $query->whereBetween('price', [
+                $request->price,
+                $request->maximum_price,
+            ]);
         }
 
-        if ($request->filled('maximum_price')) {
-            $query->where('maximum_price', '<=', $request->maximum_price);
+        $paginatedData = $query->paginate(6);
+
+        $currency = 'USD'; // Default currency
+        $ip = request()->ip();
+
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // Localhost testing
+            return $this->handleLocalRequestPrice(
+                $paginatedData,
+                $propertyStatusRent,
+                $propertyStatusSell,
+                $propertyStatusBuy,
+                $propertyTypes,
+                $countries,
+                $propertyRooms,
+                $priceLowest,
+                $priceMax,
+                $propertyStatus,
+                $currency
+            );
         }
 
-        $propertySearch = $query->whereBetween('lowest_price', [
-            $request->lowest_price ?? 0,
-            $request->maximum_price ?? PHP_INT_MAX,
-        ]);
-
-        $paginatedData  = $propertySearch->paginate(4);
-
+        try {
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country);
+        } catch (\Exception $e) {
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
 
         return view('frontend.book.list_price_property', compact(
             'propertyStatusRent',
@@ -415,8 +719,44 @@ class BookPropertyController extends Controller
             'priceLowest',
             'priceMax',
             'propertyStatus',
-            'paginatedData'
+            'paginatedData',
+            'currency'
         ));
+    }
+
+    //
+    public function handleLocalRequestPrice(
+        $paginatedData,
+        $propertyStatusRent,
+        $propertyStatusSell,
+        $propertyStatusBuy,
+        $propertyTypes,
+        $countries,
+        $propertyRooms,
+        $priceLowest,
+        $priceMax,
+        $propertyStatus,
+        $currency
+    ) {
+        $currency = 'NGN'; // Default currency for local development
+
+        if ($paginatedData) {
+            return view('frontend.book.list_price_property', compact(
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency',
+                'paginatedData',
+            ));
+        }
+
+        abort(404, 'Property not found');
     }
 
     // BookPropertyDetails
@@ -430,35 +770,86 @@ class BookPropertyController extends Controller
         $multiImage = [];
         $property_amen = [];
         $amenitiesSell = [];
+        $currency = 'USD'; // Default currency
+
+        // Fetch user's IP and location details
+        $ip = request()->ip(); // Get user IP address
+
+        // Handle local IP (127.0.0.1 or ::1)
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // For local development, assume Nigeria (NGN) as the default currency
+            return $this->handleLocalRequest($property, $sellProperty, $currency);
+        }
+
+        try {
+            // Path to the GeoLite2 database
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+
+            // Retrieve country name and currency code (if available)
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+        } catch (\Exception $e) {
+            // Log the error and use default currency
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
+
+        // Fetch property amenities and images if property exists
+        if ($property) {
+            $amenities = $property->amenities_id ?? '';
+            $amenitiesIds = $amenities ? explode(',', $amenities) : [];
+            $property_amen = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
+            $multiImage = MultiImage::where('property_id', $id)->get();
+
+            return view('frontend.book.book_property_details', compact(
+                'property',
+                'multiImage',
+                'property_amen',
+                'currency' // Pass currency to the view
+            ));
+        }
+
+        // If no property found, fallback to SellMyProperty data
+        if ($sellProperty) {
+            $amenitiesIds = $sellProperty->amenities ? json_decode($sellProperty->amenities, true) : [];
+            $amenitiesSell = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
+            return view('frontend.book.book_property_details', compact(
+                'sellProperty',
+                'amenitiesSell',
+                'currency' // Pass currency to the view
+            ));
+        }
+
+        abort(404, 'Property not found');
+    }
+
+    //
+    // Currency conversion method
+    // Handle the local development request by returning default values
+    public function handleLocalRequest($property, $sellProperty, $currency)
+    {
+        $currency = 'NGN'; // Default currency for local development
 
         if ($property) {
-            // Fetch property amenities and split them into an array of IDs
-            $amenities = $property->amenities_id ?? ''; // Ensure amenities_id exists
-            $amenitiesIds = $amenities ? explode(',', $amenities) : [];
-
-            // Fetch amenities names from the Amenities table
-            $property_amen = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
-
-            // Fetch multi images for the property
-            $multiImage = MultiImage::where('property_id', $id)->get();
+            $multiImage = MultiImage::where('property_id', $property->id)->get();
+            return view('frontend.book.book_property_details', compact(
+                'property',
+                'multiImage',
+                'currency'
+            ));
         }
 
         if ($sellProperty) {
-            // Decode SellMyProperty amenities JSON and fetch names
             $amenitiesIds = $sellProperty->amenities ? json_decode($sellProperty->amenities, true) : [];
             $amenitiesSell = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
+            return view('frontend.book.book_property_details', compact(
+                'sellProperty',
+                'amenitiesSell',
+                'currency'
+            ));
         }
 
-        if ($property) {
-            // Return the view for Property table record
-            return view('frontend.book.book_property_details', compact('property', 'multiImage', 'property_amen'));
-        } elseif ($sellProperty) {
-            // Return the view for SellMyProperty table record
-            return view('frontend.book.book_property_details', compact('sellProperty', 'amenitiesSell'));
-        } else {
-            // Handle the case where no record is found in either table
-            abort(404, 'Property not found');
-        }
+        abort(404, 'Property not found');
     }
 
 
@@ -515,18 +906,20 @@ class BookPropertyController extends Controller
         return redirect()->back()->with($notification);
     }
     // UserAuthBook
-    public function UserAuthBook()
+    public function UserAuthBook($id)
     {
+        $userData = Auth::user();
+        $properties = Property::where('id', $id)->first();
         // Check if the user is logged in
         if (!Auth::check()) {
             $notification = array(
-               'message' => 'Log in to book property.',
+                'message' => "You have to have an account before you {$properties->property_status} a property",
                 'alert-type' => 'error',
             );
             return redirect()->route('login')->with($notification);
         }
 
-               // Check if the user has already booked this property
+        // Check if the user has already booked this property
         //        $existingBooking = Booking::where('user_id', Auth::id())
         //        ->where('property_id', $propertyId)
         //        ->first();
@@ -539,6 +932,73 @@ class BookPropertyController extends Controller
         //        return redirect()->back()->with($notification);
         //    }
 
-        return view('frontend.book.user_bookings');
+        return view('frontend.book.user_bookings', compact('properties', 'userData'));
+    }
+    //
+    public function StoreBooking(Request $request)
+    {
+        // Validate the request data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:15',
+            'property_name' => 'required|string|max:255',
+            'property_type' => 'required|string|max:255',
+            'property_code' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        // Save data to the database
+        $booking = Booking::create($validated);
+
+        $notification = array(
+            'message' => "Booking successfully submitted!",
+            'alert-type' => 'success',
+        );
+
+        // Redirect with success message
+        return redirect()->back()->with($notification);
+    }
+    // StoreBookingGuest
+    public function StoreBookingGuest(Request $request){
+        // Validate the request data
+        $validated = $request->validate([
+            // 'name' => 'required|string|max:255',
+            // 'email' => 'required|email',
+            // 'phone' => 'required|string|max:15',
+            // 'property_name' => 'required|string|max:255',
+            // 'property_type' => 'required|string|max:255',
+            // 'property_code' => 'required|string|max:255',
+            // 'country' => 'required|string|max:255',
+            // 'state' => 'required|string|max:255',
+            // 'city' => 'required|string|max:255',
+            // 'price' => 'required|numeric',
+        ]);
+
+        // Save data to the database
+        Booking::insert([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'property_name' => $request->property_name,
+            'property_type' => $request->property_type,
+            'property_code' => $request->property_code,
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'price' => $request->price,
+            'created_at' => Carbon::now(),
+        ]);
+
+        $notification = array(
+            'message' => "Booking successfully submitted!",
+            'alert-type' => 'success',
+        );
+
+        // Redirect with success message
+        return redirect()->back()->with($notification);
     }
 }

@@ -37,14 +37,9 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label for="input2" class="form-label">Lowest Price </label>
-                            <input type="text" class="form-control" name="lowest_price" id=""
-                                value="{{ $property->lowest_price }}">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label for="input2" class="form-label">Maximum Price </label>
-                            <input type="text" class="form-control" name="maximum_price" id=""
-                                value="{{ $property->maxium_price }}">
+                            <label for="input2" class="form-label">Price </label>
+                            <input type="text" class="form-control" name="price" id=""
+                                value="{{ $property->price }}">
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Property Amenities </label>

@@ -33,6 +33,11 @@ Route::get('/', [UserController::class, 'Index'])->name('index');
 
 Route::group(["middleware" => "prevent-back-history"], function () {
 
+    // Route::get('/test-location', function () {
+    //     $location = geoip()->getLocation();
+    //     return response()->json($location);
+    // });
+
     // Book Search Page
     Route::controller(BookPropertyController::class)->group(function () {
         Route::get('/list/all/property',  'ListAllProperty')->name('list.all.property');
@@ -43,10 +48,16 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::post('/search/book/properties', 'SearchBookProperty')->name('search.book.properties');
         Route::get('/properties', 'filterStatusProperties')->name('filter.status.properties');
         Route::get('/properties/type', 'filterTypeProperties')->name('filter.type.properties');
+        Route::get('search/price/properties', function () {
+            return redirect()->back(); // Redirect back or to a default page
+        });
+
         Route::post('/search/price/properties', 'SearchPriceProperty')->name('search.price.properties');
         Route::get('/property/details/{id}/{slug}', 'BookPropertyDetails');
-        Route::get('/user/property/book', 'UserAuthBook')->name('user.auth.booking');
+        Route::get('/user/property/book/{id}', 'UserAuthBook')->name('user.auth.booking');
         Route::post('/book-property/{propertyId}', 'BookPropertyNow')->name('book.property.now');
+        Route::post('/store/booking', 'StoreBooking')->name('store.booking');
+        Route::post('/store/booking/guest', 'StoreBookingGuest')->name('store.booking.guest');
     });
 
     Route::middleware(['auth', 'roles:user', 'verified'])->group(function () {

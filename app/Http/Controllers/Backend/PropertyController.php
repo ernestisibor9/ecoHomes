@@ -36,8 +36,8 @@ class PropertyController extends Controller
     public function StoreProperty(Request $request)
     {
         // $request->validate([
-        //     'property_thumbnail' => 'required|image|max:2024|mimes:jpg,jpeg,png,gif',
-        //     'photo_name' => 'required|image|max:2024|mimes:jpg,jpeg,png,gif',
+        //     'property_thumbnail' => 'sometimes|image|max:2024|mimes:jpg,jpeg,png,gif',
+        //     'photo_name' => 'sometimes|image|max:2024|mimes:jpg,jpeg,png,gif',
         // ]);
 
         $amen = $request->amenities_id;
@@ -61,9 +61,8 @@ class PropertyController extends Controller
             'property_slug' => Str::slug($request->property_name),
             'property_code' => $pcode,
             'property_status' => $request->property_status,
-            'lowest_price' => $request->lowest_price,
-            'maximum_price' => $request->maximum_price,
-
+            'price' => $request->price,
+            'maximum_price' => $request->price,
             'short_description' => $request->short_desc,
             'long_description' => $request->long_desc,
             'bedrooms' => $request->bedrooms,
@@ -150,8 +149,7 @@ class PropertyController extends Controller
             'property_slug' => Str::slug($request->property_name),
 
             'property_status' => $request->property_status,
-            'lowest_price' => $request->lowest_price,
-            'maximum_price' => $request->maximum_price,
+            'price' => $request->price,
             'short_description' => $request->short_desc,
             'long_description' => $request->long_desc,
             'bedrooms' => $request->bedrooms,

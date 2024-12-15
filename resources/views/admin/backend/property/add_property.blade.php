@@ -32,14 +32,6 @@
                                 <option value="lease">For Lease</option>
                             </select>
                         </div>
-                        <div class="col-md-6 form-group">
-                            <label for="input2" class="form-label">Lowest Price </label>
-                            <input type="text" class="form-control" name="lowest_price" id="" required>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label for="input2" class="form-label">Maximum Price </label>
-                            <input type="text" class="form-control" name="maximum_price" id="" required>
-                        </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Property Amenities </label>
                             <select class="form-select" name="amenities_id[]" id="multiple-select-field"
@@ -74,15 +66,15 @@
                             </div>
                             <div class="row" id="preview_img"></div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="input1" class="form-label">No. of Bedrooms </label>
                             <input type="number" name="bedrooms" class="form-control" id="input1" required>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="input1" class="form-label">No. of Bathrooms</label>
                             <input type="number" name="bathrooms" class="form-control" id="input1" required>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="input1" class="form-label">No. of Garage</label>
                             <input type="number" name="garage" class="form-control" id="input1" required>
                         </div>
@@ -104,7 +96,7 @@
                             </select>
                         </div>
                         <div class="row g-3 mb-3">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="">Country</label>
                                 <select name="country_id"
                                     class="form-control see
@@ -118,6 +110,10 @@
                                 @error('country_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="input1" class="form-label">Price</label>
+                                <input type="text" name="price" class="form-control" id="input1">
                             </div>
                         </div>
                         <div class="row g-3 mb-3">

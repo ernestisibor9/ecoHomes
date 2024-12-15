@@ -71,13 +71,17 @@
                             </li>
                             <li><a href="property-details.html">
                                     @if (isset($property))
-                                        For {{ $property->property_status }}
+                                     {{ $property->property_status }} Now
                                     @endif
                                 </a>
                             </li>
                         </ul>
                         <div class="price-box pull-right">
-                            <h3>$30,000.00</h3>
+                            <h3>
+                                @if (isset($property))
+                                {{ $currency }}{{ number_format($property->price, 2) }}
+                                @endif
+                            </h3>
                         </div>
                     </div>
                     <ul class="other-option pull-right clearfix">

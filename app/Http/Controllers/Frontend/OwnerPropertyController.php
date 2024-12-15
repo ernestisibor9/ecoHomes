@@ -69,6 +69,7 @@ class OwnerPropertyController extends Controller
             'phone' => 'required|numeric|regex:/^\+?[0-9]{10,15}$/', // Allow + and 10-15 digits
             'property_id' => 'required',
             'country_id' => 'required',
+            'price' => 'required',
             'state_id' => 'required',
             'city_id' => 'required',
             'amenities' => 'required',
@@ -126,6 +127,8 @@ class OwnerPropertyController extends Controller
             'property_id' => $request->property_id,
             'address' => $request->address,
             'phone' => $request->phone,
+            'price' => $request->price,
+            'maximum_price' => $request->price,
             'country_id' => $request->country_id,
             'state_id' => $request->state_id,
             'city_id' => $request->city_id,

@@ -135,10 +135,10 @@
                                     </span></label>
                                     <input type="text"
                                         class="form-control
-                                    @error('lowest_price')is-invalid @enderror"
-                                        placeholder="Price" aria-label="lowest_price"
-                                        required name="lowest_price"  value="{{ old('lowest_price') }}">
-                                    @error('lowest_price')
+                                    @error('price')is-invalid @enderror"
+                                        placeholder="Price" aria-label="price"
+                                        required name="price"  value="{{ old('price') }}">
+                                    @error('price')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>

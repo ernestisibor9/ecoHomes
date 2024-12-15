@@ -13,14 +13,17 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('property_id');
-            $table->timestamp('booked_at')->nullable();
-            $table->string('status')->default('pending'); // e.g., pending, confirmed, cancelled
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone');
+            $table->string('property_name');
+            $table->string('property_type');
+            $table->string('property_code');
+            $table->string('country');
+            $table->string('state');
+            $table->string('city');
+            $table->decimal('price', 10, 2);
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

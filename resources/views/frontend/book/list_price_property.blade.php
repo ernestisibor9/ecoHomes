@@ -1,6 +1,11 @@
 @extends('frontend.master')
 
 @section('home')
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
     <style>
         .see {
             display: block !important;
@@ -74,8 +79,8 @@
                                         <select class="wide see form-control" id="status_id" name="property_status">
                                             <option data-display="This Area Only">Property Status</option>
                                             @foreach ($propertyStatus as $propertyStat)
-                                                <option value="{{ $propertyStat->property_status }}">
-                                                    {{ ucfirst($propertyStat->property_status) }} Now</option>
+                                                <option value="{{ $propertyStat->property_status }}">For
+                                                    {{ ucfirst($propertyStat->property_status) }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -124,24 +129,6 @@
 
                                         </select>
                                     </div>
-                                    {{-- <div class="select-box">
-                                        <select class="wide see form-control" name="lowest_price">
-                                            <option data-display="Most Popular">Minimum Price</option>
-                                            @foreach ($priceLowest as $lowestPrice)
-                                                <option value="{{ $lowestPrice->lowest_price }}">
-                                                    ${{ $lowestPrice->lowest_price }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="select-box">
-                                        <select class="wide see form-control" name="maximum_price">
-                                            <option data-display="Most Popular">Maximum Price</option>
-                                            @foreach ($priceMax as $maxPrice)
-                                                <option value="{{ $maxPrice->maximum_price }}">
-                                                    ${{ $maxPrice->maximum_price }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
                                     <div class="filter-btn">
                                         <button type="submit" class="theme-btn btn-one"><i
                                                 class="fas fa-filter"></i>&nbsp;Filter</button>
@@ -157,28 +144,27 @@
                                 <form action="{{ route('search.price.properties') }}" method="post">
                                     @csrf
                                     <div class="select-box">
-                                        <select class="wide see form-control" name="lowest_price">
-                                            <option data-display="Select Location">Mininmum Price</option>
-                                            @foreach ($priceLowest as $lowest_price)
-                                                <option value="{{ $lowest_price->lowest_price }}">
-                                                    {{ $lowest_price->lowest_price }}</option>
+                                        <select class="wide see form-control" name="price">
+                                            <option value="">Minimum Price</option>
+                                            @foreach ($priceLowest as $price)
+                                                <option value="{{ $price->price }}">{{$currency}}{{ $price->price }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="select-box">
                                         <select class="wide see form-control" name="maximum_price">
-                                            <option data-display="Select Location">Maximum Price</option>
-                                            @foreach ($priceMax as $maximum_price)
-                                                <option value="{{ $maximum_price->maximum_price }}">
-                                                    {{ $maximum_price->maximum_price }}</option>
+                                            <option value="">Maximum Price</option>
+                                            @foreach ($priceMax as $price)
+                                                <option value="{{ $price->price }}">{{$currency}}{{ $price->price }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="filter-btn">
-                                        <button type="submit" class="theme-btn btn-one"><i
-                                                class="fas fa-filter"></i>&nbsp;Filter</button>
+                                        <button type="submit" class="theme-btn btn-one"><i class="fas fa-filter"></i>&nbsp;Filter</button>
                                     </div>
                                 </form>
+
+
                             </div>
                         </div>
                         {{-- <div class="price-filter sidebar-widget">
@@ -257,7 +243,7 @@
                     <div class="property-content-side">
                         <div class="item-shorting clearfix">
                             <div class="left-column pull-left">
-                                <h5>Search Results: <span>Showing {{ count(  $paginatedData  ) }} Listings</span></h5>
+                                <h5>Search Results: <span>Showing {{ count($paginatedData) }} Listings</span></h5>
                             </div>
                             <div class="right-column pull-right clearfix">
                                 <div class="short-box clearfix">
@@ -280,11 +266,11 @@
                         <div class="wrapper list">
                             <div class="deals-list-content list-item">
 
-                                @if (  $paginatedData->isEmpty())
+                                @if ($paginatedData->isEmpty())
                                     <p>No active records found.</p>
                                 @else
                                     {{-- {{ !empty($profileData->photo) ? url('upload/admin_images/' . $profileData->photo) : url('upload/no_image2.jpeg') }} --}}
-                                    @foreach (  $paginatedData  as $item)
+                                    @foreach ($paginatedData as $item)
                                         <div class="deals-block-one">
                                             <div class="inner-box">
                                                 <div class="image-box">
@@ -299,8 +285,8 @@
                                                             <span>Hot</span>
                                                         @endif
                                                     </span>
-                                                    <div class="buy-btn"><a href="property-details.html">For
-                                                            {{ ucfirst($item->property_status) }}</a></div>
+                                                    <div class="buy-btn"><a href="property-details.html">
+                                                            {{ ucfirst($item->property_status) }} Now</a></div>
                                                 </div>
                                                 <div class="lower-content">
                                                     <div class="title-text">
@@ -311,7 +297,7 @@
                                                     <div class="price-box clearfix">
                                                         <div class="price-info pull-left">
                                                             <h6>Start From</h6>
-                                                            <h4>${{ $item->lowest_price }}</h4>
+                                                            <h4>{{$currency}}{{number_format( $item->price, 2)}}</h4>
                                                         </div>
                                                         <div class="author-box pull-right">
                                                             <figure class="author-thumb">
@@ -332,20 +318,82 @@
                                                         <li><i class="icon-16"></i>600 Sq Ft</li>
                                                     </ul>
                                                     <div class="other-info-box clearfix">
-                                                        <div class="btn-box pull-left"><a href="{{url('property/details/'.$item->id.'/'.$item->property_slug)}}"
+                                                        <div class="btn-box pull-left"><a
+                                                                href="{{ url('property/details/' . $item->id . '/' . $item->property_slug) }}"
                                                                 class="theme-btn btn-two">See Details</a></div>
                                                         <ul class="other-option pull-right clearfix">
-                                                            {{-- <li><a href="property-details.html"><i
-                                                                        class="icon-12"></i></a></li>
-                                                            <li><a href="property-details.html"><i
-                                                                        class="icon-13"></i></a></li> --}}
-                                                            <div class="btn-box pull-left"><a href="property-details.html"
-                                                                    class="theme-btn btn-success">Book Now</a></div>
+
+                                                            <div class="btn-box pull-left"><button type="button"
+                                                                    class="theme-btn btn-success" data-bs-toggle="modal"
+                                                                    data-bs-target="#staticBackdrop">
+                                                                    @if ($item->type->type_name === 'Duplex')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Flat')
+                                                                        Rent Now
+                                                                    @elseif($item->type->type_name === 'Shortlet')
+                                                                        Book Now
+                                                                    @elseif($item->type->type_name === 'Bungalow')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Land')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Warehouse')
+                                                                        Rent Now
+                                                                    @elseif($item->type->type_name === 'Hotel')
+                                                                        Book Now
+                                                                    @else
+                                                                        Book Now
+                                                                    @endif
+                                                                </button></div>
+
                                                         </ul>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                                <!------Bootstrap Modal starts----->
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Select The Type Of User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                {{-- <div class="modal-body">
+
+                </div> --}}
+                <div class="modal-footer  mx-auto">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop2">Guest User</button>
+                    <a href="{{route('user.auth.booking', $item->id)}}" type="button" class="btn btn-primary">User</a>
+                    {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button> --}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-------Bootstrap Modal ends----->
                                     @endforeach
                                 @endif
 
@@ -354,13 +402,14 @@
                         </div>
                         <div class="">
                             <div class="">
-                                {!!$paginatedData->links('pagination::bootstrap-5')!!}
+                                {!! $paginatedData->links('pagination::bootstrap-5') !!}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </section>
     <!-- property-page-section end -->
 
@@ -500,5 +549,29 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trigger the user choice modal on "Book Now" click
+            document.getElementById('bookNowBtn').addEventListener('click', function() {
+                new bootstrap.Modal(document.getElementById('userChoiceModal')).show();
+            });
+
+            // Show guest user form modal
+            document.getElementById('guestUserBtn').addEventListener('click', function() {
+                let userChoiceModal = bootstrap.Modal.getInstance(document.getElementById(
+                    'userChoiceModal'));
+                userChoiceModal.hide(); // Hide the first modal
+                new bootstrap.Modal(document.getElementById('guestUserFormModal')).show();
+            });
+
+            // Redirect to login page for registered user
+            document.getElementById('registeredUserBtn').addEventListener('click', function() {
+                let userChoiceModal = bootstrap.Modal.getInstance(document.getElementById(
+                    'userChoiceModal'));
+                userChoiceModal.hide(); // Hide the first modal
+                window.location.href = "{{ route('login') }}"; // Adjust route name as necessary
+            });
+        });
+    </script>
 
 @endsection
