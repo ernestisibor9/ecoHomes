@@ -32,7 +32,7 @@
                                     Buy</option>
                                 <option value="rent" {{ $property->property_status === 'rent' ? 'selected' : '' }}>For
                                     Rent</option>
-                                <option value="let" {{ $property->property_status === 'let' ? 'selected' : '' }}>For
+                                <option value="lease" {{ $property->property_status === 'lease' ? 'selected' : '' }}>For
                                     Let</option>
                             </select>
                         </div>

@@ -384,7 +384,7 @@
 ?>
 
 <p><strong>Hello </strong><br/></p>
-<p>{!! nl2br(e($message)) !!}</p>
+<p>{!! nl2br($message) !!}</p>
 </div>
 <div class="bee-block bee-block-2 bee-button"></div>
 </div>

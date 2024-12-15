@@ -12,9 +12,10 @@ use App\Models\UserProgress;
 use Carbon\Carbon;
 use App\Mail\SellerMail;
 use App\Models\Consent;
+use Illuminate\Support\Str;
 use App\Models\Message;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Pusher\Pusher;
 
@@ -63,6 +64,7 @@ class OwnerPropertyController extends Controller
         $validator = $request->validate([
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
+            'property_name'=> 'required|string',
             'email' => 'required|email|unique:sell_my_properties,email',
             'phone' => 'required|numeric|regex:/^\+?[0-9]{10,15}$/', // Allow + and 10-15 digits
             'property_id' => 'required',
@@ -74,7 +76,7 @@ class OwnerPropertyController extends Controller
             'multi_img' => 'required|array',
             'multi_img.*' => 'image|mimes:jpeg,png,jpg,gif|max:1048',
             'video' => 'nullable|file|mimetypes:video/mp4,video/mkv,video/avi|max:51200',
-            'description' => ['required', function ($attribute, $value, $fail) {
+            'long_description' => ['required', function ($attribute, $value, $fail) {
                 $wordCount = str_word_count(strip_tags($value));
                 if ($wordCount < 32) {
                     $fail("The $attribute must contain at least 100 words.");
@@ -118,6 +120,8 @@ class OwnerPropertyController extends Controller
             'user_id' => auth()->id(),
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
+            'property_name'=>$request->property_name,
+            'property_slug' => Str::slug($request->property_name),
             'email' => $request->email,
             'property_id' => $request->property_id,
             'address' => $request->address,
@@ -127,7 +131,7 @@ class OwnerPropertyController extends Controller
             'city_id' => $request->city_id,
             'postal_code' => $request->postal_code,
             'reference_no' => $reference_no,
-            'description' => $request->description,
+            'long_description' => $request->long_description,
             'amenities' => json_encode(array_map('trim', explode(',', $request->amenities))),
             'multi_img' => $images_json,
             'video' => $save_video, // Save the video path or null
@@ -143,12 +147,18 @@ class OwnerPropertyController extends Controller
 
         // Send email notification
         try {
+            // Log::info('Email Data: ', [
+            //     'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.<br/>',
+            //     'Message' => 'Your submission is pending approval. <br/> One of our expert will reach out to you soon.',
+            // ]);
             Mail::to($request->email)->send(new SellerMail([
                 'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.<br/>',
                 'Message' => 'Your submission is pending approval. <br/> One of our expert will reach out to you soon.',
             ]));
+
         } catch (\Exception $e) {
             // Log error for debugging purposes
+            Log::error('Email failed: ' . $e->getMessage());
             return redirect()->back()->with([
                 'message' => 'Failed to send email notification. Please try again later.',
                 'alert-type' => 'error',

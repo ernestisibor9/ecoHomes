@@ -29,7 +29,7 @@
                                 <option selected="" disabled>Select Property Status</option>
                                 <option value="buy">For Buy</option>
                                 <option value="rent">For Rent</option>
-                                <option value="let">For Let</option>
+                                <option value="lease">For Lease</option>
                             </select>
                         </div>
                         <div class="col-md-6 form-group">

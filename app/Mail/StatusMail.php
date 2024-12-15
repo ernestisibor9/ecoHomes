@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class StatusMail extends Mailable
 {
@@ -19,6 +20,10 @@ class StatusMail extends Mailable
     public function __construct(private $data)
     {
         //
+        if (!isset($data['Subject'], $data['Message'])) {
+            Log::error('Email data is missing Subject or Message keys.', $data);
+        }
+        $this->data = $data;
     }
 
     /**

@@ -49,21 +49,25 @@
                                     <td>
                                         <div class="btn-group">
                                             @if ($property->status === 'pending')
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'approved']) }}"
-                                                   class="btn btn-success">Approve</a>
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'rejected']) }}"
-                                                   class="btn btn-danger">Reject</a>
-                                            @elseif ($property->status === 'approved')
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'pending']) }}"
-                                                   class="btn btn-warning">Pending</a>
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'rejected']) }}"
-                                                   class="btn btn-danger">Reject</a>
-                                            @elseif ($property->status === 'rejected')
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'approved']) }}"
-                                                   class="btn btn-success">Approve</a>
-                                                <a href="{{ route('change.status2', ['id' => $property->id, 'status' => 'pending']) }}"
-                                                   class="btn btn-warning">Pending</a>
-                                            @endif
+                                            <!-- Approve Button -->
+                                            <form method="POST" action="{{ route('change.status3', ['id' => $property->id, 'status' => 'approved']) }}" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success">Approve</button>
+                                            </form>
+
+                                            <!-- Reject Button -->
+                                            <button class="btn btn-danger" onclick="showRejectModal({{ $property->id }})">Reject</button>
+                                        @elseif ($property->status === 'approved')
+                                            <!-- Reject Button -->
+                                            <button class="btn btn-danger" onclick="showRejectModal({{ $property->id }})">Reject</button>
+                                        @elseif ($property->status === 'rejected')
+                                            <!-- Approve Button -->
+                                            <form method="POST" action="{{ route('change.status3', ['id' => $property->id, 'status' => 'approved']) }}" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success">Approve</button>
+                                            </form>
+                                        @endif
+
                                         </div>
 
                                         {{-- <a href="{{ route('change.status2', $property->id) }}"
@@ -81,9 +85,46 @@
                     <p>No pending properties for approval.</p>
                 @endif
             </div>
+
+            <!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('change.status3', ['id' => '__PROPERTY_ID__', 'status' => 'rejected']) }}" id="rejectForm">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rejectModalLabel">Reject Property</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="rejectionMessage">Reason for Rejection</label>
+                        <textarea name="message" id="rejectionMessage" class="form-control" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Send Rejection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
         </div>
     </div>
 </div>
 </div>
+
+<script>
+    function showRejectModal(propertyId) {
+    const form = document.getElementById('rejectForm');
+    const action = form.getAttribute('action').replace('__PROPERTY_ID__', propertyId);
+    form.setAttribute('action', action);
+    const rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
+    rejectModal.show();
+}
+
+</script>
 
 @endsection

@@ -29,11 +29,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [UserController::class, 'Index'])->name('index');
+
+
 Route::group(["middleware" => "prevent-back-history"], function () {
+
+    // Book Search Page
+    Route::controller(BookPropertyController::class)->group(function () {
+        Route::get('/list/all/property',  'ListAllProperty')->name('list.all.property');
+        Route::get('/book/search',  'BookSearch')->name('book.search');
+        Route::get('/get-states-book/ajax/{countryId}', 'GetStatesBook');
+        Route::get('/get-cities-book/ajax/{stateId}', 'GetCitiesBook');
+        Route::get('/properties/filter', 'BookPropertyFilter')->name('properties.filter');
+        Route::post('/search/book/properties', 'SearchBookProperty')->name('search.book.properties');
+        Route::get('/properties', 'filterStatusProperties')->name('filter.status.properties');
+        Route::get('/properties/type', 'filterTypeProperties')->name('filter.type.properties');
+        Route::post('/search/price/properties', 'SearchPriceProperty')->name('search.price.properties');
+        Route::get('/property/details/{id}/{slug}', 'BookPropertyDetails');
+        Route::get('/user/property/book', 'UserAuthBook')->name('user.auth.booking');
+        Route::post('/book-property/{propertyId}', 'BookPropertyNow')->name('book.property.now');
+    });
 
     Route::middleware(['auth', 'roles:user', 'verified'])->group(function () {
         Route::get('/dashboard', [UserController::class, 'UserDashboard'])->name('dashboard');
         Route::get('/user/logout', [UserController::class, 'UserLogout'])->name('user.logout');
+
 
         // Seller2 Route
         Route::get('/property/step1', [OwnerPropertyController::class, 'showStep1Form'])->name('form.step1');
@@ -56,16 +75,6 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         // Consent routes
         Route::post('/store/consent/pdf', [OwnerPropertyController::class, 'storeConsent'])->name('store.consent');
 
-
-
-        // Book Search Page
-        Route::controller(BookPropertyController::class)->group(function () {
-            Route::get('/book/search',  'BookSearch')->name('book.search');
-            Route::get('/get-states-book/ajax/{countryId}', 'GetStatesBook');
-            Route::get('/get-cities-book/ajax/{stateId}', 'GetCitiesBook');
-            Route::get('/properties/filter', 'BookPropertyFilter')->name('properties.filter');
-        });
-
         // Location controller
         Route::controller(LocationController::class)->group(function () {
             Route::get('/sell/my/property', 'SellMyProperty')->name('sell.my.property');
@@ -74,13 +83,13 @@ Route::group(["middleware" => "prevent-back-history"], function () {
             Route::get('/sell/my/property/details', 'SellMyPropertyDetails')->name('sell.my.property.details');
         });
 
-         // trusted.owner.details
-    Route::get('/trusted/owner/details', [LocationController::class, 'TrustedOwnerDetails'])->name('trusted.owner.details');
-           // unmatched.variety.details
-    Route::get('/unmatched/variety/details', [LocationController::class, 'UnmatchedVarietyDetails'])->name('unmatched.variety.details');
+        // trusted.owner.details
+        Route::get('/trusted/owner/details', [LocationController::class, 'TrustedOwnerDetails'])->name('trusted.owner.details');
+        // unmatched.variety.details
+        Route::get('/unmatched/variety/details', [LocationController::class, 'UnmatchedVarietyDetails'])->name('unmatched.variety.details');
 
-    // smart.search.details
-    Route::get('/smart/search/details', [LocationController::class, 'SmartSearchDetails'])->name('smart.search.details');
+        // smart.search.details
+        Route::get('/smart/search/details', [LocationController::class, 'SmartSearchDetails'])->name('smart.search.details');
     });
 
     // Route::get('/dashboard', function () {
@@ -122,7 +131,7 @@ Route::group(["middleware" => "prevent-back-history"], function () {
 
             // Route::get('/all/seller3', 'AllSeller3')->name('all.seller3');
             Route::get('/all/seller3/progress3', 'AllSellerProgress3')->name('all.seller3.progress3');
-            Route::get('/change/statuss3/{id}/{status}', 'ChangeStatus3')->name('change.status3');
+            Route::post('/change/statuss3/{id}/{status}', 'ChangeStatus3')->name('change.status3');
             Route::post('/admin/approve3/{userId}', 'AdminApprove3')->name('admin.properties.update3');
         });
 
@@ -196,7 +205,7 @@ Route::group(["middleware" => "prevent-back-history"], function () {
     Route::get('/reach/million/details', [LocationController::class, 'ReachMillionDetails'])->name('reach.million.details');
 
     // trusted.owner.details
-   // Route::get('/trusted/owner/details', [LocationController::class, 'TrustedOwnerDetails'])->name('trusted.owner.details');
+    // Route::get('/trusted/owner/details', [LocationController::class, 'TrustedOwnerDetails'])->name('trusted.owner.details');
 
     // unmatched.variety.details
     //Route::get('/unmatched/variety/details', [LocationController::class, 'UnmatchedVarietyDetails'])->name('unmatched.variety.details');

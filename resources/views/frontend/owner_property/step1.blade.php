@@ -117,6 +117,32 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <label for="">Property Name <span class="text-danger"> *
+                                    </span></label>
+                                    <input type="text"
+                                        class="form-control
+                                    @error('property_name')is-invalid @enderror"
+                                        placeholder="Property Name" aria-label="property_name"
+                                        required name="property_name"  value="{{ old('property_name') }}">
+                                    @error('property_name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="">Price <span class="text-danger"> *
+                                    </span></label>
+                                    <input type="text"
+                                        class="form-control
+                                    @error('lowest_price')is-invalid @enderror"
+                                        placeholder="Price" aria-label="lowest_price"
+                                        required name="lowest_price"  value="{{ old('lowest_price') }}">
+                                    @error('lowest_price')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6">
                                     <label for="">Property Type <span class="text-danger"> *
@@ -268,8 +294,8 @@
                                     </p>
                                     <p id="wordCountDisplay"></p>
                                 </label>
-                                <textarea class="form-control" id="description" rows="3" name="description"
-                                 required  >{{ old('description') }}</textarea>
+                                <textarea class="form-control" id="description" rows="3" name="long_description"
+                                 required  >{{ old('long_description') }}</textarea>
                             </div>
                             <div class="row g-3 mb-3">
                                 {{-- <div class="form-group message-btn">

@@ -35,7 +35,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <a href="{{ route('book.search') }}">
+            <a href="{{ route('list.all.property') }}">
                 <img src="{{ asset('frontend/assets/images/banner/buy_banner.png') }}" alt="" class="img-fluid">
             </a>
         </div>
@@ -52,7 +52,7 @@
                 <p class="pb-2"></p>
                 {{-- <p class="text-dark" style="font-size: 1.3rem;">ready buyers. Simple, fast, and secure.</p> --}}
                 <p class="mt-4">
-                    <a href="{{ route('book.search') }}" class="theme-btn btn-one">Click here to book a property</a>
+                    <a href="{{ route('list.all.property') }}" class="theme-btn btn-one">Click here to book a property</a>
                 </p>
             </div>
             <div class="col-md-6 image-container">
@@ -87,7 +87,7 @@
                     prime office space, we’ve got you covered.
                 </p>
                 <div>
-                    <a href="{{ route('book.search') }}" class="theme-btn btn-one">Click here to book a property</a>
+                    <a href="{{ route('list.all.property') }}" class="theme-btn btn-one">Click here to book a property</a>
                 </div>
             </div>
         </div>
@@ -123,7 +123,7 @@
     </div>
     <div class="container-fluid mt-5 mb-5">
         <div class="row">
-            <a href="{{ route('book.search') }}">
+            <a href="{{ route('list.all.property') }}">
                 <img src="{{ asset('frontend/assets/images/banner/buy_banner.png') }}" alt="" class="img-fluid">
             </a>
         </div>
@@ -133,7 +133,7 @@
         <div>
             <p class="text-white display-6 mb-4" style="font-size: 1.3rem">Click below to find and
                 book your dream property now!</p>
-            <a href="{{ route('book.search') }}" class="theme-btn btn-one">Book a Property Now</a>
+            <a href="{{ route('list.all.property') }}" class="theme-btn btn-one">Book a Property Now</a>
         </div>
     </div>
     <div class="container mt-5 mb-5">
@@ -148,7 +148,7 @@
                 <p class="pb-2"></p>
                 {{-- <p class="text-dark" style="font-size: 1.3rem;">ready buyers. Simple, fast, and secure.</p> --}}
                 <p class="mt-4">
-                    <a href="{{ route('book.search') }}" class="theme-btn btn-one">Click here to book a property</a>
+                    <a href="{{ route('list.all.property') }}" class="theme-btn btn-one">Click here to book a property</a>
                 </p>
             </div>
             <div class="col-md-6 image-container">

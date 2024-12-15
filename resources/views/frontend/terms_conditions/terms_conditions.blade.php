@@ -163,7 +163,7 @@
                                   <input type="radio" name="decision" value="decline"> Decline
                                 </label>
                                 <br><br>
-                                <a href="{{url('/')}}"  id="cancel" class="hidden btn btn-danger">Back to Home</a>
+                                <a href="{{route('status.page')}}"  id="cancel" class="hidden btn btn-danger">Back</a>
                               </form>
                         </div>
                     </div>

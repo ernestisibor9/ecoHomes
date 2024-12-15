@@ -154,7 +154,7 @@ class SellerController extends Controller
     }
 
     // Change Status
-    public function ChangeStatus3($id, $status)
+    public function ChangeStatus3(Request $request, $id, $status)
     {
         // Fetch the UserProgress record and the associated user
         $statusId = UserProgress::with('user')->findOrFail($id);
@@ -174,11 +174,19 @@ class SellerController extends Controller
             $statusId->save();
         }
 
-        $data = [
-            'Subject' => "Property Status",
-            'Message' => 'Your property submission has been approved. <br/><br/> Please proceed to Step 3.',
-            'link' => route('form.step3')
-        ];
+        // $data = [
+        //     'Subject' => "Property Status",
+        //     'Message' => 'Your property submission has been approved. <br/><br/> Please proceed to Step 3.',
+        //     'link' => route('form.step3')
+        // ];
+            // Prepare email data
+    $data = [
+        'Subject' => "Property Status",
+        'Message' => ($status === 'rejected' && $request->has('message'))
+            ? $request->input('message') . "<br><br> Contact one of our expert for supports"  // Use admin's input for rejection message
+            : 'Your property submission has been approved. <br/><br/> Please proceed to Step 3.',
+        'link' => ($status === 'approved') ? route('form.step3') : null
+    ];
 
         Mail::to($email)->send(new StatusMail($data));
         $statusId->save();
