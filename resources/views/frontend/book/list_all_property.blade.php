@@ -64,6 +64,14 @@
     <!-- property-page-section -->
     <section class="property-page-section property-list">
         <div class="auto-container">
+            @if (session('message'))
+                <div class="alert alert-{{ session('status') == 'success' ? 'success' : 'danger' }} alert-dismissible fade show"
+                    role="alert">
+                    {{ session('message') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="row clearfix">
                 <div class="col-lg-4 col-md-12 col-sm-12 sidebar-side">
                     <div class="default-sidebar property-sidebar">
@@ -250,13 +258,16 @@
                                 <div class="short-box clearfix">
                                     <div class="select-box">
                                         <form id="property-sort-form" method="GET"
-                                        action="{{ route('filter.sort.properties') }}">
+                                            action="{{ route('filter.sort.properties') }}">
                                             @csrf
-                                           <select class="wide see form-select" id="sort_id" name="sort">
-                                            <option data-display="Sort By">Sort By</option>
-                                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
-                                            <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Price: Low to High</option>
-                                            <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Price: High to Low</option>
+                                            <select class="wide see form-select" id="sort_id" name="sort">
+                                                <option data-display="Sort By">Sort By</option>
+                                                <option value="latest"
+                                                    {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
+                                                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>
+                                                    Price: Low to High</option>
+                                                <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>
+                                                    Price: High to Low</option>
                                             </select>
                                         </form>
                                     </div>
@@ -398,22 +409,22 @@
                                                         <h1 class="modal-title fs-5"
                                                             id="staticBackdrop2Label-{{ $item->id }}">
                                                             @if ($item->type->type_name === 'Duplex')
-                                                            Buy Now
-                                                        @elseif($item->type->type_name === 'Flat')
-                                                            Rent Now
-                                                        @elseif($item->type->type_name === 'Shortlet')
-                                                            Book Now
-                                                        @elseif($item->type->type_name === 'Bungalow')
-                                                            Buy Now
-                                                        @elseif($item->type->type_name === 'Land')
-                                                            Buy Now
-                                                        @elseif($item->type->type_name === 'Warehouse')
-                                                            Rent Now
-                                                        @elseif($item->type->type_name === 'Hotel')
-                                                            Book Now
-                                                        @else
-                                                            Book Now
-                                                        @endif
+                                                                Buy Now
+                                                            @elseif($item->type->type_name === 'Flat')
+                                                                Rent Now
+                                                            @elseif($item->type->type_name === 'Shortlet')
+                                                                Book Now
+                                                            @elseif($item->type->type_name === 'Bungalow')
+                                                                Buy Now
+                                                            @elseif($item->type->type_name === 'Land')
+                                                                Buy Now
+                                                            @elseif($item->type->type_name === 'Warehouse')
+                                                                Rent Now
+                                                            @elseif($item->type->type_name === 'Hotel')
+                                                                Book Now
+                                                            @else
+                                                                Book Now
+                                                            @endif
                                                         </h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
@@ -500,22 +511,22 @@
                                                                 <button class="theme-btn btn-one" type="submit"
                                                                     id="">
                                                                     @if ($item->type->type_name === 'Duplex')
-                                                                    Buy Now
-                                                                @elseif($item->type->type_name === 'Flat')
-                                                                    Rent Now
-                                                                @elseif($item->type->type_name === 'Shortlet')
-                                                                    Book Now
-                                                                @elseif($item->type->type_name === 'Bungalow')
-                                                                    Buy Now
-                                                                @elseif($item->type->type_name === 'Land')
-                                                                    Buy Now
-                                                                @elseif($item->type->type_name === 'Warehouse')
-                                                                    Rent Now
-                                                                @elseif($item->type->type_name === 'Hotel')
-                                                                    Book Now
-                                                                @else
-                                                                    Book Now
-                                                                @endif
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Flat')
+                                                                        Rent Now
+                                                                    @elseif($item->type->type_name === 'Shortlet')
+                                                                        Book Now
+                                                                    @elseif($item->type->type_name === 'Bungalow')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Land')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Warehouse')
+                                                                        Rent Now
+                                                                    @elseif($item->type->type_name === 'Hotel')
+                                                                        Book Now
+                                                                    @else
+                                                                        Book Now
+                                                                    @endif
                                                                 </button>
                                                             </div>
                                                         </form>
@@ -659,19 +670,19 @@
         });
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const sortField = document.getElementById('sort_id');
-        const form = document.getElementById('property-sort-form');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sortField = document.getElementById('sort_id');
+            const form = document.getElementById('property-sort-form');
 
-        // Handle sort changes
-        if (sortField) {
-            sortField.addEventListener('change', function () {
-                form.submit(); // Automatically submit the form
-            });
-        }
-    });
-</script>
+            // Handle sort changes
+            if (sortField) {
+                sortField.addEventListener('change', function() {
+                    form.submit(); // Automatically submit the form
+                });
+            }
+        });
+    </script>
 
 
     <script>

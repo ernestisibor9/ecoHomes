@@ -145,7 +145,7 @@
                                     @csrf
                                     <div class="select-box">
                                         <select class="wide see form-control" name="price">
-                                            <option value="">Minimum Price</option>
+                                            <option data-display="Select Location">Minimum Price</option>
                                             @foreach ($priceLowest as $price)
                                                 <option value="{{ $price->price }}">
                                                     {{ $currency }}{{ $price->price }}</option>
@@ -154,10 +154,10 @@
                                     </div>
                                     <div class="select-box">
                                         <select class="wide see form-control" name="maximum_price">
-                                            <option value="">Maximum Price</option>
-                                            @foreach ($priceMax as $price)
-                                                <option value="{{ $price->price }}">
-                                                    {{ $currency }}{{ $price->price }}</option>
+                                            <option data-display="Select Location">Maximum Price</option>
+                                            @foreach ($priceMax as $maximum_price)
+                                                <option value="{{ $maximum_price->maximum_price }}">
+                                                    {{ $currency }}{{ $maximum_price->maximum_price }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -166,8 +166,6 @@
                                                 class="fas fa-filter"></i>&nbsp;Filter</button>
                                     </div>
                                 </form>
-
-
                             </div>
                         </div>
                         {{-- <div class="price-filter sidebar-widget">
@@ -251,13 +249,16 @@
                             <div class="right-column pull-right clearfix">
                                 <div class="short-box clearfix">
                                     <div class="select-box">
-                                        <select class="wide see">
-                                            <option data-display="Sort by: Newest">Sort by: Newest</option>
-                                            <option value="1">New Arrival</option>
-                                            <option value="2">Top Rated</option>
-                                            <option value="3">Offer Place</option>
-                                            <option value="4">Most Place</option>
-                                        </select>
+                                        <form id="property-sort-form" method="GET"
+                                        action="{{ route('filter.sort.properties') }}">
+                                            @csrf
+                                           <select class="wide see form-select" id="sort_id" name="sort">
+                                            <option data-display="Sort By">Sort By</option>
+                                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
+                                            <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Price: Low to High</option>
+                                            <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Price: High to Low</option>
+                                            </select>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="short-menu clearfix">
@@ -300,7 +301,7 @@
                                                     <div class="price-box clearfix">
                                                         <div class="price-info pull-left">
                                                             <h6>Start From</h6>
-                                                            <h4>{{ $currency }}{{ number_format($item->price, 2) }}
+                                                            <h4>{{ $currency }} {{ number_format($item->price, 2) }}
                                                             </h4>
                                                         </div>
                                                         <div class="author-box pull-right">
@@ -327,27 +328,30 @@
                                                                 class="theme-btn btn-two">See Details</a></div>
                                                         <ul class="other-option pull-right clearfix">
 
-                                                            <div class="btn-box pull-left"> <button type="button" class="theme-btn btn-success"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#modal-{{ $item->id }}">
-                                                                @if ($item->type->type_name === 'Duplex')
-                                                                    Buy Now
-                                                                @elseif($item->type->type_name === 'Flat')
-                                                                    Rent Now
-                                                                @elseif($item->type->type_name === 'Shortlet')
-                                                                    Book Now
-                                                                @elseif($item->type->type_name === 'Bungalow')
-                                                                    Buy Now
-                                                                @elseif($item->type->type_name === 'Land')
-                                                                    Buy Now
-                                                                @elseif($item->type->type_name === 'Warehouse')
-                                                                    Rent Now
-                                                                @elseif($item->type->type_name === 'Hotel')
-                                                                    Book Now
-                                                                @else
-                                                                    Book Now
-                                                                @endif
-                                                            </button>
+                                                            <div class="btn-box pull-left">
+                                                                <button type="button" class="theme-btn btn-success"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modal-{{ $item->id }}">
+                                                                    @if ($item->type->type_name === 'Duplex')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Flat')
+                                                                        Rent Now
+                                                                    @elseif($item->type->type_name === 'Shortlet')
+                                                                        Book Now
+                                                                    @elseif($item->type->type_name === 'Bungalow')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Land')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Warehouse')
+                                                                        Rent Now
+                                                                    @elseif($item->type->type_name === 'Hotel')
+                                                                        Book Now
+                                                                    @else
+                                                                        Book Now
+                                                                    @endif
+                                                                </button>
+                                                            </div>
+
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -654,6 +658,21 @@
             }
         });
     </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sortField = document.getElementById('sort_id');
+        const form = document.getElementById('property-sort-form');
+
+        // Handle sort changes
+        if (sortField) {
+            sortField.addEventListener('change', function () {
+                form.submit(); // Automatically submit the form
+            });
+        }
+    });
+</script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

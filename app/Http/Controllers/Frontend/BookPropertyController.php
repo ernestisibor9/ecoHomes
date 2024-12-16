@@ -963,12 +963,13 @@ class BookPropertyController extends Controller
         return redirect()->back()->with($notification);
     }
     // StoreBookingGuest
-    public function StoreBookingGuest(Request $request){
+    public function StoreBookingGuest(Request $request)
+    {
         // Validate the request data
         $validated = $request->validate([
-            // 'name' => 'required|string|max:255',
-            // 'email' => 'required|email',
-            // 'phone' => 'required|string|max:15',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:15',
             // 'property_name' => 'required|string|max:255',
             // 'property_type' => 'required|string|max:255',
             // 'property_code' => 'required|string|max:255',
@@ -978,28 +979,32 @@ class BookPropertyController extends Controller
             // 'price' => 'required|numeric',
         ]);
 
-        // Save data to the database
-        Booking::insert([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'property_name' => $request->property_name,
-            'property_type' => $request->property_type,
-            'property_code' => $request->property_code,
-            'country' => $request->country,
-            'state' => $request->state,
-            'city' => $request->city,
-            'price' => $request->price,
-            'created_at' => Carbon::now(),
-        ]);
+        try {
+            // Save data to the database
+            Booking::insert([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'property_name' => $request->property_name,
+                'property_type' => $request->property_type,
+                'property_code' => $request->property_code,
+                'country' => $request->country,
+                'state' => $request->state,
+                'city' => $request->city,
+                'price' => $request->price,
+                'created_at' => Carbon::now(),
+            ]);
+            // Flash success message
+            session()->flash('status', 'success');
+            session()->flash('message', 'Booking successfully submitted!');
+        } catch (\Exception $e) {
+            // Flash failure message
+            session()->flash('status', 'error');
+            session()->flash('message', 'Failed to submit your booking. Please try again.');
+        }
 
-        $notification = array(
-            'message' => "Booking successfully submitted!",
-            'alert-type' => 'success',
-        );
-
-        // Redirect with success message
-        return redirect()->back()->with($notification);
+        // Redirect back to the form
+        return redirect()->back();
     }
 
     // FilterSortProperties
@@ -1041,20 +1046,20 @@ class BookPropertyController extends Controller
             $q->where('status', '1');
         });
 
-            // Apply sorting
-    if ($request->filled('sort')) {
-        switch ($request->sort) {
-            case 'latest':
-                $query->orderBy('created_at', 'desc');
-                break;
-            case 'asc':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'desc':
-                $query->orderBy('price', 'desc');
-                break;
+        // Apply sorting
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+                case 'latest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+            }
         }
-    }
 
         // Get the filtered properties
         $paginatedData = $query->paginate(6);
@@ -1147,5 +1152,3 @@ class BookPropertyController extends Controller
         abort(404, 'Property not found');
     }
 }
-
-
