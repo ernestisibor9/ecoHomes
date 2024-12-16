@@ -1001,4 +1001,151 @@ class BookPropertyController extends Controller
         // Redirect with success message
         return redirect()->back()->with($notification);
     }
+
+    // FilterSortProperties
+    public function filterSortProperties(Request $request)
+    {
+        // Retrieve data based on different filters
+        $propertyStatusRent = Property::where('property_status', 'rent')->get();
+        $propertyStatusBuy = Property::where('property_status', 'buy')->get();
+        $propertyStatusSell = Property::where('property_status', 'sell')->get();
+        $propertyTypes = PropertyType::orderBy('type_name', 'asc')->get();
+        $propertyRooms = Property::select('bedrooms')
+            ->distinct()
+            ->orderBy('bedrooms', 'asc')
+            ->get();
+        $priceLowest = Property::select('price')
+            ->distinct()
+            ->orderBy('price', 'asc')
+            ->get();
+        $priceMax = Property::select('maximum_price')
+            ->distinct()
+            ->orderBy('maximum_price', 'asc')
+            ->get();
+        $propertyStatus = Property::select('property_status')
+            ->distinct()
+            ->orderBy('property_status', 'asc')
+            ->get();
+        $countries = Country::get();
+
+        // Set up the query for filtering properties
+        $query = Property::query();
+
+        // Apply filters based on the request
+        if ($request->filled('property_status')) {
+            $query->where('property_status', $request->property_status);
+        }
+
+        // Ensure that the property status is approved or has status 1
+        $query->where(function ($q) {
+            $q->where('status', '1');
+        });
+
+            // Apply sorting
+    if ($request->filled('sort')) {
+        switch ($request->sort) {
+            case 'latest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'desc':
+                $query->orderBy('price', 'desc');
+                break;
+        }
+    }
+
+        // Get the filtered properties
+        $paginatedData = $query->paginate(6);
+
+
+        $currency = 'USD'; // Default currency
+
+        // Fetch user's IP and location details
+        $ip = request()->ip(); // Get user IP address
+
+        // Handle local IP (127.0.0.1 or ::1)
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // For local development, assume Nigeria (NGN) as the default currency
+            return $this->handleLocalRequestSort(
+                $paginatedData,
+                $propertyStatusRent,
+                $propertyStatusSell,
+                $propertyStatusBuy,
+                $propertyTypes,
+                $countries,
+                $propertyRooms,
+                $priceLowest,
+                $priceMax,
+                $propertyStatus,
+                $currency
+            );
+        }
+
+        try {
+            // Path to the GeoLite2 database
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+
+            // Retrieve country name and currency code (if available)
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+        } catch (\Exception $e) {
+            // Log the error and use default currency
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
+
+
+        // Return the view with paginated data and other variables
+        return view('frontend.book.list_properties_sort', compact(
+            'propertyStatusRent',
+            'propertyStatusBuy',
+            'propertyStatusSell',
+            'propertyTypes',
+            'countries',
+            'propertyRooms',
+            'priceLowest',
+            'priceMax',
+            'propertyStatus',
+            'currency',
+            'paginatedData'  // Use the paginated data here
+        ));
+    }
+    //
+    public function handleLocalRequestSort(
+        $paginatedData,
+        $propertyStatusRent,
+        $propertyStatusSell,
+        $propertyStatusBuy,
+        $propertyTypes,
+        $countries,
+        $propertyRooms,
+        $priceLowest,
+        $priceMax,
+        $propertyStatus,
+        $currency
+    ) {
+        $currency = 'NGN'; // Default currency for local development
+
+        if ($paginatedData) {
+            return view('frontend.book.list_properties_sort', compact(
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency',
+                'paginatedData',
+            ));
+        }
+
+        abort(404, 'Property not found');
+    }
 }
+
+

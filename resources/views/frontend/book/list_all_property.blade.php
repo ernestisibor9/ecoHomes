@@ -249,13 +249,16 @@
                             <div class="right-column pull-right clearfix">
                                 <div class="short-box clearfix">
                                     <div class="select-box">
-                                        <select class="wide see">
-                                            <option data-display="Sort by: Newest">Sort by: Newest</option>
-                                            <option value="1">New Arrival</option>
-                                            <option value="2">Top Rated</option>
-                                            <option value="3">Offer Place</option>
-                                            <option value="4">Most Place</option>
-                                        </select>
+                                        <form id="property-sort-form" method="GET"
+                                        action="{{ route('filter.sort.properties') }}">
+                                            @csrf
+                                           <select class="wide see form-select" id="sort_id" name="sort">
+                                            <option data-display="Sort By">Sort By</option>
+                                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
+                                            <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Price: Low to High</option>
+                                            <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Price: High to Low</option>
+                                            </select>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="short-menu clearfix">
@@ -327,26 +330,27 @@
 
                                                             <div class="btn-box pull-left">
                                                                 <button type="button" class="theme-btn btn-success"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#modal-{{ $item->id }}">
-                                                            @if ($item->type->type_name === 'Duplex')
-                                                                Buy Now
-                                                            @elseif($item->type->type_name === 'Flat')
-                                                                Rent Now
-                                                            @elseif($item->type->type_name === 'Shortlet')
-                                                                Book Now
-                                                            @elseif($item->type->type_name === 'Bungalow')
-                                                                Buy Now
-                                                            @elseif($item->type->type_name === 'Land')
-                                                                Buy Now
-                                                            @elseif($item->type->type_name === 'Warehouse')
-                                                                Rent Now
-                                                            @elseif($item->type->type_name === 'Hotel')
-                                                                Book Now
-                                                            @else
-                                                                Book Now
-                                                            @endif
-                                                        </button></div>
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modal-{{ $item->id }}">
+                                                                    @if ($item->type->type_name === 'Duplex')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Flat')
+                                                                        Rent Now
+                                                                    @elseif($item->type->type_name === 'Shortlet')
+                                                                        Book Now
+                                                                    @elseif($item->type->type_name === 'Bungalow')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Land')
+                                                                        Buy Now
+                                                                    @elseif($item->type->type_name === 'Warehouse')
+                                                                        Rent Now
+                                                                    @elseif($item->type->type_name === 'Hotel')
+                                                                        Book Now
+                                                                    @else
+                                                                        Book Now
+                                                                    @endif
+                                                                </button>
+                                                            </div>
 
                                                         </ul>
                                                     </div>
@@ -356,12 +360,13 @@
                                         <!------Bootstrap Modal starts----->
                                         <!-- Modal -->
                                         <div class="modal fade" id="modal-{{ $item->id }}" data-bs-backdrop="static"
-                                            data-bs-keyboard="false" tabindex="-1"   aria-labelledby="modalLabel-{{ $item->id }}"
-                                            aria-hidden="true">
+                                            data-bs-keyboard="false" tabindex="-1"
+                                            aria-labelledby="modalLabel-{{ $item->id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="modalLabel-{{ $item->id }}">Select The
+                                                        <h1 class="modal-title fs-5" id="modalLabel-{{ $item->id }}">
+                                                            Select The
                                                             Type Of User</h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
@@ -371,7 +376,8 @@
                 </div> --}}
                                                     <div class="modal-footer  mx-auto">
                                                         <button type="button" class="btn btn-danger"
-                                                            data-bs-toggle="modal"  data-bs-target="#staticBackdrop2-{{ $item->id }}">Guest
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#staticBackdrop2-{{ $item->id }}">Guest
                                                             User</button>
                                                         <a href="{{ route('user.auth.booking', $item->id) }}"
                                                             type="button" class="btn btn-primary">User</a>
@@ -383,13 +389,31 @@
                                         </div>
 
                                         <!-- Modal -->
-                                        <div class="modal fade"  id="staticBackdrop2-{{ $item->id }}" data-bs-backdrop="static"
-                                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                            aria-hidden="true">
+                                        <div class="modal fade" id="staticBackdrop2-{{ $item->id }}"
+                                            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                            aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title fs-5"  id="staticBackdrop2Label-{{ $item->id }}">Book Now
+                                                        <h1 class="modal-title fs-5"
+                                                            id="staticBackdrop2Label-{{ $item->id }}">
+                                                            @if ($item->type->type_name === 'Duplex')
+                                                            Buy Now
+                                                        @elseif($item->type->type_name === 'Flat')
+                                                            Rent Now
+                                                        @elseif($item->type->type_name === 'Shortlet')
+                                                            Book Now
+                                                        @elseif($item->type->type_name === 'Bungalow')
+                                                            Buy Now
+                                                        @elseif($item->type->type_name === 'Land')
+                                                            Buy Now
+                                                        @elseif($item->type->type_name === 'Warehouse')
+                                                            Rent Now
+                                                        @elseif($item->type->type_name === 'Hotel')
+                                                            Book Now
+                                                        @else
+                                                            Book Now
+                                                        @endif
                                                         </h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
@@ -474,7 +498,25 @@
                                                             </div>
                                                             <div class="d-grid gap-2 form-group message-btn">
                                                                 <button class="theme-btn btn-one" type="submit"
-                                                                    id="">Book Now</button>
+                                                                    id="">
+                                                                    @if ($item->type->type_name === 'Duplex')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Flat')
+                                                                    Rent Now
+                                                                @elseif($item->type->type_name === 'Shortlet')
+                                                                    Book Now
+                                                                @elseif($item->type->type_name === 'Bungalow')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Land')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Warehouse')
+                                                                    Rent Now
+                                                                @elseif($item->type->type_name === 'Hotel')
+                                                                    Book Now
+                                                                @else
+                                                                    Book Now
+                                                                @endif
+                                                                </button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -616,6 +658,21 @@
             }
         });
     </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sortField = document.getElementById('sort_id');
+        const form = document.getElementById('property-sort-form');
+
+        // Handle sort changes
+        if (sortField) {
+            sortField.addEventListener('change', function () {
+                form.submit(); // Automatically submit the form
+            });
+        }
+    });
+</script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

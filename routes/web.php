@@ -47,6 +47,7 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::get('/properties/filter', 'BookPropertyFilter')->name('properties.filter');
         Route::post('/search/book/properties', 'SearchBookProperty')->name('search.book.properties');
         Route::get('/properties', 'filterStatusProperties')->name('filter.status.properties');
+        Route::get('/properties/sort', 'filterSortProperties')->name('filter.sort.properties');
         Route::get('/properties/type', 'filterTypeProperties')->name('filter.type.properties');
         Route::get('search/price/properties', function () {
             return redirect()->back(); // Redirect back or to a default page

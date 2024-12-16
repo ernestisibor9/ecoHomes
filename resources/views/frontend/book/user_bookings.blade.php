@@ -14,10 +14,44 @@
         </div>
         <div class="auto-container">
             <div class="content-box clearfix">
-                <h1>Book Property</h1>
+                <h1>    @if ($properties->type->type_name === 'Duplex')
+                    Buy Property
+                @elseif($properties->type->type_name === 'Flat')
+                    Rent Property
+                @elseif($properties->type->type_name === 'Shortlet')
+                    Book Property
+                @elseif($properties->type->type_name === 'Bungalow')
+                    Buy Property
+                @elseif($properties->type->type_name === 'Land')
+                    Buy Property
+                @elseif($properties->type->type_name === 'Warehouse')
+                    Rent Property
+                @elseif($properties->type->type_name === 'Hotel')
+                    Book Property
+                @else
+                    Book Now
+                @endif</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li>Book Property</li>
+                    <li>
+                        @if ($properties->type->type_name === 'Duplex')
+                        Buy Now
+                    @elseif($properties->type->type_name === 'Flat')
+                        Rent Now
+                    @elseif($properties->type->type_name === 'Shortlet')
+                        Book Now
+                    @elseif($properties->type->type_name === 'Bungalow')
+                        Buy Now
+                    @elseif($properties->type->type_name === 'Land')
+                        Buy Now
+                    @elseif($properties->type->type_name === 'Warehouse')
+                        Rent Now
+                    @elseif($properties->type->type_name === 'Hotel')
+                        Book Now
+                    @else
+                        Book Now
+                    @endif
+                    </li>
                 </ul>
             </div>
         </div>
@@ -29,7 +63,25 @@
         <div class="row justify-content-center">
             <div class="col-md-9">
                 <div class="card shadow p-3">
-                    <h3 class="card-title text-center pt-2">Book Now</h3>
+                    <h3 class="card-title text-center pt-2">
+                        @if ($properties->type->type_name === 'Duplex')
+                        Buy Now
+                    @elseif($properties->type->type_name === 'Flat')
+                        Rent Now
+                    @elseif($properties->type->type_name === 'Shortlet')
+                        Book Now
+                    @elseif($properties->type->type_name === 'Bungalow')
+                        Buy Now
+                    @elseif($properties->type->type_name === 'Land')
+                        Buy Now
+                    @elseif($properties->type->type_name === 'Warehouse')
+                        Rent Now
+                    @elseif($properties->type->type_name === 'Hotel')
+                        Book Now
+                    @else
+                        Book Now
+                    @endif
+                    </h3>
                     <div class="card-body">
                         <form action="{{route('store.booking')}}" method="post">
                             @csrf
@@ -114,7 +166,25 @@
                                 </div>
                             </div>
                             <div class="d-grid gap-2 form-group message-btn">
-                                <button class="theme-btn btn-one" type="submit" id="nextButton">Book Now</button>
+                                <button class="theme-btn btn-one" type="submit" id="nextButton">
+                                    @if ($properties->type->type_name === 'Duplex')
+                                    Buy Now
+                                    @elseif($properties->type->type_name === 'Flat')
+                                    Rent Now
+                                    @elseif($properties->type->type_name === 'Shortlet')
+                                    Book Now
+                                    @elseif($properties->type->type_name === 'Bungalow')
+                                    Buy Now
+                                    @elseif($properties->type->type_name === 'Land')
+                                    Buy Now
+                                    @elseif($properties->type->type_name === 'Warehouse')
+                                    Rent Now
+                                    @elseif($properties->type->type_name === 'Hotel')
+                                    Book Now
+                                    @else
+                                    Book Now
+                                    @endif
+                                </button>
                             </div>
                         </form>
                     </div>

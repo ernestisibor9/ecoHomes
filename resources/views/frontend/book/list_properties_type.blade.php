@@ -324,77 +324,205 @@
                                                                 class="theme-btn btn-two">See Details</a></div>
                                                         <ul class="other-option pull-right clearfix">
 
-                                                            <div class="btn-box pull-left"><button type="button"
-                                                                    class="theme-btn btn-success" data-bs-toggle="modal"
-                                                                    data-bs-target="#staticBackdrop">
-                                                                    @if ($item->type->type_name === 'Duplex')
-                                                                        Buy Now
-                                                                    @elseif($item->type->type_name === 'Flat')
-                                                                        Rent Now
-                                                                    @elseif($item->type->type_name === 'Shortlet')
-                                                                        Book Now
-                                                                    @elseif($item->type->type_name === 'Bungalow')
-                                                                        Buy Now
-                                                                    @elseif($item->type->type_name === 'Land')
-                                                                        Buy Now
-                                                                    @elseif($item->type->type_name === 'Warehouse')
-                                                                        Rent Now
-                                                                    @elseif($item->type->type_name === 'Hotel')
-                                                                        Book Now
-                                                                    @else
-                                                                        Book Now
-                                                                    @endif
-                                                                </button></div>
+                                                            <div class="btn-box pull-left"><button type="button" class="theme-btn btn-success"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#modal-{{ $item->id }}">
+                                                                @if ($item->type->type_name === 'Duplex')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Flat')
+                                                                    Rent Now
+                                                                @elseif($item->type->type_name === 'Shortlet')
+                                                                    Book Now
+                                                                @elseif($item->type->type_name === 'Bungalow')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Land')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Warehouse')
+                                                                    Rent Now
+                                                                @elseif($item->type->type_name === 'Hotel')
+                                                                    Book Now
+                                                                @else
+                                                                    Book Now
+                                                                @endif
+                                                            </button></div>
 
                                                         </ul>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                                <!------Bootstrap Modal starts----->
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Select The Type Of User</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                {{-- <div class="modal-body">
+                       <!------Bootstrap Modal starts----->
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="modal-{{ $item->id }}" data-bs-backdrop="static"
+                                            data-bs-keyboard="false" tabindex="-1"
+                                            aria-labelledby="modalLabel-{{ $item->id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="modalLabel-{{ $item->id }}">
+                                                            Select The
+                                                            Type Of User</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    {{-- <div class="modal-body">
 
                 </div> --}}
-                <div class="modal-footer  mx-auto">
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop2">Guest User</button>
-                    <a href="{{route('user.auth.booking', $item->id)}}" type="button" class="btn btn-primary">User</a>
-                    {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <div class="modal-footer  mx-auto">
+                                                        <button type="button" class="btn btn-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#staticBackdrop2-{{ $item->id }}">Guest
+                                                            User</button>
+                                                        <a href="{{ route('user.auth.booking', $item->id) }}"
+                                                            type="button" class="btn btn-primary">User</a>
+                                                        {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Understood</button> --}}
-                </div>
-            </div>
-        </div>
-    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-------Bootstrap Modal ends----->
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="staticBackdrop2-{{ $item->id }}"
+                                            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5"
+                                                            id="staticBackdrop2Label-{{ $item->id }}">
+                                                            @if ($item->type->type_name === 'Duplex')
+                                                            Buy Now
+                                                        @elseif($item->type->type_name === 'Flat')
+                                                            Rent Now
+                                                        @elseif($item->type->type_name === 'Shortlet')
+                                                            Book Now
+                                                        @elseif($item->type->type_name === 'Bungalow')
+                                                            Buy Now
+                                                        @elseif($item->type->type_name === 'Land')
+                                                            Buy Now
+                                                        @elseif($item->type->type_name === 'Warehouse')
+                                                            Rent Now
+                                                        @elseif($item->type->type_name === 'Hotel')
+                                                            Book Now
+                                                        @else
+                                                            Book Now
+                                                        @endif
+                                                        </h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body p-4">
+                                                        <form action="{{ route('store.booking.guest') }}" method="post">
+                                                            @csrf
+                                                            <div class="row g-3 mb-3">
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">User's Name <span
+                                                                            class="text-danger">*</span> </label>
+                                                                    <input type="name" class="form-control"
+                                                                        aria-label="Name" name="name" required>
+                                                                </div>
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">Email <span
+                                                                            class="text-danger">*</span> </label>
+                                                                    <input type="email" class="form-control"
+                                                                        aria-label="Email" name="email" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-3 mb-3">
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">Phone Number <span
+                                                                            class="text-danger">*</span> </label>
+                                                                    <input type="name" class="form-control"
+                                                                        aria-label="Phone" name="phone" required>
+                                                                </div>
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">Property Name</label>
+                                                                    <input type="text" class="form-control"
+                                                                        aria-label="Property Name" name="property_name"
+                                                                        required value="{{ $item->property_name }}"
+                                                                        readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-3 mb-3">
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">Property Type</label>
+                                                                    <input type="name" class="form-control"
+                                                                        aria-label="Property Type" name="property_type"
+                                                                        required value="{{ $item->type->type_name }}"
+                                                                        readonly>
+                                                                </div>
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">Property ID</label>
+                                                                    <input type="email" class="form-control"
+                                                                        aria-label="Property ID" name="property_code"
+                                                                        required value="{{ $item->property_code }}"
+                                                                        readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-3 mb-3">
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">Country</label>
+                                                                    <input type="name" class="form-control"
+                                                                        aria-label="Country" name="country" required
+                                                                        value="{{ $item->country->name }}" readonly>
+                                                                </div>
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">State/County</label>
+                                                                    <input type="email" class="form-control"
+                                                                        aria-label="State" name="state" required
+                                                                        value="{{ $item->state->name }}" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-3 mb-3">
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">City</label>
+                                                                    <input type="name" class="form-control"
+                                                                        aria-label="City" name="city" required
+                                                                        value="{{ $item->city->name }}" readonly>
+                                                                </div>
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="">Price
+                                                                        ({{ $currency }})
+                                                                    </label>
+                                                                    <input type="email" class="form-control"
+                                                                        aria-label="Price" name="price" required
+                                                                        value="{{ $item->price }}" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-grid gap-2 form-group message-btn">
+                                                                <button class="theme-btn btn-one" type="submit"
+                                                                    id="">
+                                                                    @if ($item->type->type_name === 'Duplex')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Flat')
+                                                                    Rent Now
+                                                                @elseif($item->type->type_name === 'Shortlet')
+                                                                    Book Now
+                                                                @elseif($item->type->type_name === 'Bungalow')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Land')
+                                                                    Buy Now
+                                                                @elseif($item->type->type_name === 'Warehouse')
+                                                                    Rent Now
+                                                                @elseif($item->type->type_name === 'Hotel')
+                                                                    Book Now
+                                                                @else
+                                                                    Book Now
+                                                                @endif
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary">Understood</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-------Bootstrap Modal ends----->
                                     @endforeach
                                 @endif
 
