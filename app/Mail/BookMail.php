@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class BookMail extends Mailable
 {
@@ -16,9 +17,13 @@ class BookMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(private $data)
     {
         //
+        if (!isset($data['Subject'], $data['Message'])) {
+            Log::error('Email data is missing Subject or Message keys.', $data);
+        }
+        $this->data = $data;
     }
 
     /**
@@ -27,7 +32,7 @@ class BookMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Book Mail',
+            subject: 'Book Property Notification',
         );
     }
 
@@ -36,8 +41,10 @@ class BookMail extends Mailable
      */
     public function content(): Content
     {
+        $book = $this->data;
         return new Content(
-            view: 'view.name',
+            view: 'mail.book',
+            with: ['book' => $this->data]
         );
     }
 

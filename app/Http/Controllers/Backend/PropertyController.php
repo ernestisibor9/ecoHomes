@@ -10,6 +10,7 @@ use App\Models\Facility;
 use App\Models\MultiImage;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Models\SellMyProperty;
 use App\Models\State;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -24,7 +25,8 @@ class PropertyController extends Controller
         $countries = Country::get();
         $propertyTypes = PropertyType::latest()->get();
         $amenities = Amenities::latest()->get();
-        return view('admin.backend.property.add_property', compact('propertyTypes', 'amenities', 'countries'));
+        $sellers = SellMyProperty::orderBy('firstname', 'ASC')->get();
+        return view('admin.backend.property.add_property', compact('propertyTypes', 'amenities','sellers', 'countries'));
     }
     // AllProperty
     public function AllProperty()
@@ -69,6 +71,8 @@ class PropertyController extends Controller
             'bathrooms' => $request->bathrooms,
             'garage' => $request->garage,
             'property_video' => $request->property_video,
+            'seller_id' => $request->seller_id,
+            'verification_status' => $request->verification_status,
 
             'address' => $request->address,
             'country_id' => $request->country_id,

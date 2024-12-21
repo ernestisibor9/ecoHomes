@@ -150,10 +150,7 @@ class OwnerPropertyController extends Controller
 
         // Send email notification
         try {
-            // Log::info('Email Data: ', [
-            //     'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.<br/>',
-            //     'Message' => 'Your submission is pending approval. <br/> One of our expert will reach out to you soon.',
-            // ]);
+
             Mail::to($request->email)->send(new SellerMail([
                 'Subject' => 'Thank you for choosing EcoHomes as your trusted property platform.<br/>',
                 'Message' => 'Your submission is pending approval. <br/> One of our expert will reach out to you soon.',

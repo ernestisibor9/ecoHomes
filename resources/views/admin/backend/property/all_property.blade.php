@@ -49,12 +49,14 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('change.property.status', $property->id) }}" class="btn btn-{{ $property->status === '0' ? 'success': 'danger'  }}">{{ $property->status === '0' ? 'Active' : 'Inactive'  }} </a> &nbsp;
-                                    <a href="{{ route('property.details', $property->id) }}" title="Edit"
+                                    <a href="{{ route('property.details', $property->id) }}" title="Details"
                                         class="btn btn-warning">Details</a>
                                     <a href="{{ route('property.edit', $property->id) }}" title="Edit"
                                         class="btn btn-primary">Edit</a>
                                     <a href="{{ route('property.delete', $property->id) }}" title="Delete"
                                         class="btn btn-danger" id="delete">Delete</a>
+                                        <a href="{{ route('availability.create', $property->id) }}" title="Availability"
+                                            class="btn btn-success">Availability</a>
                                 </td>
                             </tr>
             </div>

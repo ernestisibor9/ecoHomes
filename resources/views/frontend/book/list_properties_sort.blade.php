@@ -332,20 +332,12 @@
                                                                 <button type="button" class="theme-btn btn-success"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#modal-{{ $item->id }}">
-                                                                    @if ($item->type->type_name === 'Duplex')
+                                                                    @if ($item->property_status === 'buy')
                                                                         Buy Now
-                                                                    @elseif($item->type->type_name === 'Flat')
+                                                                    @elseif($item->property_status === 'rent')
                                                                         Rent Now
-                                                                    @elseif($item->type->type_name === 'Shortlet')
-                                                                        Book Now
-                                                                    @elseif($item->type->type_name === 'Bungalow')
-                                                                        Buy Now
-                                                                    @elseif($item->type->type_name === 'Land')
-                                                                        Buy Now
-                                                                    @elseif($item->type->type_name === 'Warehouse')
-                                                                        Rent Now
-                                                                    @elseif($item->type->type_name === 'Hotel')
-                                                                        Book Now
+                                                                    @elseif($item->property_status === 'lease')
+                                                                        Lease Now
                                                                     @else
                                                                         Book Now
                                                                     @endif
@@ -377,10 +369,10 @@
                                                     <div class="modal-footer  mx-auto">
                                                         <button type="button" class="btn btn-danger"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#staticBackdrop2-{{ $item->id }}">Guest
+                                                            data-bs-target="#staticBackdrop2-{{ $item->id }}">Proceed as a Guest
                                                             User</button>
                                                         <a href="{{ route('user.auth.booking', $item->id) }}"
-                                                            type="button" class="btn btn-primary">User</a>
+                                                            type="button" class="btn btn-primary">Proceed as a User</a>
                                                         {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Understood</button> --}}
                                                     </div>
@@ -397,20 +389,12 @@
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5"
                                                             id="staticBackdrop2Label-{{ $item->id }}">
-                                                            @if ($item->type->type_name === 'Duplex')
+                                                            @if ($item->property_status === 'buy')
                                                             Buy Now
-                                                        @elseif($item->type->type_name === 'Flat')
+                                                        @elseif($item->property_status === 'rent')
                                                             Rent Now
-                                                        @elseif($item->type->type_name === 'Shortlet')
-                                                            Book Now
-                                                        @elseif($item->type->type_name === 'Bungalow')
-                                                            Buy Now
-                                                        @elseif($item->type->type_name === 'Land')
-                                                            Buy Now
-                                                        @elseif($item->type->type_name === 'Warehouse')
-                                                            Rent Now
-                                                        @elseif($item->type->type_name === 'Hotel')
-                                                            Book Now
+                                                        @elseif($item->property_status === 'lease')
+                                                            Lease Now
                                                         @else
                                                             Book Now
                                                         @endif
@@ -499,20 +483,12 @@
                                                             <div class="d-grid gap-2 form-group message-btn">
                                                                 <button class="theme-btn btn-one" type="submit"
                                                                     id="">
-                                                                    @if ($item->type->type_name === 'Duplex')
+                                                                    @if ($item->property_status === 'buy')
                                                                     Buy Now
-                                                                @elseif($item->type->type_name === 'Flat')
+                                                                @elseif($item->property_status === 'rent')
                                                                     Rent Now
-                                                                @elseif($item->type->type_name === 'Shortlet')
-                                                                    Book Now
-                                                                @elseif($item->type->type_name === 'Bungalow')
-                                                                    Buy Now
-                                                                @elseif($item->type->type_name === 'Land')
-                                                                    Buy Now
-                                                                @elseif($item->type->type_name === 'Warehouse')
-                                                                    Rent Now
-                                                                @elseif($item->type->type_name === 'Hotel')
-                                                                    Book Now
+                                                                @elseif($item->property_status === 'lease')
+                                                                    Lease Now
                                                                 @else
                                                                     Book Now
                                                                 @endif

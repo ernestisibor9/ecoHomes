@@ -434,7 +434,17 @@
                                                 St Johns Wood</li>
                                             <li><i class="fas fa-phone"></i><a href="tel:03030571965">030 3057 1965</a></li>
                                         </ul>
-                                        <div class="btn-box"><a href="agents-details.html">Book Now</a></div>
+                                        <div class="btn-box"><a href="agents-details.html">
+                                            @if ($item->property_status === 'buy')
+                                            Buy Now
+                                        @elseif($item->property_status === 'rent')
+                                            Rent Now
+                                        @elseif($item->property_status === 'lease')
+                                            Lease Now
+                                        @else
+                                            Book Now
+                                        @endif
+                                        </a></div>
                                     </div>
                                 </div>
                                 <div class="form-inner">

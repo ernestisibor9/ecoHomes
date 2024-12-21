@@ -2,14 +2,14 @@
 
 @section('home')
 
-<style>
-      .property-img {
+    <style>
+        .property-img {
             width: 770px !important;
             height: 520px !important;
             object-fit: cover;
             transition: transform 0.3s ease;
         }
-</style>
+    </style>
 
     <!--Page Title-->
     <section class="page-title-two bg-color-1 centred">
@@ -21,7 +21,7 @@
             <div class="content-box clearfix">
                 <h1>Property Details</h1>
                 <ul class="bread-crumb clearfix">
-                    <li><a href="{{url('/')}}">Home</a></li>
+                    <li><a href="{{ url('/') }}">Home</a></li>
                     <li>Property Details</li>
                 </ul>
             </div>
@@ -71,7 +71,7 @@
                             </li>
                             <li><a href="property-details.html">
                                     @if (isset($property))
-                                     {{ $property->property_status }} Now
+                                        {{ $property->property_status }} Now
                                     @endif
                                 </a>
                             </li>
@@ -79,7 +79,7 @@
                         <div class="price-box pull-right">
                             <h3>
                                 @if (isset($property))
-                                {{ $currency }}{{ number_format($property->price, 2) }}
+                                    {{ $currency }}{{ number_format($property->price, 2) }}
                                 @endif
                             </h3>
                         </div>
@@ -141,39 +141,39 @@
                             </div>
                             <ul class="list clearfix">
                                 <li>Property ID: <span>
-                                    @if (isset($property))
-                                    For {{ $property->property_code }}
-                                @endif
-                                </span></li>
+                                        @if (isset($property))
+                                            For {{ $property->property_code }}
+                                        @endif
+                                    </span></li>
                                 <li>Rooms: <span>06</span></li>
                                 <li>Garage Size: <span>200 Sq Ft</span></li>
                                 <li>Property Price: <span>
-                                    @if (isset($property))
-                                    ${{ $property->lowest_price }}
-                                @endif
-                                </span></li>
+                                        @if (isset($property))
+                                            ${{ $property->lowest_price }}
+                                        @endif
+                                    </span></li>
                                 <li>Bedrooms: <span>
-                                    @if (isset($property))
-                                    {{ $property->bedrooms }}
-                                @endif
-                                </span></li>
+                                        @if (isset($property))
+                                            {{ $property->bedrooms }}
+                                        @endif
+                                    </span></li>
                                 <li>Year Built: <span>01 April, 2024</span></li>
                                 <li>Property Type: <span>
-                                    @if (isset($property))
-                                     {{ $property->type->type_name }}
-                                @endif
-                                </span></li>
+                                        @if (isset($property))
+                                            {{ $property->type->type_name }}
+                                        @endif
+                                    </span></li>
                                 <li>Bathrooms: <span>
-                                    @if (isset($property))
-                                    {{ $property->bathrooms }}
-                                @endif
-                                </span></li>
+                                        @if (isset($property))
+                                            {{ $property->bathrooms }}
+                                        @endif
+                                    </span></li>
                                 <li>Property Status: <span>
                                         @if (isset($property))
-                                        For {{ $property->property_status }}
-                                    @endif
+                                            For {{ $property->property_status }}
+                                        @endif
                                     </span></li>
-                                    </span>
+                                </span>
                                 </li>
                                 <li>Property Size: <span>2024 Sq Ft</span></li>
                                 <li>Garage: <span>01</span></li>
@@ -267,19 +267,19 @@
                                 {{-- <li><span>Address:</span> Virginia temple hills</li> --}}
                                 <li><span>Country:</span>
                                     @if (isset($property))
-                                    {{$property->country->name}}
-                                @endif
+                                        {{ $property->country->name }}
+                                    @endif
                                 </li>
                                 <li><span>State/County:</span>
                                     @if (isset($property))
-                                    {{$property->state->name}}
-                                @endif
+                                        {{ $property->state->name }}
+                                    @endif
                                 </li>
                                 <li><span>Zip/Postal Code:</span>23401</li>
                                 <li><span>City:</span>
                                     @if (isset($property))
-                                    {{$property->city->name}}
-                                @endif
+                                        {{ $property->city->name }}
+                                    @endif
                                 </li>
                             </ul>
                             <div class="google-map-area">
@@ -497,7 +497,17 @@
                                             St Johns Wood</li>
                                         <li><i class="fas fa-phone"></i><a href="tel:03030571965">030 3057 1965</a></li>
                                     </ul>
-                                    <div class="btn-box"><a href="agents-details.html">Book Now</a></div>
+                                    <div class="btn-box"><a href="agents-details.html">
+                                            @if ($item->property_status === 'buy')
+                                                Buy Now
+                                            @elseif($item->property_status === 'rent')
+                                                Rent Now
+                                            @elseif($item->property_status === 'lease')
+                                                Lease Now
+                                            @else
+                                                Book Now
+                                            @endif
+                                        </a></div>
                                 </div>
                             </div>
                             <div class="form-inner">

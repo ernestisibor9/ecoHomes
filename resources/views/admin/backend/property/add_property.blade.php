@@ -78,10 +78,23 @@
                             <label for="input1" class="form-label">No. of Garage</label>
                             <input type="number" name="garage" class="form-control" id="input1" required>
                         </div>
-                        {{-- <div class="col-md-6">
-                                <label for="input1" class="form-label">Property Size</label>
-                                <input type="text" name="property_size" class="form-control" id="input1">
-                            </div> --}}
+                        <div class="col-md-6">
+                            <label for="input1" class="form-label">Seller's Name</label>
+                            <select id="input7" class="form-select form-group" name="seller_id" required>
+                                <option selected="" disabled>Select Seller</option>
+                                @foreach ($sellers as $seller)
+                                    <option value="{{ $seller->id }}">{{ $seller->firstname }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="input1" class="form-label">Verification Status</label>
+                            <select id="input7" class="form-select form-group" name="verification_status" required>
+                                <option selected="" disabled>Verification Status</option>
+                                <option value="1">Verified</option>
+                                <option value="0">Unverified</option>
+                            </select>
+                        </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Property Video</label>
                             <input type="text" name="property_video" class="form-control" id="input1">

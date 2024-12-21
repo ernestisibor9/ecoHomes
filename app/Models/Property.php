@@ -15,6 +15,10 @@ class Property extends Model
         return $this->belongsTo(PropertyType::class, 'ptype_id', 'id');
     }
 
+    public function seller(){
+        return $this->belongsTo(SellMyProperty::class, 'seller_id', 'id');
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -33,4 +37,14 @@ class Property extends Model
     {
         return $this->hasMany(Amenities::class);
     }
+    public function availability()
+    {
+        return $this->hasMany(Availability::class);
+    }
+
+    public function viewingRequests()
+    {
+        return $this->hasMany(ViewingRequest::class);
+    }
+
 }

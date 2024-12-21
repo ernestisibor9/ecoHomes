@@ -33,7 +33,7 @@ return new class extends Migration
                 ->references('id')->on('users')
                 ->onDelete('cascade');
             $table->foreign('property_id')
-                ->references('id')->on('property_types')
+                ->references('id')->on('properties')
                 ->onDelete('cascade');
             $table->timestamps();
         });

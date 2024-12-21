@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BookMail;
+use App\Models\Availability;
+use App\Models\ViewingRequest;
 
 class BookPropertyController extends Controller
 {
@@ -919,19 +923,6 @@ class BookPropertyController extends Controller
             return redirect()->route('login')->with($notification);
         }
 
-        // Check if the user has already booked this property
-        //        $existingBooking = Booking::where('user_id', Auth::id())
-        //        ->where('property_id', $propertyId)
-        //        ->first();
-
-        //    if ($existingBooking) {
-        //        $notification = array(
-        //            'message' => 'You have already booked this property',
-        //            'alert-type' => 'error',
-        //        );
-        //        return redirect()->back()->with($notification);
-        //    }
-
         return view('frontend.book.user_bookings', compact('properties', 'userData'));
     }
     //
@@ -953,6 +944,22 @@ class BookPropertyController extends Controller
 
         // Save data to the database
         $booking = Booking::create($validated);
+
+        // Send email notification
+        try {
+
+            Mail::to($request->email)->send(new BookMail([
+                'Subject' => 'You have successfully booked a property.<br/>',
+                'Message' => 'You have successfully booked a property.<br/><br/> One of our expert will reach out to you soon.',
+            ]));
+        } catch (\Exception $e) {
+            // Log error for debugging purposes
+            Log::error('Email failed: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Failed to book property. Please try again later.',
+                'alert-type' => 'error',
+            ]);
+        }
 
         $notification = array(
             'message' => "Booking successfully submitted!",
@@ -994,6 +1001,24 @@ class BookPropertyController extends Controller
                 'price' => $request->price,
                 'created_at' => Carbon::now(),
             ]);
+
+            // Send email notification
+            try {
+
+                Mail::to($request->email)->send(new BookMail([
+                    'Subject' => 'You have successfully booked a property.<br/>',
+                    'Message' => 'You have successfully booked a property.<br/><br/> One of our expert will reach out to you soon.',
+                ]));
+            } catch (\Exception $e) {
+                // Log error for debugging purposes
+                Log::error('Email failed: ' . $e->getMessage());
+                return redirect()->back()->with([
+                    'message' => 'Failed to book property. Please try again later.',
+                    'alert-type' => 'error',
+                ]);
+            }
+
+
             // Flash success message
             session()->flash('status', 'success');
             session()->flash('message', 'Booking successfully submitted!');
@@ -1151,4 +1176,332 @@ class BookPropertyController extends Controller
 
         abort(404, 'Property not found');
     }
+    // RentProperties
+    public function RentProperties()
+    {
+        // Fetch paginated properties
+        $rentedProperties = Property::where('status', '1')->where('property_status', 'rent')->paginate(6); // Paginate properties with 2 items per page
+
+        // Fetch additional data for filtering (status, types, etc.)
+        $propertyStatusRent = Property::where('property_status', 'rent')->get();
+        $propertyStatusBuy = Property::where('property_status', 'buy')->get();
+        $propertyStatusSell = Property::where('property_status', 'sell')->get();
+        $propertyTypes = PropertyType::orderBy('type_name', 'asc')->get();
+        $propertyRooms = Property::select('bedrooms')
+            ->distinct()
+            ->orderBy('bedrooms', 'asc')
+            ->get();
+        $priceLowest = Property::select('price')
+            ->distinct()
+            ->orderBy('price', 'asc')
+            ->get();
+        $priceMax = Property::select('maximum_price')
+            ->distinct()
+            ->orderBy('maximum_price', 'asc')
+            ->get();
+        $propertyStatus = Property::select('property_status')
+            ->distinct()
+            ->orderBy('property_status', 'asc')
+            ->get();
+        $countries = Country::get();
+
+        $currency = 'USD'; // Default currency
+
+        // Fetch user's IP and location details
+        $ip = request()->ip(); // Get user IP address
+
+        // Handle local IP (127.0.0.1 or ::1)
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // For local development, assume Nigeria (NGN) as the default currency
+            return $this->handleLocalRequestRent(
+                $rentedProperties,
+                $propertyStatusRent,
+                $propertyStatusSell,
+                $propertyStatusBuy,
+                $propertyTypes,
+                $countries,
+                $propertyRooms,
+                $priceLowest,
+                $priceMax,
+                $propertyStatus,
+                $currency
+            );
+        }
+
+        try {
+            // Path to the GeoLite2 database
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+
+            // Retrieve country name and currency code (if available)
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+        } catch (\Exception $e) {
+            // Log the error and use default currency
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
+
+        // Return the combined paginated data to the view
+        return view('frontend.book.rent_properties', compact(
+            'rentedProperties',
+            'propertyStatusRent',
+            'propertyStatusBuy',
+            'propertyStatusSell',
+            'propertyTypes',
+            'countries',
+            'propertyRooms',
+            'priceLowest',
+            'priceMax',
+            'propertyStatus',
+            'currency'
+        ));
+    }
+    //
+    public function handleLocalRequestRent(
+        $rentedProperties,
+        $propertyStatusRent,
+        $propertyStatusSell,
+        $propertyStatusBuy,
+        $propertyTypes,
+        $countries,
+        $propertyRooms,
+        $priceLowest,
+        $priceMax,
+        $propertyStatus,
+        $currency
+    ) {
+        $currency = 'NGN'; // Default currency for local development
+
+        if ($rentedProperties) {
+            return view('frontend.book.rent_properties', compact(
+                'rentedProperties',
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency'
+            ));
+        }
+
+        abort(404, 'Property not found');
+    }
+
+    // Buy Properties
+    public function BuyProperties()
+    {
+        // Fetch paginated properties
+        $buyProperties = Property::where('status', '1')->where('property_status', 'buy')->paginate(6); // Paginate properties with 2 items per page
+
+        // Fetch additional data for filtering (status, types, etc.)
+        $propertyStatusRent = Property::where('property_status', 'rent')->get();
+        $propertyStatusBuy = Property::where('property_status', 'buy')->get();
+        $propertyStatusSell = Property::where('property_status', 'sell')->get();
+        $propertyTypes = PropertyType::orderBy('type_name', 'asc')->get();
+        $propertyRooms = Property::select('bedrooms')
+            ->distinct()
+            ->orderBy('bedrooms', 'asc')
+            ->get();
+        $priceLowest = Property::select('price')
+            ->distinct()
+            ->orderBy('price', 'asc')
+            ->get();
+        $priceMax = Property::select('maximum_price')
+            ->distinct()
+            ->orderBy('maximum_price', 'asc')
+            ->get();
+        $propertyStatus = Property::select('property_status')
+            ->distinct()
+            ->orderBy('property_status', 'asc')
+            ->get();
+        $countries = Country::get();
+
+        $currency = 'USD'; // Default currency
+
+        // Fetch user's IP and location details
+        $ip = request()->ip(); // Get user IP address
+
+        // Handle local IP (127.0.0.1 or ::1)
+        if ($ip == '127.0.0.1' || $ip == '::1') {
+            // For local development, assume Nigeria (NGN) as the default currency
+            return $this->handleLocalRequestBuy(
+                $buyProperties,
+                $propertyStatusRent,
+                $propertyStatusSell,
+                $propertyStatusBuy,
+                $propertyTypes,
+                $countries,
+                $propertyRooms,
+                $priceLowest,
+                $priceMax,
+                $propertyStatus,
+                $currency
+            );
+        }
+
+        try {
+            // Path to the GeoLite2 database
+            $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+            $record = $reader->city($ip);
+
+            // Retrieve country name and currency code (if available)
+            $country = $record->country->name ?? 'Unknown';
+            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+        } catch (\Exception $e) {
+            // Log the error and use default currency
+            Log::error('GeoLite2 Error: ' . $e->getMessage());
+        }
+
+        // Return the combined paginated data to the view
+        return view('frontend.book.buy_properties', compact(
+            'buyProperties',
+            'propertyStatusRent',
+            'propertyStatusBuy',
+            'propertyStatusSell',
+            'propertyTypes',
+            'countries',
+            'propertyRooms',
+            'priceLowest',
+            'priceMax',
+            'propertyStatus',
+            'currency'
+        ));
+    }
+    //
+    public function handleLocalRequestBuy(
+        $buyProperties,
+        $propertyStatusRent,
+        $propertyStatusSell,
+        $propertyStatusBuy,
+        $propertyTypes,
+        $countries,
+        $propertyRooms,
+        $priceLowest,
+        $priceMax,
+        $propertyStatus,
+        $currency
+    ) {
+        $currency = 'NGN'; // Default currency for local development
+
+        if ($buyProperties) {
+            return view('frontend.book.buy_properties', compact(
+                'buyProperties',
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency'
+            ));
+        }
+
+        abort(404, 'Property not found');
+    }
+    // SubmitRequest
+    // public function SubmitRequest(Request $request, $propertyId)
+    // {
+    //     $request->validate([
+    //         'requested_time' => 'required|date|after_or_equal:now',
+    //     ]);
+
+    //     // Check if the requested time falls within availability
+    //     $availability = Availability::where('property_id', $propertyId)
+    //         ->where('start_time', '<=', $request->requested_time)
+    //         ->where('end_time', '>=', $request->requested_time)
+    //         ->first();
+
+    //     $notification = array(
+    //         'message' => 'The selected time is not available!',
+    //         'alert-type' => 'error'
+    //     );
+
+    //     if (!$availability) {
+    //         return redirect()->back()->with($notification);
+    //     }
+
+    //     // Create the viewing request
+    //     ViewingRequest::create([
+    //         'property_id' => $propertyId,
+    //         'user_id' => auth()->id(),
+    //         'requested_time' => $request->requested_time,
+    //         'status' => 'pending',
+    //     ]);
+
+    //     session()->flash('status', 'success');
+    //     session()->flash('message', 'Your viewing request has been submitted successfully.!');
+
+    //     // Redirect back to the previous page
+    //     return redirect()->back();
+    // }
+
+    public function SubmitRequest(Request $request, $propertyId)
+    {
+        // Validate the request input for the date
+        $request->validate([
+            'name'=> 'required',
+            'email'=> 'required',
+            'phone'=> 'required',
+            'requested_date' => 'required|date|after_or_equal:today', // Ensure the date is today or in the future
+            'requested_time' => 'required|date_format:H:i',  // Ensure the time is in valid format (HH:mm)
+        ]);
+
+        // Get the requested date
+        $requestedDate = $request->requested_date;
+
+        // Check if the requested date is within the availability date range for the property
+        $isAvailable = Availability::where('property_id', $propertyId)
+            ->where('start_date', '<=', $requestedDate)  // Check if the requested date is on or after the start date
+            ->where('end_date', '>=', $requestedDate)    // Check if the requested date is on or before the end date
+            ->exists();
+
+        if (!$isAvailable) {
+            // If the date is not available within the range, return an error
+            $notification = array(
+                'message' => 'The selected date is not available. Please choose another date.',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        // Check if the requested date is already booked by another user
+        $isAlreadyBooked = ViewingRequest::where('property_id', $propertyId)
+            ->where('requested_date', $requestedDate) // Checking if the requested date is already booked
+            ->exists();
+
+        if ($isAlreadyBooked) {
+            // If the date is already booked, return an error
+            $notification = array(
+                'message' => 'The selected date is already booked. Please choose another date.',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        // If everything is fine, create the viewing request
+        ViewingRequest::create([
+            'property_id' => $propertyId,
+            'name'=> $request->name,
+            'email'=> $request->email,
+            'phone'=> $request->phone,
+            'requested_time'=> $request->requested_time,
+            'user_id' => auth()->id(),
+            'requested_date' => $requestedDate,  // Store only the date in the requested_time field
+            'status' => 'pending',  // Pending status until approval
+        ]);
+
+        // Send success notification
+        session()->flash('status', 'success');
+        session()->flash('message', 'Your viewing request has been submitted successfully.');
+        return redirect()->back();
+    }
+
+
 }

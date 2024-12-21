@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Backend\AmenitiesController;
+use App\Http\Controllers\Backend\AvailabilityController;
 use App\Http\Controllers\Backend\NotificationController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\OwnerPropertyController;
 use App\Http\Controllers\Frontend\SellerController;
 use App\Http\Controllers\Frontend\UserController as FrontendUserController;
+use App\Http\Controllers\Frontend\ViewingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -53,12 +55,18 @@ Route::group(["middleware" => "prevent-back-history"], function () {
             return redirect()->back(); // Redirect back or to a default page
         });
 
+        // Route::get('/properties/{propertyId}/availability/{date}', [ViewingController::class, 'checkAvailability']);
+        // Route::post('/properties/{propertyId}/viewing-request', [ViewingController::class, 'submitViewingRequest']);
+        Route::post('/store/{propertyId}/viewing/request', 'SubmitRequest')->name('viewing.request');
+
         Route::post('/search/price/properties', 'SearchPriceProperty')->name('search.price.properties');
         Route::get('/property/details/{id}/{slug}', 'BookPropertyDetails');
         Route::get('/user/property/book/{id}', 'UserAuthBook')->name('user.auth.booking');
         Route::post('/book-property/{propertyId}', 'BookPropertyNow')->name('book.property.now');
         Route::post('/store/booking', 'StoreBooking')->name('store.booking');
         Route::post('/store/booking/guest', 'StoreBookingGuest')->name('store.booking.guest');
+        Route::get('/rent/properties', 'RentProperties')->name('rent.properties');
+        Route::get('/buy/properties', 'BuyProperties')->name('buy.properties');
     });
 
     Route::middleware(['auth', 'roles:user', 'verified'])->group(function () {
@@ -184,6 +192,12 @@ Route::group(["middleware" => "prevent-back-history"], function () {
             Route::get('/delete/multiimages/property/{id}', 'PropertyMultiDelete')->name('property.multiimg.delete');
             Route::get('/details/property/{id}', 'DetailsProperty')->name('property.details');
             Route::get('/change/property/status/{id}', 'ChangeStatus')->name('change.property.status');
+        });
+
+        // Availability Management
+        Route::controller(AvailabilityController::class)->group(function () {
+            Route::get('/properties/{propertyId}/availability/create', 'CreateAvailability')->name('availability.create');
+            Route::post('/properties/{propertyId}/availability', 'StoreAvailability')->name('availability.store');
         });
 
         // Notifications
