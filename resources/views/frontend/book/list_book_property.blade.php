@@ -64,6 +64,14 @@
     <!-- property-page-section -->
     <section class="property-page-section property-list">
         <div class="auto-container">
+            @if (session('message'))
+                <div class="alert alert-{{ session('status') == 'success' ? 'success' : 'danger' }} alert-dismissible fade show"
+                    role="alert">
+                    {{ session('message') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="row clearfix">
                 <div class="col-lg-4 col-md-12 col-sm-12 sidebar-side">
                     <div class="default-sidebar property-sidebar">
@@ -168,25 +176,24 @@
                                 </form>
                             </div>
                         </div>
-                        {{-- <div class="price-filter sidebar-widget">
-                            <div class="widget-title">
-                                <h5>Select Price Range</h5>
-                            </div>
-                            <div class="range-slider clearfix">
-                                <div class="clearfix">
-                                    <div class="input">
-                                        <input type="text" class="property-amount" name="field-name" readonly="">
-                                    </div>
-                                </div>
-                                <div class="price-range-slider"></div>
-                            </div>
-                        </div> --}}
+                        <div class="category-widget sidebar-widget">
+                            <a href="#">
+                                <img src="{{asset('frontend/assets/images/adverts/adverts.png')}}" alt=""
+                            class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="category-widget sidebar-widget">
+                            <a href="{{route('sell.my.property.details')}}">
+                                <img src="{{asset('frontend/assets/images/adverts/adverts2.png')}}" alt=""
+                            class="img-fluid">
+                            </a>
+                        </div>
                         <div class="category-widget sidebar-widget">
                             <div class="widget-title">
                                 <h5>Status Of Property</h5>
                             </div>
                             <ul class="category-list clearfix">
-                                <li><a href="property-details.html">For Rent
+                                <li><a href="{{ route('rent.properties') }}">For Rent
                                         <span>
                                             @if ($propertyStatusRent && count($propertyStatusRent) > 0)
                                                 ({{ count($propertyStatusRent) }})
@@ -197,21 +204,10 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li><a href="property-details.html">For Buy
+                                <li><a href="{{ route('buy.properties') }}">For Buy
                                         <span>
                                             @if ($propertyStatusBuy && count($propertyStatusBuy) > 0)
                                                 ({{ count($propertyStatusBuy) }})
-                                            @else
-                                                <!-- Handle the case when properties are not available -->
-                                                (0)
-                                            @endif
-                                        </span>
-                                    </a>
-                                </li>
-                                <li><a href="property-details.html">For Sell
-                                        <span>
-                                            @if ($propertyStatusSell && count($propertyStatusSell) > 0)
-                                                ({{ count($propertyStatusSell) }})
                                             @else
                                                 <!-- Handle the case when properties are not available -->
                                                 (0)
@@ -250,13 +246,16 @@
                                 <div class="short-box clearfix">
                                     <div class="select-box">
                                         <form id="property-sort-form" method="GET"
-                                        action="{{ route('filter.sort.properties') }}">
+                                            action="{{ route('filter.sort.properties') }}">
                                             @csrf
-                                           <select class="wide see form-select" id="sort_id" name="sort">
-                                            <option data-display="Sort By">Sort By</option>
-                                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
-                                            <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Price: Low to High</option>
-                                            <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Price: High to Low</option>
+                                            <select class="wide see form-select" id="sort_id" name="sort">
+                                                <option data-display="Sort By">Sort By</option>
+                                                <option value="latest"
+                                                    {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
+                                                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>
+                                                    Price: Low to High</option>
+                                                <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>
+                                                    Price: High to Low</option>
                                             </select>
                                         </form>
                                     </div>
@@ -293,10 +292,17 @@
                                                             {{ ucfirst($item->property_status) }} Now</a></div>
                                                 </div>
                                                 <div class="lower-content">
-                                                    <div class="title-text">
+                                                    <div class="title-text d-flex justify-content-between">
                                                         <h4><a
                                                                 href="property-details.html">{{ ucwords($item->property_name) }}</a>
                                                         </h4>
+                                                        <div class="text-center">
+                                                            @if ($item->verification_status == '1')
+                                                            <span class="badge text-bg-success p-1">verified</span>
+                                                            @else
+                                                            <span class="badge text-bg-danger p-1">unverified</span>
+                                                            @endif
+                                                    </div>
                                                     </div>
                                                     <div class="price-box clearfix">
                                                         <div class="price-info pull-left">
@@ -369,12 +375,20 @@
                                                     <div class="modal-footer  mx-auto">
                                                         <button type="button" class="btn btn-danger"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#staticBackdrop2-{{ $item->id }}">Proceed as a Guest
-                                                            User</button>
+                                                            data-bs-target="#staticBackdrop2-{{ $item->id }}">Proceed
+                                                            as a Guest
+                                                        </button>
+                                                        @auth
                                                         <a href="{{ route('user.auth.booking', $item->id) }}"
-                                                            type="button" class="btn btn-primary">Login as a User</a>
-                                                        {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button> --}}
+                                                            type="button" class="btn btn-success">Book as a User
+                                                        </a>
+                                                        @endauth
+
+                                                        @guest
+                                                        <a href="{{ route('user.auth.booking', $item->id) }}"
+                                                            type="button" class="btn btn-primary">Login as a User
+                                                        </a>
+                                                        @endguest
                                                     </div>
                                                 </div>
                                             </div>
@@ -389,110 +403,47 @@
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5"
                                                             id="staticBackdrop2Label-{{ $item->id }}">
-                                                            @if ($item->property_status === 'buy')
-                                                            Buy Now
-                                                        @elseif($item->property_status === 'rent')
-                                                            Rent Now
-                                                        @elseif($item->property_status === 'lease')
-                                                            Lease Now
-                                                        @else
-                                                            Book Now
-                                                        @endif
+                                                            {{-- @if ($item->property_status === 'buy')
+                                                                Buy Now
+                                                            @elseif($item->property_status === 'rent')
+                                                                Rent Now
+                                                            @elseif($item->property_status === 'lease')
+                                                                Lease Now
+                                                            @else
+                                                                Book Now
+                                                            @endif --}}
+                                                            Submit Request
                                                         </h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body p-4">
-                                                        <form action="{{ route('store.booking.guest') }}" method="post">
+
+                                                        <form action="{{ route('viewing.request', $item->id) }}"  method="post">
                                                             @csrf
-                                                            <div class="row g-3 mb-3">
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">User's Name <span
-                                                                            class="text-danger">*</span> </label>
-                                                                    <input type="name" class="form-control"
-                                                                        aria-label="Name" name="name" required>
-                                                                </div>
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">Email <span
-                                                                            class="text-danger">*</span> </label>
-                                                                    <input type="email" class="form-control"
-                                                                        aria-label="Email" name="email" required>
-                                                                </div>
+                                                            <div class="mb-3">
+                                                                <label for="requested_time" class="form-label">Full Name</label>
+                                                                <input type="text" name="name" id="" class="form-control" required>
                                                             </div>
-                                                            <div class="row g-3 mb-3">
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">Phone Number <span
-                                                                            class="text-danger">*</span> </label>
-                                                                    <input type="name" class="form-control"
-                                                                        aria-label="Phone" name="phone" required>
-                                                                </div>
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">Property Name</label>
-                                                                    <input type="text" class="form-control"
-                                                                        aria-label="Property Name" name="property_name"
-                                                                        required value="{{ $item->property_name }}"
-                                                                        readonly>
-                                                                </div>
+                                                            <div class="mb-3">
+                                                                <label for="requested_time" class="form-label">Email</label>
+                                                                <input type="email" name="email" id="" class="form-control" required>
                                                             </div>
-                                                            <div class="row g-3 mb-3">
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">Property Type</label>
-                                                                    <input type="name" class="form-control"
-                                                                        aria-label="Property Type" name="property_type"
-                                                                        required value="{{ $item->type->type_name }}"
-                                                                        readonly>
-                                                                </div>
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">Property ID</label>
-                                                                    <input type="email" class="form-control"
-                                                                        aria-label="Property ID" name="property_code"
-                                                                        required value="{{ $item->property_code }}"
-                                                                        readonly>
-                                                                </div>
+                                                            <div class="mb-3">
+                                                                <label for="requested_time" class="form-label">Phone</label>
+                                                                <input type="text" name="phone" id="" class="form-control" required>
                                                             </div>
-                                                            <div class="row g-3 mb-3">
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">Country</label>
-                                                                    <input type="name" class="form-control"
-                                                                        aria-label="Country" name="country" required
-                                                                        value="{{ $item->country->name }}" readonly>
-                                                                </div>
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">State/County</label>
-                                                                    <input type="email" class="form-control"
-                                                                        aria-label="State" name="state" required
-                                                                        value="{{ $item->state->name }}" readonly>
-                                                                </div>
+                                                            <div class="mb-3">
+                                                                <label for="requested_time" class="form-label">Select Date</label>
+                                                                <input type="date" name="requested_date" id="requested_date" class="form-control" required>
                                                             </div>
-                                                            <div class="row g-3 mb-3">
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">City</label>
-                                                                    <input type="name" class="form-control"
-                                                                        aria-label="City" name="city" required
-                                                                        value="{{ $item->city->name }}" readonly>
-                                                                </div>
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="">Price
-                                                                        ({{ $currency }})
-                                                                    </label>
-                                                                    <input type="email" class="form-control"
-                                                                        aria-label="Price" name="price" required
-                                                                        value="{{ $item->price }}" readonly>
-                                                                </div>
+                                                            <div class="mb-3">
+                                                                <label for="requested_time" class="form-label">Select Time</label>
+                                                                <input type="time" name="requested_time" id="requested_time" class="form-control" required>
                                                             </div>
+
                                                             <div class="d-grid gap-2 form-group message-btn">
-                                                                <button class="theme-btn btn-one" type="submit"
-                                                                    id="">
-                                                                    @if ($item->property_status === 'buy')
-                                                                    Buy Now
-                                                                @elseif($item->property_status === 'rent')
-                                                                    Rent Now
-                                                                @elseif($item->property_status === 'lease')
-                                                                    Lease Now
-                                                                @else
-                                                                    Book Now
-                                                                @endif
-                                                                </button>
+                                                                <button type="submit" class="theme-btn btn-one">Request Viewing</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -635,19 +586,19 @@
         });
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const sortField = document.getElementById('sort_id');
-        const form = document.getElementById('property-sort-form');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sortField = document.getElementById('sort_id');
+            const form = document.getElementById('property-sort-form');
 
-        // Handle sort changes
-        if (sortField) {
-            sortField.addEventListener('change', function () {
-                form.submit(); // Automatically submit the form
-            });
-        }
-    });
-</script>
+            // Handle sort changes
+            if (sortField) {
+                sortField.addEventListener('change', function() {
+                    form.submit(); // Automatically submit the form
+                });
+            }
+        });
+    </script>
 
 
     <script>
@@ -699,5 +650,20 @@
             });
         });
     </script>
+
+<script>
+    // Get the current date
+    const now = new Date();
+
+    // Format date as YYYY-MM-DD
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    const currentDate = `${year}-${month}-${day}`;
+
+    // Set the min attribute for the input field
+    document.getElementById('requested_date').setAttribute('min', currentDate);
+</script>
 
 @endsection

@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
 use App\Http\Controllers\Backend\SellerController as BackendSellerController;
 use App\Http\Controllers\Frontend\BookPropertyController;
+use App\Http\Controllers\frontend\FeaturedPropertyController;
 use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\OwnerPropertyController;
 use App\Http\Controllers\Frontend\SellerController;
@@ -40,6 +41,9 @@ Route::group(["middleware" => "prevent-back-history"], function () {
     //     return response()->json($location);
     // });
 
+    // Route to display featured properties
+Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedProperties'])->name('featured.properties');
+
     // Book Search Page
     Route::controller(BookPropertyController::class)->group(function () {
         Route::get('/list/all/property',  'ListAllProperty')->name('list.all.property');
@@ -60,7 +64,7 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::post('/store/{propertyId}/viewing/request', 'SubmitRequest')->name('viewing.request');
 
         Route::post('/search/price/properties', 'SearchPriceProperty')->name('search.price.properties');
-        Route::get('/property/details/{id}/{slug}', 'BookPropertyDetails');
+        Route::get('/property/details/{id}/{slug}', 'BookPropertyDetails')->name('book.details.properties');
         Route::get('/user/property/book/{id}', 'UserAuthBook')->name('user.auth.booking');
         Route::post('/book-property/{propertyId}', 'BookPropertyNow')->name('book.property.now');
         Route::post('/store/booking', 'StoreBooking')->name('store.booking');

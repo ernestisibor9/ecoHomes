@@ -24,6 +24,11 @@ use App\Mail\BookMail;
 use App\Models\Availability;
 use App\Models\ViewingRequest;
 
+
+use GuzzleHttp\Client; // For making API requests
+use Illuminate\Support\Facades\Cache;
+
+
 class BookPropertyController extends Controller
 {
     // BookSearch
@@ -88,71 +93,157 @@ class BookPropertyController extends Controller
 
     // ListAllPropertyuse Illuminate\Pagination\LengthAwarePaginator;
 
+    // public function ListAllProperty()
+    // {
+    //     // Fetch paginated properties
+    //     $sortedData2 = Property::where('status', '1')->latest()->paginate(6); // Paginate properties with 2 items per page
+
+    //     // Fetch additional data for filtering (status, types, etc.)
+    //     $propertyStatusRent = Property::where('property_status', 'rent')->get();
+    //     $propertyStatusBuy = Property::where('property_status', 'buy')->get();
+    //     $propertyStatusSell = Property::where('property_status', 'sell')->get();
+    //     $propertyTypes = PropertyType::orderBy('type_name', 'asc')->get();
+    //     $propertyRooms = Property::select('bedrooms')
+    //         ->distinct()
+    //         ->orderBy('bedrooms', 'asc')
+    //         ->get();
+    //     $priceLowest = Property::select('price')
+    //         ->distinct()
+    //         ->orderBy('price', 'asc')
+    //         ->get();
+    //     $priceMax = Property::select('maximum_price')
+    //         ->distinct()
+    //         ->orderBy('maximum_price', 'asc')
+    //         ->get();
+    //     $propertyStatus = Property::select('property_status')
+    //         ->distinct()
+    //         ->orderBy('property_status', 'asc')
+    //         ->get();
+    //     $countries = Country::get();
+
+    //     $currency = 'USD'; // Default currency
+
+    //     // Fetch user's IP and location details
+    //     $ip = request()->ip(); // Get user IP address
+
+    //     // Handle local IP (127.0.0.1 or ::1)
+    //     if ($ip == '127.0.0.1' || $ip == '::1') {
+    //         // For local development, assume Nigeria (NGN) as the default currency
+    //         return $this->handleLocalRequestList(
+    //             $sortedData2,
+    //             $propertyStatusRent,
+    //             $propertyStatusSell,
+    //             $propertyStatusBuy,
+    //             $propertyTypes,
+    //             $countries,
+    //             $propertyRooms,
+    //             $priceLowest,
+    //             $priceMax,
+    //             $propertyStatus,
+    //             $currency
+    //         );
+    //     }
+
+    //     try {
+    //         // Path to the GeoLite2 database
+    //         $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+    //         $record = $reader->city($ip);
+
+    //         // Retrieve country name and currency code (if available)
+    //         $country = $record->country->name ?? 'Unknown';
+    //         $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+    //     } catch (\Exception $e) {
+    //         // Log the error and use default currency
+    //         Log::error('GeoLite2 Error: ' . $e->getMessage());
+    //     }
+
+    //     // Return the combined paginated data to the view
+    //     return view('frontend.book.list_all_property', compact(
+    //         'sortedData2',
+    //         'propertyStatusRent',
+    //         'propertyStatusBuy',
+    //         'propertyStatusSell',
+    //         'propertyTypes',
+    //         'countries',
+    //         'propertyRooms',
+    //         'priceLowest',
+    //         'priceMax',
+    //         'propertyStatus',
+    //         'currency'
+    //     ));
+    // }
+    //
+
     public function ListAllProperty()
     {
         // Fetch paginated properties
-        $sortedData2 = Property::where('status', '1')->paginate(6); // Paginate properties with 2 items per page
+        $sortedData2 = Property::where('status', '1')->latest()->paginate(6);
 
-        // Fetch additional data for filtering (status, types, etc.)
+        // Fetch additional data for filtering
         $propertyStatusRent = Property::where('property_status', 'rent')->get();
         $propertyStatusBuy = Property::where('property_status', 'buy')->get();
         $propertyStatusSell = Property::where('property_status', 'sell')->get();
         $propertyTypes = PropertyType::orderBy('type_name', 'asc')->get();
-        $propertyRooms = Property::select('bedrooms')
-            ->distinct()
-            ->orderBy('bedrooms', 'asc')
-            ->get();
-        $priceLowest = Property::select('price')
-            ->distinct()
-            ->orderBy('price', 'asc')
-            ->get();
-        $priceMax = Property::select('maximum_price')
-            ->distinct()
-            ->orderBy('maximum_price', 'asc')
-            ->get();
-        $propertyStatus = Property::select('property_status')
-            ->distinct()
-            ->orderBy('property_status', 'asc')
-            ->get();
+        $propertyRooms = Property::select('bedrooms')->distinct()->orderBy('bedrooms', 'asc')->get();
+        $priceLowest = Property::select('price')->distinct()->orderBy('price', 'asc')->get();
+        $priceMax = Property::select('maximum_price')->distinct()->orderBy('maximum_price', 'asc')->get();
+        $propertyStatus = Property::select('property_status')->distinct()->orderBy('property_status', 'asc')->get();
         $countries = Country::get();
 
-        $currency = 'USD'; // Default currency
+        $currency = 'NGN'; // Default currency
+        $exchangeRate = 1.0; // Default exchange rate
 
         // Fetch user's IP and location details
-        $ip = request()->ip(); // Get user IP address
+        $ip = request()->ip();
 
-        // Handle local IP (127.0.0.1 or ::1)
         if ($ip == '127.0.0.1' || $ip == '::1') {
-            // For local development, assume Nigeria (NGN) as the default currency
-            return $this->handleLocalRequestList(
-                $sortedData2,
-                $propertyStatusRent,
-                $propertyStatusSell,
-                $propertyStatusBuy,
-                $propertyTypes,
-                $countries,
-                $propertyRooms,
-                $priceLowest,
-                $priceMax,
-                $propertyStatus,
-                $currency
-            );
+            // Handle local requests
+            return view('frontend.book.list_all_property', compact(
+                'sortedData2',
+                'propertyStatusRent',
+                'propertyStatusBuy',
+                'propertyStatusSell',
+                'propertyTypes',
+                'countries',
+                'propertyRooms',
+                'priceLowest',
+                'priceMax',
+                'propertyStatus',
+                'currency',
+                'exchangeRate'
+            ));
         }
 
         try {
-            // Path to the GeoLite2 database
+            // GeoIP lookup
             $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
             $record = $reader->city($ip);
-
-            // Retrieve country name and currency code (if available)
             $country = $record->country->name ?? 'Unknown';
-            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+            $currency = $this->getCurrencyForCountry($country);
+
+            // Fetch exchange rate
+            if ($currency !== 'NGN') {
+                $exchangeRate = $this->fetchExchangeRate('NGN', $currency);
+            }
         } catch (\Exception $e) {
-            // Log the error and use default currency
             Log::error('GeoLite2 Error: ' . $e->getMessage());
         }
 
-        // Return the combined paginated data to the view
+        // Convert property prices based on exchange rate
+        foreach ($sortedData2 as $property) {
+            $property->price_converted = $property->price * $exchangeRate; // Apply exchange rate conversion
+        }
+
+        // Convert priceLowest and priceMax based on exchange rate
+        foreach ($priceLowest as $price) {
+            $price->converted_price = $price->price * $exchangeRate; // Apply exchange rate conversion
+        }
+
+        foreach ($priceMax as $price) {
+            $price->converted_price = $price->maximum_price * $exchangeRate; // Apply exchange rate conversion
+        }
+
+        // Return view with data
         return view('frontend.book.list_all_property', compact(
             'sortedData2',
             'propertyStatusRent',
@@ -164,11 +255,72 @@ class BookPropertyController extends Controller
             'priceLowest',
             'priceMax',
             'propertyStatus',
-            'currency'
+            'currency',
+            'exchangeRate'
         ));
     }
 
-    //
+    /**
+     * Get currency for a given country.
+     */
+    private function getCurrencyForCountry($country)
+    {
+        $currencyMap = [
+            'Germany' => 'EUR',          // Euro
+            'United States' => 'USD',    // US Dollar
+            'Nigeria' => 'NGN',          // Nigerian Naira
+            'United Kingdom' => 'GBP',   // British Pound
+            'Canada' => 'CAD',           // Canadian Dollar
+            'Australia' => 'AUD',        // Australian Dollar
+            'Japan' => 'JPY',            // Japanese Yen
+            'India' => 'INR',            // Indian Rupee
+            'China' => 'CNY',            // Chinese Yuan
+            'South Africa' => 'ZAR',     // South African Rand
+            'Kenya' => 'KES',            // Kenyan Shilling
+            'Brazil' => 'BRL',           // Brazilian Real
+            'Mexico' => 'MXN',           // Mexican Peso
+            'Saudi Arabia' => 'SAR',     // Saudi Riyal
+            'United Arab Emirates' => 'AED', // UAE Dirham
+            'Russia' => 'RUB',           // Russian Ruble
+            'France' => 'EUR',           // Euro (shared currency)
+            'Italy' => 'EUR',            // Euro (shared currency)
+            'Spain' => 'EUR',            // Euro (shared currency)
+            'Sweden' => 'SEK',           // Swedish Krona
+            'Norway' => 'NOK',           // Norwegian Krone
+            'Switzerland' => 'CHF',      // Swiss Franc
+            'Turkey' => 'TRY',           // Turkish Lira
+            'Argentina' => 'ARS',        // Argentine Peso
+            'Egypt' => 'EGP',            // Egyptian Pound
+            'Ghana' => 'GHS',            // Ghanaian Cedi
+            // Add more country-to-currency mappings
+        ];
+
+        return $currencyMap[$country] ?? 'USD'; // Default to USD
+    }
+
+    /**
+     * Fetch exchange rate between two currencies.
+     */
+    private function fetchExchangeRate($baseCurrency, $targetCurrency)
+    {
+        $cacheKey = "exchange_rate_{$baseCurrency}_{$targetCurrency}";
+
+        // Check cache first
+        return Cache::remember($cacheKey, 3600, function () use ($baseCurrency, $targetCurrency) {
+            try {
+                $client = new Client();
+                $response = $client->get('https://v6.exchangerate-api.com/v6/4a33dde88ef89e91f1ee13a8/latest/' . $baseCurrency);
+                $data = json_decode($response->getBody(), true);
+
+                return $data['conversion_rates'][$targetCurrency] ?? 1.0; // Default to 1.0 if not found
+            } catch (\Exception $e) {
+                Log::error('Exchange Rate API Error: ' . $e->getMessage());
+                return 1.0; // Default exchange rate in case of error
+            }
+        });
+    }
+
+
 
     public function handleLocalRequestList(
         $sortedData2,
@@ -181,7 +333,8 @@ class BookPropertyController extends Controller
         $priceLowest,
         $priceMax,
         $propertyStatus,
-        $currency
+        $currency,
+        $exchangeRate // Default exchange rate for local development
     ) {
         $currency = 'NGN'; // Default currency for local development
 
@@ -197,7 +350,8 @@ class BookPropertyController extends Controller
                 'priceLowest',
                 'priceMax',
                 'propertyStatus',
-                'currency'
+                'currency',
+                'exchangeRate'
             ));
         }
 
@@ -764,25 +918,119 @@ class BookPropertyController extends Controller
     }
 
     // BookPropertyDetails
+    // public function BookPropertyDetails($id, $slug)
+    // {
+    //     // Attempt to fetch the property from both tables
+    //     $property = Property::find($id);
+    //     $sellProperty = SellMyProperty::find($id);
+
+    //     // Initialize variables
+    //     $multiImage = [];
+    //     $property_amen = [];
+    //     $amenitiesSell = [];
+    //     $currency = 'USD'; // Default currency
+
+    //     // Fetch user's IP and location details
+    //     $ip = request()->ip(); // Get user IP address
+
+    //     // Handle local IP (127.0.0.1 or ::1)
+    //     if ($ip == '127.0.0.1' || $ip == '::1') {
+    //         // For local development, assume Nigeria (NGN) as the default currency
+    //         return $this->handleLocalRequest($property, $sellProperty, $currency);
+    //     }
+
+    //     try {
+    //         // Path to the GeoLite2 database
+    //         $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
+    //         $record = $reader->city($ip);
+
+    //         // Retrieve country name and currency code (if available)
+    //         $country = $record->country->name ?? 'Unknown';
+    //         $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+    //     } catch (\Exception $e) {
+    //         // Log the error and use default currency
+    //         Log::error('GeoLite2 Error: ' . $e->getMessage());
+    //     }
+
+    //     // Fetch property amenities and images if property exists
+    //     if ($property) {
+    //         $amenities = $property->amenities_id ?? '';
+    //         $amenitiesIds = $amenities ? explode(',', $amenities) : [];
+    //         $property_amen = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
+    //         $multiImage = MultiImage::where('property_id', $id)->get();
+
+    //         return view('frontend.book.book_property_details', compact(
+    //             'property',
+    //             'multiImage',
+    //             'property_amen',
+    //             'currency' // Pass currency to the view
+    //         ));
+    //     }
+
+    //     // If no property found, fallback to SellMyProperty data
+    //     if ($sellProperty) {
+    //         $amenitiesIds = $sellProperty->amenities ? json_decode($sellProperty->amenities, true) : [];
+    //         $amenitiesSell = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
+    //         return view('frontend.book.book_property_details', compact(
+    //             'sellProperty',
+    //             'amenitiesSell',
+    //             'currency' // Pass currency to the view
+    //         ));
+    //     }
+
+    //     abort(404, 'Property not found');
+    // }
+
+    // //
+    // // Currency conversion method
+    // // Handle the local development request by returning default values
+    // public function handleLocalRequest($property, $sellProperty, $currency)
+    // {
+    //     $currency = 'NGN'; // Default currency for local development
+
+    //     if ($property) {
+    //         $multiImage = MultiImage::where('property_id', $property->id)->get();
+    //         return view('frontend.book.book_property_details', compact(
+    //             'property',
+    //             'multiImage',
+    //             'currency'
+    //         ));
+    //     }
+
+    //     if ($sellProperty) {
+    //         $amenitiesIds = $sellProperty->amenities ? json_decode($sellProperty->amenities, true) : [];
+    //         $amenitiesSell = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
+    //         return view('frontend.book.book_property_details', compact(
+    //             'sellProperty',
+    //             'amenitiesSell',
+    //             'currency'
+    //         ));
+    //     }
+
+    //     abort(404, 'Property not found');
+    // }
+
+
     public function BookPropertyDetails($id, $slug)
     {
         // Attempt to fetch the property from both tables
         $property = Property::find($id);
-        $sellProperty = SellMyProperty::find($id);
+
+        $amenities = $property->amenities_id; // Get amenities_id
+        $property_amen = explode(',', $amenities);
 
         // Initialize variables
         $multiImage = [];
-        $property_amen = [];
-        $amenitiesSell = [];
-        $currency = 'USD'; // Default currency
+        $currency = 'NGN'; // Default currency set to NGN
+        $exchangeRate = 1.0; // Default exchange rate
 
         // Fetch user's IP and location details
         $ip = request()->ip(); // Get user IP address
 
-        // Handle local IP (127.0.0.1 or ::1)
+        // Handle local IP (127.0.0.1 or ::1) or users from Nigeria
         if ($ip == '127.0.0.1' || $ip == '::1') {
-            // For local development, assume Nigeria (NGN) as the default currency
-            return $this->handleLocalRequest($property, $sellProperty, $currency);
+            // For local development, assume Nigeria
+            return $this->handleLocalRequest($property, $currency, $exchangeRate);
         }
 
         try {
@@ -790,71 +1038,78 @@ class BookPropertyController extends Controller
             $reader = new Reader(storage_path('geoip/GeoLite2-City.mmdb'));
             $record = $reader->city($ip);
 
-            // Retrieve country name and currency code (if available)
+            // Retrieve country name and determine if the user is in Nigeria
             $country = $record->country->name ?? 'Unknown';
-            $currency = $this->getCurrencyForCountry($country); // Custom helper for currency
+
+            if ($country === 'Nigeria') {
+                $currency = 'NGN';
+                $exchangeRate = 1.0; // No conversion needed for Nigeria
+            } else {
+                // Fetch the currency and exchange rate for other countries
+                $currency = $this->getCurrencyForCountry($country);
+                $exchangeRate = $this->fetchExchangeRate2('USD', $currency); // Convert from USD to target currency
+            }
         } catch (\Exception $e) {
             // Log the error and use default currency
             Log::error('GeoLite2 Error: ' . $e->getMessage());
         }
 
-        // Fetch property amenities and images if property exists
-        if ($property) {
-            $amenities = $property->amenities_id ?? '';
-            $amenitiesIds = $amenities ? explode(',', $amenities) : [];
-            $property_amen = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
             $multiImage = MultiImage::where('property_id', $id)->get();
 
             return view('frontend.book.book_property_details', compact(
                 'property',
                 'multiImage',
                 'property_amen',
-                'currency' // Pass currency to the view
+                'currency',
+                'exchangeRate' // Pass exchange rate to the view
             ));
-        }
 
-        // If no property found, fallback to SellMyProperty data
-        if ($sellProperty) {
-            $amenitiesIds = $sellProperty->amenities ? json_decode($sellProperty->amenities, true) : [];
-            $amenitiesSell = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
-            return view('frontend.book.book_property_details', compact(
-                'sellProperty',
-                'amenitiesSell',
-                'currency' // Pass currency to the view
-            ));
-        }
+
 
         abort(404, 'Property not found');
     }
 
-    //
-    // Currency conversion method
-    // Handle the local development request by returning default values
-    public function handleLocalRequest($property, $sellProperty, $currency)
+    // Fetch exchange rate using an external API
+    private function fetchExchangeRate2($baseCurrency, $targetCurrency)
     {
-        $currency = 'NGN'; // Default currency for local development
+        $cacheKey = "exchange_rate_{$baseCurrency}_{$targetCurrency}";
 
-        if ($property) {
+        // Check cache first
+        return Cache::remember($cacheKey, 3600, function () use ($baseCurrency, $targetCurrency) {
+            try {
+                $client = new Client();
+                $response = $client->get('https://v6.exchangerate-api.com/v6/4a33dde88ef89e91f1ee13a8/latest/' . $baseCurrency);
+                $data = json_decode($response->getBody(), true);
+
+                return $data['conversion_rates'][$targetCurrency] ?? 1.0; // Default to 1.0 if not found
+            } catch (\Exception $e) {
+                Log::error('Exchange Rate API Error: ' . $e->getMessage());
+                return 1.0; // Default exchange rate in case of error
+            }
+        });
+    }
+
+    // Handle local development and Nigeria-specific requests
+    public function handleLocalRequest($property, $currency, $exchangeRate)
+    {
+        $currency = 'NGN'; // Always use NGN for local development or Nigeria
+        $exchangeRate = 1.0; // No conversion for NGN
+
+        $amenities = $property->amenities_id; // Get amenities_id
+        $property_amen = explode(',', $amenities);
+
             $multiImage = MultiImage::where('property_id', $property->id)->get();
             return view('frontend.book.book_property_details', compact(
                 'property',
                 'multiImage',
-                'currency'
+                'currency',
+                'exchangeRate',
+                'property_amen'
             ));
-        }
-
-        if ($sellProperty) {
-            $amenitiesIds = $sellProperty->amenities ? json_decode($sellProperty->amenities, true) : [];
-            $amenitiesSell = Amenities::whereIn('id', $amenitiesIds)->pluck('amenities_name')->toArray();
-            return view('frontend.book.book_property_details', compact(
-                'sellProperty',
-                'amenitiesSell',
-                'currency'
-            ));
-        }
 
         abort(404, 'Property not found');
     }
+
 
 
     // BookPropertyNow
@@ -914,6 +1169,7 @@ class BookPropertyController extends Controller
     {
         $userData = Auth::user();
         $properties = Property::where('id', $id)->first();
+        // $availabilities = Availability::where('property_id', $id)->first();
         // Check if the user is logged in
         if (!Auth::check()) {
             $notification = array(
@@ -1446,9 +1702,9 @@ class BookPropertyController extends Controller
     {
         // Validate the request input for the date
         $request->validate([
-            'name'=> 'required',
-            'email'=> 'required',
-            'phone'=> 'required',
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
             'requested_date' => 'required|date|after_or_equal:today', // Ensure the date is today or in the future
             'requested_time' => 'required|date_format:H:i',  // Ensure the time is in valid format (HH:mm)
         ]);
@@ -1488,10 +1744,10 @@ class BookPropertyController extends Controller
         // If everything is fine, create the viewing request
         ViewingRequest::create([
             'property_id' => $propertyId,
-            'name'=> $request->name,
-            'email'=> $request->email,
-            'phone'=> $request->phone,
-            'requested_time'=> $request->requested_time,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'requested_time' => $request->requested_time,
             'user_id' => auth()->id(),
             'requested_date' => $requestedDate,  // Store only the date in the requested_time field
             'status' => 'pending',  // Pending status until approval
@@ -1499,9 +1755,7 @@ class BookPropertyController extends Controller
 
         // Send success notification
         session()->flash('status', 'success');
-        session()->flash('message', 'Your viewing request has been submitted successfully.');
+        session()->flash('message', 'Your viewing request has been submitted successfully. We will contact you soon');
         return redirect()->back();
     }
-
-
 }

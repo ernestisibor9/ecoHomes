@@ -26,7 +26,7 @@ class PropertyController extends Controller
         $propertyTypes = PropertyType::latest()->get();
         $amenities = Amenities::latest()->get();
         $sellers = SellMyProperty::orderBy('firstname', 'ASC')->get();
-        return view('admin.backend.property.add_property', compact('propertyTypes', 'amenities','sellers', 'countries'));
+        return view('admin.backend.property.add_property', compact('propertyTypes', 'amenities', 'sellers', 'countries'));
     }
     // AllProperty
     public function AllProperty()
@@ -45,8 +45,28 @@ class PropertyController extends Controller
         $amen = $request->amenities_id;
         $amenities = implode(',', $amen); // Add a comma to separate it and convert to array to string
 
-        $pcode = IdGenerator::generate(['table' => 'properties', 'field' =>
-        'property_code', 'length' => 5, 'prefix' => 'PC']);
+        // Determine the prefix based on property_status
+        $propertyStatus = $request->property_status;
+        $prefix = '';
+
+        if ($propertyStatus === 'buy') {
+            $prefix = 'BUY';
+        } elseif ($propertyStatus === 'lease') {
+            $prefix = 'LEA';
+        } elseif ($propertyStatus === 'rent') {
+            $prefix = 'REN';
+        }
+
+        // Generate the property code with the dynamic prefix
+        $pcode = IdGenerator::generate([
+            'table' => 'properties',
+            'field' => 'property_code',
+            'length' => 7, // Adjust length for the prefix + number
+            'prefix' => $prefix
+        ]);
+
+        // $pcode = IdGenerator::generate(['table' => 'properties', 'field' =>
+        // 'property_code', 'length' => 5, 'prefix' => 'PC']);
 
 
         // Without Imagick 700 x 800

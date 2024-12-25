@@ -1,10 +1,10 @@
-
 <style>
     @media (max-width: 768px) {
         .video-background {
             display: none;
             /* Hide video on tablets and smaller devices */
         }
+
     }
 
 
@@ -15,16 +15,16 @@
         text-align: center;
         padding: 20px;
         z-index: 2;
-        margin-top: -450px;
+        margin-top: -295px;
     }
 
-    .content h1 {
+    /* .content h1 {
         font-size: 2.5rem;
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         color: #fff;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    }
+    } */
 
     .content p {
         /* font-size: 1.5rem;
@@ -35,6 +35,13 @@
 
     .content h3 {
         color: #fff;
+        font-size: 1.1rem;
+    }
+
+    .content .card {
+        width: 75%;
+        margin: 5px auto;
+        /* Added more spacing between cards */
     }
 
     .content .card {
@@ -42,7 +49,7 @@
         /* background-color: rgba(255, 255, 255, 0.9); */
         border-radius: 15px;
         overflow: hidden;
-        margin: 15px 0;
+        margin: 5px 0;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -51,11 +58,11 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
-    .content .card img {
+    /* .content .card img {
         max-width: 100%;
         height: auto;
         display: block;
-    }
+    } */
 
     /* Tablet Responsiveness */
     @media (max-width: 768px) {
@@ -115,7 +122,7 @@
                     <div class="card-body">
                         <h3 class="card-title">Market My Property</h3>
                         <p class="card-text pb-2">
-                            market your property at a lower price and build a strong brand with our expert team.
+                            {{-- market your property to get potential buyers. --}}
                         </p>
                         <div class="button-box">
                             <a href="{{ route('sell.my.property.details') }}" class="theme-btn btn-one">Get Started</a>
@@ -128,7 +135,7 @@
                     <div class="card-body">
                         <h3 class="card-title">Book A Property</h3>
                         <p class="card-text pb-2">
-                            You can book and secure your dream property now. It's as simple and hassle-free.
+                            {{-- You can book and secure your dream property now. --}}
                         </p>
                         <div class="button-box">
                             <a href="{{ route('book.my.property.details') }}" class="theme-btn btn-one">Get Started</a>
@@ -141,8 +148,7 @@
                     <div class="card-body">
                         <h3 class="card-title">Advertise My Property</h3>
                         <p class="card-text pb-2">
-                            Our platform provides a seamless way to promote your property,
-                            ensuring it reaches potential buyers
+                            {{-- Our platform ensures it reaches potential buyers. --}}
                         </p>
                         <div class="button-box">
                             <a href="{{ route('get.started') }}" class="theme-btn btn-one">Get Started</a>

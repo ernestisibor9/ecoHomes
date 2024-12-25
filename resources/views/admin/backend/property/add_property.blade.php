@@ -38,7 +38,7 @@
                                 data-placeholder="Select Ameities" multiple required>
                                 <option selected="" disabled>Select Property Amenities</option>
                                 @foreach ($amenities as $amenity)
-                                    <option value="{{ $amenity->id }}">{{ $amenity->amenities_name }}</option>
+                                    <option value="{{ $amenity->amenities_name }}">{{ $amenity->amenities_name }}</option>
                                 @endforeach
                             </select>
                         </div>

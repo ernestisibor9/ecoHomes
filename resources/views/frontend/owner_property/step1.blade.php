@@ -1,9 +1,9 @@
 @extends('frontend.master')
 
 @section('home')
-   @php
+    @php
         $propertyTypes = App\Models\PropertyType::orderBy('type_name', 'asc')->get();
-   @endphp
+    @endphp
     <style>
         .see {
             display: block !important;
@@ -18,36 +18,38 @@
         }
     </style>
 
-<style>
-    .progress {
-        height: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-    }
+    <style>
+        .progress {
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-    .progress-bar-custom {
-        background: linear-gradient(to right, #4caf50, #81c784);
-        /* Green gradient */
-        color: white;
-        font-weight: bold;
-    }
-</style>
+        .progress-bar-custom {
+            background: linear-gradient(to right, #4caf50, #81c784);
+            /* Green gradient */
+            color: white;
+            font-weight: bold;
+        }
+    </style>
 
-<style>
-    #loading-spinner {
-        display: none; /* Hidden by default */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
-        z-index: 1000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
+    <style>
+        #loading-spinner {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent overlay */
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 
 
 
@@ -88,30 +90,30 @@
                     <p class="text-dark">Current Step: 1/4</p>
                     <h3 class="card-title text-center pt-2">FILL THE FORM TO MARKET YOUR PROPERTY</h3>
                     <div class="card-body">
-                        <form action="{{route('form.submit1')}}" id="wordCountForm" method="POST"
+                        <form action="{{ route('form.submit1') }}" id="wordCountForm" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6">
                                     <label for="">FirstName <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <input type="text"
                                         class="form-control
                                     @error('firstname')is-invalid @enderror"
-                                        placeholder="First Name" aria-label="First name"
-                                        required name="firstname"  value="{{ old('firstname') }}">
+                                        placeholder="First Name" aria-label="First name" required name="firstname"
+                                        value="{{ old('firstname') }}">
                                     @error('firstname')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <label for="">LastName <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <input type="text"
                                         class="form-control
                                     @error('lastname')is-invalid @enderror"
-                                        placeholder="Last Name" aria-label="Last name"
-                                        name="lastname" required  value="{{ old('lastname') }}">
+                                        placeholder="Last Name" aria-label="Last name" name="lastname" required
+                                        value="{{ old('lastname') }}">
                                     @error('lastname')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -120,24 +122,24 @@
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <label for="">Property Name <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <input type="text"
                                         class="form-control
                                     @error('property_name')is-invalid @enderror"
-                                        placeholder="Property Name" aria-label="property_name"
-                                        required name="property_name"  value="{{ old('property_name') }}">
+                                        placeholder="Property Name" aria-label="property_name" required name="property_name"
+                                        value="{{ old('property_name') }}">
                                     @error('property_name')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <label for="">Price <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <input type="text"
                                         class="form-control
                                     @error('price')is-invalid @enderror"
-                                        placeholder="Price" aria-label="price"
-                                        required name="price"  value="{{ old('price') }}">
+                                        placeholder="Price" aria-label="price" required name="price"
+                                        value="{{ old('price') }}">
                                     @error('price')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -146,7 +148,7 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6">
                                     <label for="">Property Type <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <select name="property_id"
                                         class="form-control see
                                      @error('property_id')is-invalid @enderror "
@@ -154,7 +156,8 @@
                                         <option value="">Select Property</option>
                                         @foreach ($propertyTypes as $propertyType)
                                             <option value="{{ $propertyType->id }}"
-                                                {{ old('property_id') == $propertyType->id ? 'selected' : '' }}>{{ $propertyType->type_name }}</option>
+                                                {{ old('property_id') == $propertyType->id ? 'selected' : '' }}>
+                                                {{ $propertyType->type_name }}</option>
                                         @endforeach
                                     </select>
                                     @error('property_id')
@@ -163,10 +166,11 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <label for="">Video <span class="text-danger">
-                                    </span> <span class="text-danger">(The video resolution must be at least 1920x1080)</span></label>
+                                        </span> <span class="text-danger">(The video resolution must be at least
+                                            1920x1080)</span></label>
                                     <input type="file" class="form-control see @error('video')is-invalid @enderror"
-                                            name="video" id="" accept="video/mp4, video/mkv, video/avi"
-                                             value="{{ old('video') }}">
+                                        name="video" id="" accept="video/mp4, video/mkv, video/avi"
+                                        value="{{ old('video') }}">
                                     @error('video')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -175,47 +179,46 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6">
                                     <label for="">Email <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <input type="email"
                                         class="form-control
                                      @error('email')is-invalid @enderror"
-                                        placeholder="Email" aria-label="Email" name="email"
-                                        required  value="{{ old('email') }}">
+                                        placeholder="Email" aria-label="Email" name="email" required
+                                        value="{{ old('email') }}">
                                     @error('email')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <label for="">Phone <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <input type="text"
                                         class="form-control
                                     @error('phone')is-invalid @enderror "
-                                        placeholder="Phone" aria-label="Phone"
-                                        name="phone" required  value="{{ old('phone') }}">
+                                        placeholder="Phone" aria-label="Phone" name="phone" required
+                                        value="{{ old('phone') }}">
                                     @error('phone')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
-                                <label for="" class="mt-2">Enter Amenities (separated by commas):  <span class="text-danger"> *
-                                </span>
+                                <label for="" class="mt-2">Enter Amenities (separated by commas): <span
+                                        class="text-danger"> *
+                                    </span>
                                 </label>
-                                <textarea class="form-control" id="amenities" rows="3"
-                                 name="amenities" required >{{ old('amenities') }}</textarea>
+                                <textarea class="form-control" id="amenities" rows="3" name="amenities" required>{{ old('amenities') }}</textarea>
                             </div>
                             <div class="row g-3 mb-3">
                                 <div class="col-12">
                                     <label for="">Upload Photos <span class="text-danger"> *
-                                    </span><span class="text-danger">(max_size: 1MB, file type:
+                                        </span><span class="text-danger">(max_size: 1MB, file type:
                                             jpeg,png,jpg,gif)
                                         </span></label>
                                     <input type="file" name="multi_img[]"
                                         class="form-control
                                      @error('multi_img.*')is-invalid @enderror"
-                                        id="multiImg" multiple
-                                         required>
+                                        id="multiImg" multiple required>
                                     @error('multi_img.*')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -228,16 +231,14 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-12">
                                     <label for="">Country <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <select name="country_id"
                                         class="form-control see
                                      @error('country_id')is-invalid @enderror "
-                                        required style="display: block"
-                                       >
+                                        required style="display: block">
                                         <option value="">Select Country</option>
                                         @foreach ($countries as $country)
-                                            <option value="{{ $country->id }}"
-                                                >{{ $country->name }}</option>
+                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('country_id')
@@ -248,12 +249,11 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-6" id="select-state-group" style="display: none;">
                                     <label for="">State/County <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <select name="state_id"
                                         class="form-control see
                                     @error('state_id')is-invalid @enderror "
-                                        required style="display: block"
-                                        value="{{ old('state_id') }}">
+                                        required style="display: block" value="{{ old('state_id') }}">
                                         {{-- <option value="">Select State</option> --}}
                                     </select>
                                     @error('state_id')
@@ -262,9 +262,9 @@
                                 </div>
                                 <div class="col-12 col-md-6" id="select-city-group" style="display: none;">
                                     <label for="">City/Town <span class="text-danger"> *
-                                    </span></label>
-                                    <select name="city_id" class="form-control see" required
-                                    style="display: block"  value="{{ old('city_id') }}">
+                                        </span></label>
+                                    <select name="city_id" class="form-control see" required style="display: block"
+                                        value="{{ old('city_id') }}">
                                         {{-- <option value="">Select City</option> --}}
                                     </select>
                                 </div>
@@ -272,10 +272,9 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-12" id="postal-code-group" style="display: none;">
                                     <label for="">Postal Code <span class="text-danger"> *
-                                    </span></label>
+                                        </span></label>
                                     <input type="text" class="form-control" name="postal_code"
-                                        placeholder="Enter your postal code"
-                                        value="{{ old('postal_code') }}">
+                                        placeholder="Enter your postal code" value="{{ old('postal_code') }}">
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
@@ -283,19 +282,17 @@
                                     <span class="text-danger"> *
                                     </span>
                                 </label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"
-                                name="address" required  >{{ old('address') }}</textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="address" required>{{ old('address') }}</textarea>
                             </div>
                             <div class="row g-3 mb-3">
                                 <label for="" class="mt-2">Property Description <span class="text-danger"> *
-                                </span>
+                                    </span>
                                     <p class="text-danger" id="wordCountMessage" style="color: red; display: none;">
                                         Your content must be at least 32 words.
                                     </p>
                                     <p id="wordCountDisplay"></p>
                                 </label>
-                                <textarea class="form-control" id="description" rows="3" name="long_description"
-                                 required  >{{ old('long_description') }}</textarea>
+                                <textarea class="form-control" id="description" rows="3" name="long_description" required>{{ old('long_description') }}</textarea>
                             </div>
                             <div class="row g-3 mb-3">
                                 {{-- <div class="form-group message-btn">
@@ -307,9 +304,10 @@
                             </div>
                         </form>
                         <!-- Spinner -->
-<div id="loading-spinner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
-    <img src="{{ asset('spinner.gif') }}" alt="Loading..." style="width: 100px; height: 100px;">
-</div>
+                        <div id="loading-spinner"
+                            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+                            <img src="{{ asset('spinner.gif') }}" alt="Loading..." style="width: 100px; height: 100px;">
+                        </div>
 
                     </div>
                 </div>
@@ -463,30 +461,28 @@
             }
         });
 
-        document.getElementById('wordCountForm').addEventListener('submit', function (event) {
+        document.getElementById('wordCountForm').addEventListener('submit', function(event) {
             const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0);
             if (words.length < 60) {
                 event.preventDefault(); // Prevent form submission
-                alert('Please enter at least 100 words before submitting.');
+                alert('Please enter at least 32 words before submitting.');
             }
         });
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('form'); // Select your form element
-        const spinner = document.getElementById('loading-spinner');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form'); // Select your form element
+            const spinner = document.getElementById('loading-spinner');
 
-        form.addEventListener('submit', function () {
-            spinner.style.display = 'flex'; // Show the spinner (Flexbox for centering)
+            form.addEventListener('submit', function() {
+                spinner.style.display = 'flex'; // Show the spinner (Flexbox for centering)
+            });
         });
-    });
 
-    form.addEventListener('submit', function () {
-    document.querySelector('button[type="submit"]').disabled = true;
-    spinner.style.display = 'flex';
-});
-
-</script>
-
+        form.addEventListener('submit', function() {
+            document.querySelector('button[type="submit"]').disabled = true;
+            spinner.style.display = 'flex';
+        });
+    </script>
 @endsection

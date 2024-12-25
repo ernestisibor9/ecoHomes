@@ -2,6 +2,12 @@
 
 @section('home')
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+
     <style>
         .property-img {
             width: 770px !important;
@@ -33,6 +39,13 @@
     <!-- property-details -->
     <section class="property-details property-details-one">
         <div class="auto-container">
+            @if (session('message'))
+                <div class="alert alert-{{ session('status') == 'success' ? 'success' : 'danger' }} alert-dismissible fade show"
+                    role="alert">
+                    {{ session('message') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <div class="top-details clearfix">
                 <div class="left-column pull-left clearfix">
                     <h3>
@@ -79,7 +92,12 @@
                         <div class="price-box pull-right">
                             <h3>
                                 @if (isset($property))
-                                    {{ $currency }}{{ number_format($property->price, 2) }}
+                                    @if ($currency == 'NGN')
+                                        ₦ {{ number_format($property->price, 2) }} <!-- Price in NGN -->
+                                    @else
+                                        {{ $currency }} {{ number_format($property->price * $exchangeRate, 2) }}
+                                        <!-- Converted Price -->
+                                    @endif
                                 @endif
                             </h3>
                         </div>
@@ -187,17 +205,11 @@
                                 @if (!empty($property_amen))
                                     <ul>
                                         @foreach ($property_amen as $amenity)
-                                            <li>{{ $amenity }}</li>
+                                            <li>{{ $amenity}} </li>
                                         @endforeach
                                     </ul>
-                                @endif
-
-                                @if (!empty($amenitiesSell))
-                                    <ul>
-                                        @foreach ($amenitiesSell as $amenity)
-                                            <li>{{ $amenity }}</li>
-                                        @endforeach
-                                    </ul>
+                                @else
+                                <li>No amenities listed.</li>
                                 @endif
                             </ul>
                         </div>
@@ -497,18 +509,128 @@
                                             St Johns Wood</li>
                                         <li><i class="fas fa-phone"></i><a href="tel:03030571965">030 3057 1965</a></li>
                                     </ul>
-                                    <div class="btn-box"><a href="agents-details.html">
-                                            @if ($item->property_status === 'buy')
+                                    <div class="btn-box">
+                                        <button type="button" class="theme-btn btn-success" data-bs-toggle="modal"
+                                            data-bs-target="#modal-{{ $property->id }}">
+                                            @if ($property->property_status === 'buy')
                                                 Buy Now
-                                            @elseif($item->property_status === 'rent')
+                                            @elseif($property->property_status === 'rent')
                                                 Rent Now
-                                            @elseif($item->property_status === 'lease')
+                                            @elseif($property->property_status === 'lease')
                                                 Lease Now
                                             @else
                                                 Book Now
                                             @endif
-                                        </a></div>
+                                        </button>
+                                    </div>
                                 </div>
+                                <!------Bootstrap Modal starts----->
+                                <!-- Modal -->
+                                <div class="modal fade" id="modal-{{ $property->id }}" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1"
+                                    aria-labelledby="modalLabel-{{ $property->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="modalLabel-{{ $property->id }}">
+                                                    Select The
+                                                    Type Of User</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-footer  mx-auto">
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#staticBackdrop2-{{ $property->id }}">Proceed
+                                                    as a Guest
+                                                </button>
+                                                @auth
+                                                    <a href="{{ route('user.auth.booking', $property->id) }}" type="button"
+                                                        class="btn btn-success">Book as a User
+                                                    </a>
+                                                @endauth
+
+                                                @guest
+                                                    <a href="{{ route('user.auth.booking', $property->id) }}" type="button"
+                                                        class="btn btn-primary">Login as a User
+                                                    </a>
+                                                @endguest
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop2-{{ $property->id }}"
+                                    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5"
+                                                    id="staticBackdrop2Label-{{ $property->id }}">
+                                                    {{-- @if ($item->property_status === 'buy')
+                                                                Buy Now
+                                                            @elseif($item->property_status === 'rent')
+                                                                Rent Now
+                                                            @elseif($item->property_status === 'lease')
+                                                                Lease Now
+                                                            @else
+                                                                Book Now
+                                                            @endif --}}
+                                                    Submit Request
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+
+                                                <form action="{{ route('viewing.request', $property->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Full
+                                                            Name</label>
+                                                        <input type="text" name="name" id=""
+                                                            class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Email</label>
+                                                        <input type="email" name="email" id=""
+                                                            class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Phone</label>
+                                                        <input type="text" name="phone" id=""
+                                                            class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Select
+                                                            Date</label>
+                                                        <input type="date" name="requested_date" id="requested_date"
+                                                            class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Select
+                                                            Time</label>
+                                                        <input type="time" name="requested_time" id="requested_time"
+                                                            class="form-control" required>
+                                                    </div>
+
+                                                    <div class="d-grid gap-2 form-group message-btn">
+                                                        <button type="submit" class="theme-btn btn-one">Request
+                                                            Viewing</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Understood</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-------Bootstrap Modal ends----->
                             </div>
                             <div class="form-inner">
                                 <form action="property-details.html" method="post" class="default-form">
@@ -725,4 +847,19 @@
         </div>
     </section>
     <!-- property-details end -->
+
+    <script>
+        // Get the current date
+        const now = new Date();
+
+        // Format date as YYYY-MM-DD
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+
+        const currentDate = `${year}-${month}-${day}`;
+
+        // Set the min attribute for the input field
+        document.getElementById('requested_date').setAttribute('min', currentDate);
+    </script>
 @endsection

@@ -7,21 +7,17 @@
         @include('frontend.home.hero')
         <!-- banner-style-two end -->
 
-
-        <!-- feature-style-three -->
-        @include('frontend.home.services')
-        <!-- feature-style-three end -->
-
-
         <!-- about-section -->
         @include('frontend.home.about')
         <!-- about-section end -->
 
-
         <!-- feature-section -->
-        @include('frontend.home.features')
+        @include('frontend.home.features', ['properties' => $properties, 'currency' => $currency, 'exchangeRate' => $exchangeRate])
         <!-- feature-section end -->
 
+        <!-- feature-style-three -->
+        @include('frontend.home.services')
+        <!-- feature-style-three end -->
 
         <!-- cta-section -->
         @include('frontend.home.buy_sell')
