@@ -14,23 +14,32 @@
             <div class="card">
                 <div class="card-body p-4">
                     <h5 class="mb-4"></h5>
-                    <form class="row g-3" method="post" id="" action="{{ route('store.property') }}"
+                    <form class="row g-3" method="post" id="myForm" action="{{ route('store.property') }}"
                         enctype="multipart/form-data">
                         @csrf
 
                         <div class="col-md-6 form-group">
                             <label for="input1" class="form-label">Property Name</label>
-                            <input type="text" name="property_name" class="form-control" id="input1"
+                            <input type="text" name="property_name" class="form-control
+                            @error('property_name')is-invalid @enderror" id="input1"
                                 placeholder="Property Name" required>
+                                @error('property_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="input2" class="form-label">Property Status</label>
-                            <select id="input7" class="form-select" name="property_status" required>
+                            <select id="input7" class="form-select
+                            @error('property_status')is-invalid @enderror" name="property_status" required>
                                 <option selected="" disabled>Select Property Status</option>
-                                <option value="buy">For Buy</option>
-                                <option value="rent">For Rent</option>
-                                <option value="lease">For Lease</option>
+                                <option value="buy">Buy</option>
+                                <option value="rent">Rent</option>
+                                <option value="lease">Lease</option>
+                                <option value="book">Book</option>
                             </select>
+                            @error('property_status')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Property Amenities </label>
@@ -43,7 +52,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label for="input2" class="form-label">Property Thumbnail Photo (max size:2mb)</label>
+                            <label for="input2" class="form-label">Property Thumbnail Photo (max size:1mb)</label>
                             <input type="file" name="property_thumbnail"
                                 class="form-control @error('property_thumbnail')is-invalid @enderror" id="input1"
                                 onChange="mainThamUrl(this)" required>
@@ -55,7 +64,7 @@
                             <img src="" id="mainThmb">
                         </div>
                         <div class="col-md-6">
-                            <label for="input2" class="form-label">Multipe Image (max size:2mb)</label>
+                            <label for="input2" class="form-label">Multipe Image (max size:1mb)</label>
                             <input type="file" name="multi_img[]" id="multiImg"
                                 class="form-control @error('multi_img')is-invalid @enderror" id="input1"
                                 multiple="">
@@ -68,28 +77,30 @@
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">No. of Bedrooms </label>
-                            <input type="number" name="bedrooms" class="form-control" id="input1" required>
+                            <input type="number" name="bedrooms" class="form-control" id="input1">
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">No. of Bathrooms</label>
-                            <input type="number" name="bathrooms" class="form-control" id="input1" required>
+                            <input type="number" name="bathrooms" class="form-control" id="input1">
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">No. of Garage</label>
-                            <input type="number" name="garage" class="form-control" id="input1" required>
+                            <input type="number" name="garage" class="form-control" id="input1">
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Seller's Name</label>
-                            <select id="input7" class="form-select form-group" name="seller_id" required>
+                            <select id="input7" class="form-select form-group
+                            " name="seller_id" required>
                                 <option selected="" disabled>Select Seller</option>
                                 @foreach ($sellers as $seller)
                                     <option value="{{ $seller->id }}">{{ $seller->firstname }}</option>
                                 @endforeach
                             </select>
+
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Verification Status</label>
-                            <select id="input7" class="form-select form-group" name="verification_status" required>
+                            <select id="input7" class="form-select form-group" name="verification_status">
                                 <option selected="" disabled>Verification Status</option>
                                 <option value="1">Verified</option>
                                 <option value="0">Unverified</option>
@@ -101,13 +112,24 @@
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Property Type </label>
-                            <select id="input7" class="form-select form-group" name="ptype_id" required>
+                            <select id="property_type" class="form-select form-group" name="ptype_id">
                                 <option selected="" disabled>Select Property Type</option>
                                 @foreach ($propertyTypes as $ptype)
                                     <option value="{{ $ptype->id }}">{{ $ptype->type_name }}</option>
                                 @endforeach
                             </select>
                         </div>
+
+                            <div class="col-md-6 mb-2">
+                                <label for="input1" class="form-label">Price Per Night <span>(Hotels & Shortlet only)</span></label>
+                                <input type="number" name="price_per_night" class="form-control
+                                " id="input1" >
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="input1" class="form-label">Guest Capacity</label>
+                                <input type="number" name="guest_capacity" class="form-control" id="input1" >
+                            </div>
+
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="">Country</label>
@@ -124,9 +146,13 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 field" id="priceFields">
                                 <label for="input1" class="form-label">Price</label>
-                                <input type="text" name="price" class="form-control" id="input1">
+                                <input type="text" name="price" class="form-control
+                                @error('price')is-invalid @enderror" id="input1">
+                                @error('price')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
@@ -144,7 +170,7 @@
                             </div>
                             <div class="col-12 col-md-6" id="select-city-group" style="display: none;">
                                 <label for="">City/Town</label>
-                                <select name="city_id" class="form-control see" required style="display: block">
+                                <select name="city_id" class="form-control see" style="display: block">
                                     {{-- <option value="">Select City</option> --}}
                                 </select>
                             </div>
@@ -407,6 +433,41 @@
             }
         });
     });
+</script>
+
+<script>
+// document.addEventListener("DOMContentLoaded", function () {
+//     const propertyTypeSelect = document.getElementById('property_type');
+//     const priceFields = document.getElementById('priceFields');
+//     const hotelFields = document.getElementById('hotelFields');
+
+//     // Function to handle form field visibility based on property type
+//     function toggleFields() {
+//         const selectedType = propertyTypeSelect.value; // Get selected value
+
+//         if (selectedType === '6' || selectedType==='3') { // Check for hotel ID (e.g., 1 for hotel)
+//             // Show hotel-specific fields and hide price-related fields
+//             hotelFields.style.display = 'block';
+//             if (priceFields) {
+//                 priceFields.style.display = 'none';
+//             }
+//         } else {
+//             // Show price-related fields and hide hotel-specific fields
+//             hotelFields.style.display = 'none';
+//             if (priceFields) {
+//                 priceFields.style.display = 'block';
+//             }
+//         }
+//     }
+
+//     // Listen for changes to the property type select field
+//     propertyTypeSelect.addEventListener('change', toggleFields);
+
+//     // Initialize fields based on the initial selection
+//     toggleFields();
+// });
+
+
 </script>
 
 @endsection

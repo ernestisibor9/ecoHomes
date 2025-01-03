@@ -76,7 +76,7 @@ class OwnerPropertyController extends Controller
             'address' => 'required|string|max:255',
             'multi_img' => 'required|array',
             'multi_img.*' => 'image|mimes:jpeg,png,jpg,gif|max:1048',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/mkv,video/avi|max:51200',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/mkv,video/avi|max:8072',
             'long_description' => ['required', function ($attribute, $value, $fail) {
                 $wordCount = str_word_count(strip_tags($value));
                 if ($wordCount < 32) {
@@ -124,7 +124,6 @@ class OwnerPropertyController extends Controller
             'property_name'=>$request->property_name,
             'property_slug' => Str::slug($request->property_name),
             'email' => $request->email,
-            'property_id' => $request->property_id,
             'address' => $request->address,
             'phone' => $request->phone,
             'price' => $request->price,

@@ -21,66 +21,80 @@
 
                         <div class="col-md-6 form-group">
                             <label for="input1" class="form-label">Property Name</label>
-                            <input type="text" name="property_name" class="form-control" id="input1"
-                                placeholder="Property Name" value="{{ $property->property_name }}">
+                            <input type="text" name="property_name"
+                                class="form-control
+                            @error('property_name')is-invalid @enderror"
+                                id="input1" placeholder="Property Name" value="{{ $property->property_name }}">
+                            @error('property_name')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="input2" class="form-label">Property Status</label>
-                            <select id="input7" class="form-select" name="property_status">
-                                <option selected="" disabled>Select Property Status</option>
-                                <option value="buy" {{ $property->property_status === 'buy' ? 'selected' : '' }}>For
+                            <select id="input7" class="form-select @error('property_status')is-invalid @enderror" name="property_status">
+                                <option value="buy" {{ $property->property_status === 'buy' ? 'selected' : '' }}>
                                     Buy</option>
-                                <option value="rent" {{ $property->property_status === 'rent' ? 'selected' : '' }}>For
+                                <option value="rent" {{ $property->property_status === 'rent' ? 'selected' : '' }}>
                                     Rent</option>
-                                <option value="lease" {{ $property->property_status === 'lease' ? 'selected' : '' }}>For
+                                <option value="lease" {{ $property->property_status === 'lease' ? 'selected' : '' }}>
                                     Let</option>
+                                <option value="lease" {{ $property->property_status === 'book' ? 'selected' : '' }}>
+                                    Book</option>
                             </select>
+                            @error('property_status')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="input2" class="form-label">Price </label>
                             <input type="text" class="form-control" name="price" id=""
                                 value="{{ $property->price }}">
                         </div>
-                        <div class="col-md-6">
-                            <label for="input1" class="form-label">Property Amenities </label>
-                            <select class="form-select" name="amenities_id[]" id="multiple-select-field"
-                                data-placeholder="Select Ameities" multiple required>
-                                @foreach ($amenities as $amenity)
-                                    <option value="{{ $amenity->id }}"
-                                        {{ in_array($amenity->id, $property_amen) ? 'selected' : '' }}>
-                                        {{ $amenity->amenities_name }}
-                                    </option>
-                                @endforeach
-                            </select>
+
+                        <div class="col-md-6 form-group">
+                            <label for="input2" class="form-label">Price Per Night</label>
+                            <input type="text" class="form-control @error('price_per_night')is-invalid @enderror" name="price_per_night" id=""
+                                value="{{ $property->price_per_night }}">
+                                @error('price_per_night')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="col-md-4">
                             <label for="input1" class="form-label">No. of Bedrooms </label>
-                            <input type="number" name="bedrooms" class="form-control" id="input1"
+                            <input type="number" name="bedrooms" class="form-control @error('bedrooms')is-invalid @enderror" id="input1"
                                 value="{{ $property->bedrooms }}">
+                                @error('bedrooms')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="input1" class="form-label">No. of Bathrooms</label>
-                            <input type="number" name="bathrooms" class="form-control" id="input1"
+                            <input type="number" name="bathrooms" class="form-control @error('bathrooms')is-invalid @enderror" id="input1"
                                 value="{{ $property->bathrooms }}">
+                                @error('bathrooms')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="col-md-4">
                             <label for="input1" class="form-label">No. of Garage</label>
-                            <input type="number" name="garage" class="form-control" id="input1"
+                            <input type="number" name="garage" class="form-control @error('garage')is-invalid @enderror" id="input1"
                                 value="{{ $property->garage }}">
+                                @error('garage')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
-                        {{-- <div class="col-md-6">
-                                <label for="input1" class="form-label">Property Size</label>
-                                <input type="text" name="property_size" class="form-control" id="input1">
-                            </div> --}}
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Property Video</label>
-                            <input type="text" name="property_video" class="form-control" id="input1"
+                            <input type="text" name="property_video" class="form-control @error('property_video')is-invalid @enderror" id="input1"
                                 value="{{ $property->property_video }}">
+                                @error('property_video')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="input1" class="form-label">Property Type </label>
-                            <select id="input7" class="form-select form-group" name="ptype_id" required>
+                            <select id="input7" class="form-select  @error('ptype_id')is-invalid @enderror form-group" name="ptype_id">
                                 {{-- <option selected="" disabled>Select Property Type</option> --}}
                                 @foreach ($propertyTypes as $ptype)
                                     <option value="{{ $ptype->id }}"
@@ -88,73 +102,50 @@
                                         {{ $ptype->type_name }}
                                     </option>
                                 @endforeach
+                                @error('ptype_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                             </select>
                         </div>
-                        {{-- <div class="col-md-6">
-                            <label for="input8" class="form-label">City </label>
-                            <input type="text" class="form-control" name="city" id=""
-                                value="{{ $property->city }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="input9" class="form-label">Country </label>
-                            <select id="input9" class="form-select" name="country">
-                                <option value="usa" {{ $property->country === 'usa' ? 'selected' : '' }}>USA
-                                </option>
-                                <option value="uk" {{ $property->country === 'uk' ? 'selected' : '' }}>UK</option>
-                                <option value="nigeria" {{ $property->country === 'nigeria' ? 'selected' : '' }}>
-                                    Nigeria</option>
-                                <option value="brazil" {{ $property->country === 'brazil' ? 'selected' : '' }}>Brazil
-                                </option>
-                                <option value="france" {{ $property->country === 'france' ? 'selected' : '' }}>France
-                                </option>
-                                <option value="germany" {{ $property->country === 'germany' ? 'selected' : '' }}>
-                                    Germany</option>
-                                <option value="canada" {{ $property->country === 'canada' ? 'selected' : '' }}>Canada
-                                </option>
-                                <option value="spain" {{ $property->country === 'spain' ? 'selected' : '' }}>Spain
-                                </option>
-                                <option value="italy" {{ $property->country === 'italy' ? 'selected' : '' }}>Italy
-                                </option>
-                                <option value="portugal" {{ $property->country === 'portugal' ? 'selected' : '' }}>
-                                    Portugal</option>
-                                <option value="argentina" {{ $property->country === 'argentina' ? 'selected' : '' }}>
-                                    Argentina</option>
-                                <option value="switzerland"
-                                    {{ $property->country === 'switzerland' ? 'selected' : '' }}>Switzerland</option>
-                                <option value="china" {{ $property->country === 'china' ? 'selected' : '' }}>China
-                                </option>
-                                <option value="japan" {{ $property->country === 'japan' ? 'selected' : '' }}>Japan
-                                </option>
-                                <option value="south-korea"
-                                    {{ $property->country === 'south-korea' ? 'selected' : '' }}>South Korea</option>
-                                <option value="south-africa"
-                                    {{ $property->country === 'south-korea' ? 'selected' : '' }}>South Africa</option>
-                            </select>
-                        </div> --}}
                         <div class="col-md-12">
                             <label for="input11" class="form-label">Address </label>
-                            <textarea class="form-control" required id="input11" placeholder="Address ..." rows="3" name="address">{{ $property->address }}</textarea>
+                            <textarea class="form-control  @error('address')is-invalid @enderror" id="input11" placeholder="Address ..." rows="3" name="address">{{ $property->address }}</textarea>
+                            @error('address')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="col-md-12">
                             <label for="input11" class="form-label">Short Description </label>
-                            <textarea class="form-control" required id="input11" rows="2" name="short_desc">{{ $property->short_description }}</textarea>
+                            <textarea class="form-control @error('short_desc')is-invalid @enderror" id="input11" rows="2" name="short_desc">{{ $property->short_description }}</textarea>
+                            @error('short_desc')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="col-md-12">
                             <label for="input11" class="form-label">Long Description </label>
-                            <textarea class="form-control" required id="input11" rows="4" name="long_desc">{{ $property->long_description }}</textarea>
+                            <textarea class="form-control @error('long_desc')is-invalid @enderror" id="input11" rows="4" name="long_desc">{{ $property->long_description }}</textarea>
+                            @error('long_desc')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <div class="form-check">
-                                <input class="form-check-input" {{ $property->featured === '1' ? 'checked' : '' }}
+                                <input class="form-check-input @error('featured')is-invalid @enderror" {{ $property->featured === '1' ? 'checked' : '' }}
                                     type="checkbox" id="input12" value="1" name="featured">
-                                <label class="form-check-label" for="input12" name="short_desc">Featured</label>
+                                <label class="form-check-label" for="input12" name="">Featured</label>
+                                @error('featured')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check">
-                                <input class="form-check-input" {{ $property->hot === '1' ? 'checked' : '' }}
+                                <input class="form-check-input @error('hot')is-invalid @enderror" {{ $property->hot === '1' ? 'checked' : '' }}
                                     type="checkbox" id="input12" value="1" name="hot">
                                 <label class="form-check-label" for="input12" name="short_desc">Hot</label>
+                                @error('hot')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                             </div>
                         </div>
 
@@ -186,10 +177,10 @@
                             value="{{ $property->property_thumbnail }}">
 
                         <div class="col-md-6 form-group">
-                            <label for="input2" class="form-label">Property Thumbnail Photo (max size:2mb)</label>
+                            <label for="input2" class="form-label">Property Thumbnail Photo (max size:1mb)</label>
                             <input type="file" name="property_thumbnail"
                                 class="form-control @error('property_thumbnail')is-invalid @enderror" id="input1"
-                                onChange="mainThamUrl(this)" required>
+                                onChange="mainThamUrl(this)">
                             <div class="mt-2">
                                 @error('property_thumbnail')
                                     <span class="text-danger">{{ $message }}</span>
@@ -242,15 +233,21 @@
                                     @foreach ($multiImages as $key => $img)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td><img src="{{ asset($img->photo_name) }}" alt="" width="60px" height="50px"></td>
+                                            <td><img src="{{ asset($img->photo_name) }}" alt=""
+                                                    width="60px" height="50px"></td>
                                             <td>
-                                                <input type="file" name="multi_img[{{$img->id}}]" id="multiImg"
-                                                    class="form-control" id="input1" multiple="">
+                                                <input type="file" name="multi_img[{{ $img->id }}]"
+                                                    id="multiImg"
+                                                    class="form-control @error('multi_img')is-invalid @enderror"
+                                                    id="input1" multiple="">
+                                                @error('multi_img')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </td>
                                             <td>
                                                 <input type="submit" value="Update" class="btn btn-primary">
-                                                <a href="{{route('property.multiimg.delete', $img->id)}}" title="Delete"
-                                                    class="btn btn-danger" id="delete">Delete</a>
+                                                <a href="{{ route('property.multiimg.delete', $img->id) }}"
+                                                    title="Delete" class="btn btn-danger" id="delete">Delete</a>
                                             </td>
                                         </tr>
                         </div>
@@ -320,37 +317,37 @@
         $('#myForm').validate({
             rules: {
                 property_name: {
-                    required: true,
+                    : true,
                 },
                 property_status: {
-                    required: true,
+                    : true,
                 },
                 price: {
-                    required: true,
+                    : true,
                 },
                 property_category: {
-                    required: true,
+                    : true,
                 },
                 ptype_id: {
-                    required: true
+                    : true
                 }
 
             },
             messages: {
                 property_name: {
-                    required: 'Please Enter Property Name',
+                    : 'Please Enter Property Name',
                 },
                 property_status: {
-                    required: 'Please Select Property Status',
+                    : 'Please Select Property Status',
                 },
                 price: {
-                    required: 'Please Select Price',
+                    : 'Please Select Price',
                 },
                 property_category: {
-                    required: 'Please Select Property Category',
+                    : 'Please Select Property Category',
                 },
                 ptype_id: {
-                    required: 'Please Select a Property Type',
+                    : 'Please Select a Property Type',
                 }
 
             },

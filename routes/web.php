@@ -11,6 +11,7 @@ use App\Http\Controllers\Frontend\BookPropertyController;
 use App\Http\Controllers\frontend\FeaturedPropertyController;
 use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\OwnerPropertyController;
+use App\Http\Controllers\Frontend\PropertyReserveController;
 use App\Http\Controllers\Frontend\SellerController;
 use App\Http\Controllers\Frontend\UserController as FrontendUserController;
 use App\Http\Controllers\Frontend\ViewingController;
@@ -44,9 +45,14 @@ Route::group(["middleware" => "prevent-back-history"], function () {
     // Route to display featured properties
 Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedProperties'])->name('featured.properties');
 
+    // Room Reservation
+    Route::post('/calculate-price', [PropertyReserveController::class, 'calculatePrice']);
+    Route::post('/check-availability', [PropertyReserveController::class, 'checkAvailability']);
+
     // Book Search Page
     Route::controller(BookPropertyController::class)->group(function () {
         Route::get('/list/all/property',  'ListAllProperty')->name('list.all.property');
+        Route::get('/property/book/{id}',  'BookProperty')->name('property.book');
         Route::get('/book/search',  'BookSearch')->name('book.search');
         Route::get('/get-states-book/ajax/{countryId}', 'GetStatesBook');
         Route::get('/get-cities-book/ajax/{stateId}', 'GetCitiesBook');
@@ -71,6 +77,13 @@ Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedPropert
         Route::post('/store/booking/guest', 'StoreBookingGuest')->name('store.booking.guest');
         Route::get('/rent/properties', 'RentProperties')->name('rent.properties');
         Route::get('/buy/properties', 'BuyProperties')->name('buy.properties');
+
+        // All Properties
+        Route::get('/api/locations','GetLocations');
+        Route::get('/properties/search', 'Search')->name('properties.search');
+
+
+
     });
 
     Route::middleware(['auth', 'roles:user', 'verified'])->group(function () {

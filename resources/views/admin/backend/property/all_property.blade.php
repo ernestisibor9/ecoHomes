@@ -24,7 +24,6 @@
                             <th>Property Status</th>
                             <th>Country</th>
                             <th>State/County</th>
-                            <th>City</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -39,7 +38,6 @@
                                 <td>{{ $property->property_status}}</td>
                                 <td>{{ $property->country->name}}</td>
                                 <td>{{ $property->state->name}}</td>
-                                <td>{{ $property->city->name}}</td>
                                 <td>
                                     @if ($property->status === '1')
                                         <span class="badge rounded-pill bg-success">Active</span>

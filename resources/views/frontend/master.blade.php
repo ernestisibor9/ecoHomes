@@ -36,6 +36,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+
+
 </head>
 
 
@@ -175,6 +177,7 @@
             }
         @endif
     </script>
+
 
 </body><!-- End of .page_wrapper -->
 

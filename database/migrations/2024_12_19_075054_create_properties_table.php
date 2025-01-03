@@ -31,6 +31,12 @@ return new class extends Migration
             $table->string('property_video')->nullable();
             $table->string('garage')->nullable();
 
+            $table->decimal('price_per_night', 8, 2)->nullable();
+            $table->integer('guest_capacity')->nullable();
+            $table->decimal('cleaning_fee', 8, 2)->default(0)->nullable();
+            $table->decimal('eco_home_service_fee', 8, 2)->default(0)->nullable();
+
+
             $table->unsignedBigInteger('seller_id');
             $table->foreign('seller_id')
                 ->references('id')->on('sell_my_properties')

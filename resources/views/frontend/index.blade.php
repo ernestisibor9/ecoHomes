@@ -8,7 +8,7 @@
         <!-- banner-style-two end -->
 
         <!-- about-section -->
-        @include('frontend.home.about')
+        {{-- @include('frontend.home.about') --}}
         <!-- about-section end -->
 
         <!-- feature-section -->

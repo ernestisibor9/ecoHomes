@@ -42,7 +42,7 @@
                 <div class="news-block-two wow fadeInRight animated" data-wow-delay="00ms" data-wow-duration="1500ms">
                     <div class="inner-box align-items-center">
                         <div class="image-box">
-                            <figure class="image"><a href="blog-details.html"><img src="assets/images/news/news-5.jpg" alt=""></a></figure>
+                            <figure class="image"><a href="blog-details.html"><img src="{{asset('frontend/assets/images/news/news-5.jpg')}}" alt=""></a></figure>
                             <a href="blog-details.html" class="feature">Featured</a>
                         </div>
                         <div class="content-box">

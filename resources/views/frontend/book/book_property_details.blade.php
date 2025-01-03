@@ -92,11 +92,24 @@
                         <div class="price-box pull-right">
                             <h3>
                                 @if (isset($property))
-                                    @if ($currency == 'NGN')
-                                        ₦ {{ number_format($property->price, 2) }} <!-- Price in NGN -->
+                                    @if ($property->type->type_name == 'Hotel' || $property->type->type_name == 'Shortlet')
+                                        @if ($currency == 'NGN')
+                                            {{ '₦ ' . number_format($property->price_per_night, 2) }} <small
+                                                style="font-size: 0.9rem; color: gray;">Per Night</small>
+                                            <!-- Display price per night in NGN -->
+                                        @else
+                                            {{ $currency . ' ' . number_format($property->price_per_night_converted, 2) }}
+                                            <small style="font-size: 0.9rem; color: gray;">Per Night</small>
+                                            <!-- Display converted price per night -->
+                                        @endif
                                     @else
-                                        {{ $currency }} {{ number_format($property->price * $exchangeRate, 2) }}
-                                        <!-- Converted Price -->
+                                        @if ($currency == 'NGN')
+                                            {{ '₦ ' . number_format($property->price, 2) }}
+                                            <!-- Display regular price in NGN -->
+                                        @else
+                                            {{ $currency . ' ' . number_format($property->price_converted, 2) }}
+                                            <!-- Display converted regular price -->
+                                        @endif
                                     @endif
                                 @endif
                             </h3>
@@ -205,11 +218,11 @@
                                 @if (!empty($property_amen))
                                     <ul>
                                         @foreach ($property_amen as $amenity)
-                                            <li>{{ $amenity}} </li>
+                                            <li>{{ $amenity }} </li>
                                         @endforeach
                                     </ul>
                                 @else
-                                <li>No amenities listed.</li>
+                                    <li>No amenities listed.</li>
                                 @endif
                             </ul>
                         </div>
@@ -290,7 +303,7 @@
                                 <li><span>Zip/Postal Code:</span>23401</li>
                                 <li><span>City:</span>
                                     @if (isset($property))
-                                        {{ $property->city->name }}
+                                        {{ optional($property->city)->name }}
                                     @endif
                                 </li>
                             </ul>
@@ -510,8 +523,13 @@
                                         <li><i class="fas fa-phone"></i><a href="tel:03030571965">030 3057 1965</a></li>
                                     </ul>
                                     <div class="btn-box">
+
                                         <button type="button" class="theme-btn btn-success" data-bs-toggle="modal"
-                                            data-bs-target="#modal-{{ $property->id }}">
+                                            data-bs-target="#modal-{{ $property->id }}"
+                                            @if (
+                                                $property->property_status !== 'buy' &&
+                                                    $property->property_status !== 'rent' &&
+                                                    $property->property_status !== 'lease') onclick="redirectToBookingPage('{{ $property->id }}')" @endif>
                                             @if ($property->property_status === 'buy')
                                                 Buy Now
                                             @elseif($property->property_status === 'rent')
@@ -522,6 +540,8 @@
                                                 Book Now
                                             @endif
                                         </button>
+
+
                                     </div>
                                 </div>
                                 <!------Bootstrap Modal starts----->
@@ -651,6 +671,12 @@
                                     </div>
                                 </form>
                             </div>
+                        </div>
+                        <div class="calculator-widget sidebar-widget" id="ad-container">
+                            <h2>ADVERTISEMENT</h2>
+                            <!-- Initial Ad Placeholder -->
+                            <img src="{{ asset('frontend/assets/images/adverts/ad1.jpg') }}" alt="Ad 1"
+                                class="img-fluid" id="current-ad">
                         </div>
                         <div class="calculator-widget sidebar-widget">
                             <div class="calculate-inner">
@@ -862,4 +888,58 @@
         // Set the min attribute for the input field
         document.getElementById('requested_date').setAttribute('min', currentDate);
     </script>
+
+    <script>
+        // Array of ads with custom durations (in milliseconds)
+        const ads = [{
+                img: '{{ asset('frontend/assets/images/adverts/ad1.jpg') }}',
+                link: 'https://example.com/ad1',
+                duration: 30000
+            }, // 1 minute
+            {
+                img: '{{ asset('frontend/assets/images/adverts/ad2.jpg') }}',
+                link: 'https://example.com/ad2',
+                duration: 30000
+            }, // 1 minutes
+            {
+                img: '{{ asset('frontend/assets/images/adverts/ad3.jpg') }}',
+                link: 'https://example.com/ad3',
+                duration: 30000
+            } // 1 minutes
+        ];
+
+        let currentAdIndex = 0; // Track the current ad index
+
+        // Function to display the next ad
+        function showNextAd() {
+            // Get the current ad
+            const currentAd = ads[currentAdIndex];
+
+            // Update the ad container
+            const adContainer = document.getElementById('ad-container');
+            adContainer.innerHTML = `
+            <a href="${currentAd.link}" target="_blank">
+                <img src="${currentAd.img}" alt="Ad ${currentAdIndex + 1}" style="width: 100%; height: 100%;">
+            </a>
+        `;
+
+            // Set a timeout for the next ad
+            setTimeout(() => {
+                // Move to the next ad (loop back if at the end)
+                currentAdIndex = (currentAdIndex + 1) % ads.length;
+                showNextAd(); // Recursively show the next ad
+            }, currentAd.duration);
+        }
+
+        // Start displaying ads
+        showNextAd();
+    </script>
+
+<script>
+    function redirectToBookingPage(propertyId) {
+        // Redirect to a different route when "Book Now" is clicked
+        window.location.href = "{{ url('property/book') }}/" + propertyId;
+    }
+</script>
+
 @endsection

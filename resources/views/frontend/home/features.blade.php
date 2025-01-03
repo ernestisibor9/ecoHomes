@@ -10,9 +10,13 @@
         object-fit: cover;
         transition: transform 0.3s ease;
     }
+
+    .featured-container {
+        margin-top: -70px;
+    }
 </style>
 
-<section class="feature-section alternate-2 sec-pad">
+<section class="feature-section alternate-2 sec-pad featured-container">
     <div class="auto-container">
         <div class="sec-title centred">
             <h5>Features</h5>
@@ -49,12 +53,22 @@
                                     <div class="price-info pull-left">
                                         <h6>Price</h6>
                                         <h4>
-                                            @if ($currency == 'NGN')
-                                                {{ '₦ ' . number_format($item->price, 2) }}
-                                                <!-- Display price in NGN -->
+                                            @if ($item->type->type_name == 'Hotel' || $item->type->type_name == 'Shortlet')
+                                                @if ($currency == 'NGN')
+                                                    {{ '₦ ' . number_format($item->price_per_night, 2) }}
+                                                    <!-- Display price per night in NGN -->
+                                                @else
+                                                    {{ $currency . ' ' . number_format($item->price_per_night_converted, 2) }}
+                                                    <!-- Display converted price per night -->
+                                                @endif
                                             @else
-                                                {{ $currency . ' ' . number_format($item->price_converted, 2) }}
-                                                <!-- Display converted price -->
+                                                @if ($currency == 'NGN')
+                                                    {{ '₦ ' . number_format($item->price, 2) }}
+                                                    <!-- Display regular price in NGN -->
+                                                @else
+                                                    {{ $currency . ' ' . number_format($item->price_converted, 2) }}
+                                                    <!-- Display converted regular price -->
+                                                @endif
                                             @endif
                                         </h4>
                                     </div>
@@ -69,7 +83,9 @@
                                     <li><i class="icon-15"></i>{{ $item->bathrooms }} Baths</li>
                                     <li><i class="icon-16"></i>600 Sq Ft</li>
                                 </ul>
-                                <div class="btn-box"><a href="{{ url('property/details/' . $item->id . '/' . $item->property_slug) }}" class="theme-btn btn-two">See
+                                <div class="btn-box"><a
+                                        href="{{ url('property/details/' . $item->id . '/' . $item->property_slug) }}"
+                                        class="theme-btn btn-two">See
                                         Details</a></div>
                             </div>
                         </div>
@@ -77,6 +93,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="more-btn centred"><a href="property-list.html" class="theme-btn btn-one">View All Listing</a></div>
+        <div class="more-btn centred"><a href="{{ route('list.all.property') }}" class="theme-btn btn-one">View All
+                Listing</a></div>
     </div>
 </section>

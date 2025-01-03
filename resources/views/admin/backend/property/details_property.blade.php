@@ -49,11 +49,11 @@
                             </tr>
                             <tr>
                                 <td>City</td>
-                                <td>{{$property->city}}</td>
+                                <td>{{$property->city->name}}</td>
                             </tr>
                             <tr>
                                 <td>Country</td>
-                                <td>{{ucfirst($property->country)}}</td>
+                                <td>{{ucfirst($property->country->name)}}</td>
                             </tr>
                             <tr>
                                 <td>Address</td>

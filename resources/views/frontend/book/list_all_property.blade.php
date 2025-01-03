@@ -39,11 +39,35 @@
             object-fit: cover;
             transition: transform 0.3s ease;
         }
+
+        .search-con {
+            margin-top: 30px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        #suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            max-width: 100%;
+            z-index: 1000;
+        }
+
+        #suggestions div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #suggestions div:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 
 
     <!-- Page Title -->
-    <section class="page-title-two bg-color-1 centred">
+    {{-- <section class="page-title-two bg-color-1 centred">
         <div class="pattern-layer">
             <div class="pattern-1" style="background-image: url({{ asset('frontend/assets/images/shape/shape-9.png') }});">
             </div>
@@ -52,15 +76,49 @@
         </div>
         <div class="auto-container">
             <div class="content-box clearfix">
-                <h1>Book Property</h1>
+                <h1>All Property</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
                     <li>Book Property</li>
                 </ul>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- End Page Title -->
+
+    <!-- property-page-section -->
+    <div class="container search-con">
+        <form action="{{route('properties.search')}}" method="get">
+            @csrf
+            <div class="row ">
+                <div class="col">
+                    <!-- Location Input -->
+                    <input type="text" id="location" name="location" placeholder="Enter city or state"
+                        value="{{ request('location') }}" autocomplete="off" class="form-control inp" />
+                    <div id="suggestions" style="display: none; border: 1px solid #ccc; max-height: 150px; overflow-y: auto;">
+                    </div>
+
+                </div>
+                <div class="col">
+                    <!-- Property Type Dropdown -->
+                    <select name="property_type" class="form-select see inp">
+                        <option value="">Select Property Type</option>
+                        <option value="Flat" {{ request('property_type') == 'Flat' ? 'selected' : '' }}>Flat</option>
+                        <option value="Bungalow" {{ request('property_type') == 'Bungalow' ? 'selected' : '' }}>Bungalow
+                        </option>
+                        <option value="Duplex" {{ request('property_type') == 'Duplex' ? 'selected' : '' }}>Duplex</option>
+                        <option value="Hotel" {{ request('property_type') == 'Hotel' ? 'selected' : '' }}>Hotel</option>
+                        <option value="Shortlet" {{ request('property_type') == 'Shortlet' ? 'selected' : '' }}>Shortlet
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <button type="submit" id="search-pro" class="theme-btn btn-one">Search Property</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!---- property-list-section -->
 
     <!-- property-page-section -->
     <section class="property-page-section property-list">
@@ -94,7 +152,8 @@
                                         </select>
                                     </div>
                                 </form>
-                                <form id="property-type-form" method="GET" action="{{ route('filter.type.properties') }}">
+                                <form id="property-type-form" method="GET"
+                                    action="{{ route('filter.type.properties') }}">
                                     @csrf
                                     <div class="select-box">
                                         <select class="wide see form-control" id="type_id" name="ptype_id">
@@ -157,7 +216,8 @@
                                             <option data-display="Select Location">Minimum Price</option>
                                             <!-- Loop through priceLowest -->
                                             @foreach ($priceLowest as $price)
-                                                <option value="{{ $currency == 'NGN' ? $price->price : $price->converted_price }}">
+                                                <option
+                                                    value="{{ $currency == 'NGN' ? $price->price : $price->converted_price }}">
                                                     @if ($currency == 'NGN')
                                                         ₦ {{ number_format($price->price, 2) }}
                                                     @else
@@ -172,7 +232,8 @@
                                         <select class="wide see form-control" name="maximum_price">
                                             <option data-display="Select Location">Maximum Price</option>
                                             @foreach ($priceMax as $price)
-                                                <option value="{{ $currency == 'NGN' ? $price->price : $price->converted_price }}">
+                                                <option
+                                                    value="{{ $currency == 'NGN' ? $price->price : $price->converted_price }}">
                                                     @if ($currency == 'NGN')
                                                         ₦ {{ number_format($price->maximum_price, 2) }}
                                                     @else
@@ -250,6 +311,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-8 col-md-12 col-sm-12 content-side">
                     <div class="property-content-side">
                         <div class="item-shorting clearfix">
@@ -322,13 +384,28 @@
                                                         <div class="price-info pull-left">
                                                             <h6>Start From</h6>
                                                             <h4>
-                                                                @if ($currency == 'NGN')
-                                                                    {{ '₦ ' . number_format($item->price, 2) }}
-                                                                    <!-- Display price in NGN -->
+                                                                @if ($item->type->type_name == 'Hotel' || $item->type->type_name == 'Shortlet')
+                                                                    @if ($currency == 'NGN')
+                                                                        {{ '₦ ' . number_format($item->price_per_night, 2) }}
+                                                                        <small style="font-size: 0.9rem; color: gray;">Per
+                                                                            Night</small>
+                                                                        <!-- Display price per night in NGN -->
+                                                                    @else
+                                                                        {{ $currency . ' ' . number_format($item->price_per_night_converted, 2) }}
+                                                                        <small style="font-size: 0.9rem; color: gray;">Per
+                                                                            Night</small>
+                                                                        <!-- Display converted price per night -->
+                                                                    @endif
                                                                 @else
-                                                                    {{ $currency . ' ' . number_format($item->price_converted, 2) }}
-                                                                    <!-- Display converted price -->
+                                                                    @if ($currency == 'NGN')
+                                                                        {{ '₦ ' . number_format($item->price, 2) }}
+                                                                        <!-- Display regular price in NGN -->
+                                                                    @else
+                                                                        {{ $currency . ' ' . number_format($item->price_converted, 2) }}
+                                                                        <!-- Display converted regular price -->
+                                                                    @endif
                                                                 @endif
+
                                                             </h4>
                                                             {{-- <h4>{{ $currency }} {{ number_format($item->price * $exchangeRate, 2) }}
                                                             </h4> --}}
@@ -356,11 +433,11 @@
                                                                 href="{{ url('property/details/' . $item->id . '/' . $item->property_slug) }}"
                                                                 class="theme-btn btn-two">See Details</a></div>
                                                         <ul class="other-option pull-right clearfix">
-
                                                             <div class="btn-box pull-left">
                                                                 <button type="button" class="theme-btn btn-success"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#modal-{{ $item->id }}">
+                                                                    data-bs-target="#modal-{{ $item->id }}"
+                                                                    @if ($item->property_status !== 'buy' && $item->property_status !== 'rent' && $item->property_status !== 'lease') onclick="redirectToBookingPage('{{ $item->id }}')" @endif>
                                                                     @if ($item->property_status === 'buy')
                                                                         Buy Now
                                                                     @elseif($item->property_status === 'rent')
@@ -372,7 +449,6 @@
                                                                     @endif
                                                                 </button>
                                                             </div>
-
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -721,6 +797,55 @@
 
         // Set the min attribute for the input field
         document.getElementById('requested_date').setAttribute('min', currentDate);
+    </script>
+
+    <script>
+        function redirectToBookingPage(propertyId) {
+            // Redirect to a different route when "Book Now" is clicked
+            window.location.href = "{{ url('property/book') }}/" + propertyId;
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('location').addEventListener('input', function() {
+                const query = this.value;
+                if (query.length > 2) {
+                    fetch(`/api/locations?query=${query}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Suggestions:', data); // Debugging
+                            const suggestionsDiv = document.getElementById('suggestions');
+                            suggestionsDiv.innerHTML = ''; // Clear previous suggestions
+
+                            if (data.length > 0) {
+                                data.forEach(item => {
+                                    const suggestion = document.createElement('div');
+                                    suggestion.textContent = item.name;
+                                    suggestion.style.cursor = 'pointer';
+                                    suggestion.addEventListener('click', () => {
+                                        document.getElementById('location').value = item
+                                            .name;
+                                        suggestionsDiv.style.display = 'none';
+                                    });
+                                    suggestionsDiv.appendChild(suggestion);
+                                });
+                                suggestionsDiv.style.display = 'block';
+                            } else {
+                                suggestionsDiv.style.display = 'none';
+                            }
+                        })
+                        .catch(error => console.error('Fetch error:', error));
+                } else {
+                    document.getElementById('suggestions').style.display = 'none';
+                }
+            });
+        });
     </script>
 
 @endsection

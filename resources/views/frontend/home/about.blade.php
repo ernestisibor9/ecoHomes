@@ -1,4 +1,10 @@
-<section class="about-section bg-color-1">
+<style>
+    .about{
+        margin-top: -50px;
+    }
+</style>
+
+<section class="about-section bg-color-1 about">
     <div class="auto-container">
         <div class="row align-items-center clearfix">
             <div class="col-lg-6 col-md-12 col-sm-12 image-column">
