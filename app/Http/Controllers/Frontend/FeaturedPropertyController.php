@@ -12,7 +12,7 @@ use GeoIp2\Database\Reader;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client; // For making API requests
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Support\Facades\DB;
 
 class FeaturedPropertyController extends Controller
 {
@@ -21,8 +21,10 @@ class FeaturedPropertyController extends Controller
 {
     $properties = Property::where('status', '1')
         ->where('featured', '1')
-        ->limit(6)
+        ->limit(12)
         ->get();
+
+        Log::info('Number of properties retrieved: ' . $properties->count());
 
     $currency = 'NGN'; // Default currency
     $exchangeRate = 1.0; // Default exchange rate

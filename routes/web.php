@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\PropertyTypeController;
 use App\Http\Controllers\Backend\SellerController as BackendSellerController;
 use App\Http\Controllers\Frontend\BookPropertyController;
 use App\Http\Controllers\frontend\FeaturedPropertyController;
+use App\Http\Controllers\Frontend\GuestController;
 use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\OwnerPropertyController;
 use App\Http\Controllers\Frontend\PropertyReserveController;
@@ -37,13 +38,12 @@ Route::get('/', [UserController::class, 'Index'])->name('index');
 
 Route::group(["middleware" => "prevent-back-history"], function () {
 
-    // Route::get('/test-location', function () {
-    //     $location = geoip()->getLocation();
-    //     return response()->json($location);
-    // });
+    Route::post('/send-guest-otp', [GuestController::class, 'sendOtp'])->name('guest.sendOtp');
+    Route::get('/verify-otp', [GuestController::class, 'verifyOtpForm'])->name('guest.verifyOtpForm');
+    Route::post('/verify-otp', [GuestController::class, 'verifyOtp'])->name('guest.verifyOtp');
 
     // Route to display featured properties
-Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedProperties'])->name('featured.properties');
+    Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedProperties'])->name('featured.properties');
 
     // Room Reservation
     Route::post('/calculate-price', [PropertyReserveController::class, 'calculatePrice']);
@@ -79,11 +79,8 @@ Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedPropert
         Route::get('/buy/properties', 'BuyProperties')->name('buy.properties');
 
         // All Properties
-        Route::get('/api/locations','GetLocations');
+        Route::get('/api/locations', 'GetLocations');
         Route::get('/properties/search', 'Search')->name('properties.search');
-
-
-
     });
 
     Route::middleware(['auth', 'roles:user', 'verified'])->group(function () {

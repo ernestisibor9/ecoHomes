@@ -95,7 +95,7 @@ class BookPropertyController extends Controller
     public function ListAllProperty()
     {
         // Fetch paginated properties
-        $sortedData2 = Property::where('status', '1')->latest()->paginate(6);
+        $sortedData2 = Property::where('status', '1')->latest()->paginate(12);
 
         // Fetch additional data for filtering
         $propertyStatusRent = Property::where('property_status', 'rent')->get();
@@ -366,7 +366,7 @@ class BookPropertyController extends Controller
         });
 
         // Get the filtered properties
-        $paginatedData = $query->paginate(6);
+        $paginatedData = $query->paginate(12);
 
         $currency = 'USD'; // Default currency
 
@@ -498,7 +498,7 @@ class BookPropertyController extends Controller
         });
 
         // Get the filtered properties
-        $paginatedData = $query->paginate(6);
+        $paginatedData = $query->paginate(12);
 
 
         $currency = 'USD'; // Default currency
@@ -632,7 +632,7 @@ class BookPropertyController extends Controller
 
         // Get the filtered properties
         // Get the filtered properties with pagination
-        $paginatedData = $query->paginate(6);
+        $paginatedData = $query->paginate(12);
 
         $currency = 'USD'; // Default currency
 
@@ -763,7 +763,7 @@ class BookPropertyController extends Controller
             ]);
         }
 
-        $paginatedData = $query->paginate(6);
+        $paginatedData = $query->paginate(12);
 
         $currency = 'USD'; // Default currency
         $ip = request()->ip();
@@ -1270,7 +1270,7 @@ class BookPropertyController extends Controller
         }
 
         // Get the filtered properties
-        $paginatedData = $query->paginate(6);
+        $paginatedData = $query->paginate(12);
 
 
         $currency = 'USD'; // Default currency
@@ -1363,7 +1363,7 @@ class BookPropertyController extends Controller
     public function RentProperties()
     {
         // Fetch paginated properties
-        $rentedProperties = Property::where('status', '1')->where('property_status', 'rent')->paginate(6); // Paginate properties with 2 items per page
+        $rentedProperties = Property::where('status', '1')->where('property_status', 'rent')->paginate(12); // Paginate properties with 2 items per page
 
         // Fetch additional data for filtering (status, types, etc.)
         $propertyStatusRent = Property::where('property_status', 'rent')->get();
@@ -1478,7 +1478,7 @@ class BookPropertyController extends Controller
     public function BuyProperties()
     {
         // Fetch paginated properties
-        $buyProperties = Property::where('status', '1')->where('property_status', 'buy')->paginate(6); // Paginate properties with 2 items per page
+        $buyProperties = Property::where('status', '1')->where('property_status', 'buy')->paginate(12); // Paginate properties with 2 items per page
 
         // Fetch additional data for filtering (status, types, etc.)
         $propertyStatusRent = Property::where('property_status', 'rent')->get();
@@ -1827,37 +1827,37 @@ class BookPropertyController extends Controller
     //     return view('frontend.book.results', compact('properties'));
     // }
 
-
     public function Search(Request $request)
     {
-
-        // search query parameters
+        // Initialize query for properties
         $query = Property::query();
 
-        if ($request->filled('location')) {
-            $location = $request->input('location');
-
-            $query->where(function ($q) use ($location) {
-                $q->whereHas('city', function ($cityQuery) use ($location) {
-                    $cityQuery->where('name', 'like', '%' . $location . '%');
-                })
-                    ->orWhereHas('state', function ($stateQuery) use ($location) {
-                        $stateQuery->where('name', 'like', '%' . $location . '%');
-                    });
+        // Filter by location (city or state)
+    // Filter by location
+    if ($request->filled('location')) {
+        $location = $request->input('location');
+        $query->where(function ($q) use ($location) {
+            $q->whereHas('city', function ($cityQuery) use ($location) {
+                $cityQuery->where('name', 'like', '%' . $location . '%');
+            })->orWhereHas('state', function ($stateQuery) use ($location) {
+                $stateQuery->where('name', 'like', '%' . $location . '%');
             });
-        }
+        });
+    }
 
+        // Filter by property type
+    // Filter by property type
+    if ($request->filled('property_type')) {
+        $query->where('ptype_id', $request->input('property_type'));
+    }
+        // Fetch filtered properties with pagination
+        $properties = $query->latest()->paginate(12);
 
-        $properties = $query->latest()->paginate(6);
-
-        // Fetch paginated properties
-        $sortedData2 = Property::where('status', '1')->latest()->paginate(6);
-
-        // Fetch additional data for filtering
+        // Additional data for filtering
+        $propertyTypes = PropertyType::orderBy('type_name', 'asc')->get();
         $propertyStatusRent = Property::where('property_status', 'rent')->get();
         $propertyStatusBuy = Property::where('property_status', 'buy')->get();
         $propertyStatusSell = Property::where('property_status', 'sell')->get();
-        $propertyTypes = PropertyType::orderBy('type_name', 'asc')->get();
         $propertyRooms = Property::select('bedrooms')->distinct()->orderBy('bedrooms', 'asc')->get();
         $priceLowest = Property::select('price')->distinct()->orderBy('price', 'asc')->get();
         $priceMax = Property::select('maximum_price')->distinct()->orderBy('maximum_price', 'asc')->get();
@@ -1865,16 +1865,16 @@ class BookPropertyController extends Controller
         $propertyStatus = Property::select('property_status')->distinct()->orderBy('property_status', 'asc')->get();
         $countries = Country::get();
 
+        // Currency and exchange rate logic
         $currency = 'NGN'; // Default currency
         $exchangeRate = 1.0; // Default exchange rate
 
         // Fetch user's IP and location details
         $ip = request()->ip();
 
+        // Handle local requests
         if ($ip == '127.0.0.1' || $ip == '::1') {
-            // Handle local requests
             return view('frontend.book.results', compact(
-                'sortedData2',
                 'propertyStatusRent',
                 'propertyStatusBuy',
                 'propertyStatusSell',
@@ -1907,7 +1907,7 @@ class BookPropertyController extends Controller
         }
 
         // Convert property prices based on exchange rate
-        foreach ($sortedData2 as $property) {
+        foreach ($properties as $property) {
             $property->price_converted = $property->price * $exchangeRate; // Apply exchange rate conversion
         }
 
@@ -1919,14 +1919,14 @@ class BookPropertyController extends Controller
         foreach ($priceMax as $price) {
             $price->converted_price = $price->maximum_price * $exchangeRate; // Apply exchange rate conversion
         }
+
         // Convert priceByNight based on exchange rate
         foreach ($priceByNight as $price) {
-            $price->converted_price = $price->$priceByNight  * $exchangeRate; // Apply exchange rate conversion
+            $price->converted_price = $price->price_per_night * $exchangeRate;
         }
 
-        // Return view with data
+        // Return view with filtered properties and other data
         return view('frontend.book.results', compact(
-            'sortedData2',
             'propertyStatusRent',
             'propertyStatusBuy',
             'propertyStatusSell',
@@ -1941,8 +1941,7 @@ class BookPropertyController extends Controller
             'priceByNight',
             'properties'
         ));
-
-
-        // return view('frontend.book.results', compact('properties'));
     }
+
+
 }

@@ -6,6 +6,12 @@
     PaddyHome Properties - Add Property
 @endsection
 
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
 <div class="page-content">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -119,15 +125,16 @@
                                 @endforeach
                             </select>
                         </div>
-
-                            <div class="col-md-6 mb-2">
-                                <label for="input1" class="form-label">Price Per Night <span>(Hotels & Shortlet only)</span></label>
-                                <input type="number" name="price_per_night" class="form-control
-                                " id="input1" >
-                            </div>
-                            <div class="col-md-6 mb-2">
-                                <label for="input1" class="form-label">Guest Capacity</label>
-                                <input type="number" name="guest_capacity" class="form-control" id="input1" >
+                            <div class="row mt-3 hidden" id="extra-fields">
+                                <div class="col-md-6 mb-2">
+                                    <label for="input1" class="form-label">Price Per Night <span>(Hotels & Shortlet only)</span></label>
+                                    <input type="number" name="price_per_night" class="form-control
+                                    " id="input1" >
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="input1" class="form-label">Guest Capacity</label>
+                                    <input type="number" name="guest_capacity" class="form-control" id="input1" >
+                                </div>
                             </div>
 
                         <div class="row g-3 mb-3">
@@ -467,7 +474,21 @@
 //     toggleFields();
 // });
 
+</script>
 
+<script>
+    $(document).ready(function () {
+        const propertyTypesToShow = [3,6];
+
+        $('#property_type').on('change', function () {
+            const selectedValue = $(this).val();
+            if (propertyTypesToShow.includes(parseInt(selectedValue))) {
+                $('#extra-fields').removeClass('hidden');
+            } else {
+                $('#extra-fields').addClass('hidden');
+            }
+        });
+    });
 </script>
 
 @endsection

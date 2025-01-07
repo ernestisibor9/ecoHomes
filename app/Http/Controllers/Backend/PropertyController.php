@@ -49,6 +49,9 @@ class PropertyController extends Controller
                 'address' => 'required|string|max:255',
                 'property_thumbnail' => 'required|image|max:1024|mimes:jpg,jpeg,png,gif',
                 'multi_img.*' => 'required|image|max:1024|mimes:jpg,jpeg,png,gif',
+                'price' => 'nullable|numeric',
+                'price_per_night' => 'nullable|numeric',
+                'guest_capacity' => 'nullable|integer',
             ]);
 
             $amenities = implode(',', $request->amenities_id); // Convert amenities array to string
@@ -74,7 +77,7 @@ class PropertyController extends Controller
             // Calculate fees if price_per_night is provided
             $cleaning_fee = $eco_home_service_fee = 0;
             if ($request->price_per_night) {
-                $cleaning_fee = 0.05 * $request->price_per_night;
+               // $cleaning_fee = 0.05 * $request->price_per_night;
                 $eco_home_service_fee = 0.10 * $request->price_per_night;
             }
 
@@ -95,7 +98,7 @@ class PropertyController extends Controller
                 'price' => $request->price,
                 'price_per_night' => $request->price_per_night,
                 'guest_capacity' => $request->guest_capacity,
-                'cleaning_fee' => $cleaning_fee,
+                // 'cleaning_fee' => $cleaning_fee,
                 'eco_home_service_fee' => $eco_home_service_fee,
                 'maximum_price' => $request->price,
                 'short_description' => $request->short_desc,

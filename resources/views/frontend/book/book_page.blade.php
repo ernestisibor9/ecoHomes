@@ -76,23 +76,23 @@
                         <div class="price-box pull-right">
                             <h3>
                                 @if (isset($property))
-                                @if ($property->type->type_name == 'Hotel' || $property->type->type_name == 'Shortlet')
-                                @if ($currency == 'NGN')
-                                    {{ '₦ ' . number_format($property->price_per_night, 2) }}
-                                    <!-- Display price per night in NGN -->
-                                @else
-                                    {{ $currency . ' ' . number_format($property->price_per_night_converted, 2) }}
-                                    <!-- Display converted price per night -->
-                                @endif
-                            @else
-                                @if ($currency == 'NGN')
-                                    {{ '₦ ' . number_format($property->price, 2) }}
-                                    <!-- Display regular price in NGN -->
-                                @else
-                                    {{ $currency . ' ' . number_format($property->price_converted, 2) }}
-                                    <!-- Display converted regular price -->
-                                @endif
-                            @endif
+                                    @if ($property->type->type_name == 'Hotel' || $property->type->type_name == 'Shortlet')
+                                        @if ($currency == 'NGN')
+                                            {{ '₦ ' . number_format($property->price_per_night, 2) }}
+                                            <!-- Display price per night in NGN -->
+                                        @else
+                                            {{ $currency . ' ' . number_format($property->price_per_night_converted, 2) }}
+                                            <!-- Display converted price per night -->
+                                        @endif
+                                    @else
+                                        @if ($currency == 'NGN')
+                                            {{ '₦ ' . number_format($property->price, 2) }}
+                                            <!-- Display regular price in NGN -->
+                                        @else
+                                            {{ $currency . ' ' . number_format($property->price_converted, 2) }}
+                                            <!-- Display converted regular price -->
+                                        @endif
+                                    @endif
                                 @endif
                             </h3>
                         </div>
@@ -106,6 +106,13 @@
                 </div>
             </div>
             <div class="row clearfix">
+                <div class="toast align-items-center text-white position-fixed bottom-0 end-0 p-3" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body"></div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+
                 <div class="col-lg-8 col-md-12 col-sm-12 content-side">
                     <div class="property-details-content">
                         <div class="carousel-inner">
@@ -458,23 +465,27 @@
                                 <div class="widget-title">
                                     <h4 style="color: green">
                                         @if (isset($property))
-                                        @if ($property->type->type_name == 'Hotel' || $property->type->type_name == 'Shortlet')
-                                        @if ($currency == 'NGN')
-                                            {{ '₦ ' . number_format($property->price_per_night, 2) }} <small style="font-size: 0.9rem; color: gray;">Per Night</small>
-                                            <!-- Display price per night in NGN -->
-                                        @else
-                                            {{ $currency . ' ' . number_format($property->price_per_night_converted, 2) }} <small style="font-size: 0.9rem; color: gray;">Per Night</small>
-                                            <!-- Display converted price per night -->
-                                        @endif
-                                    @else
-                                        @if ($currency == 'NGN')
-                                            {{ '₦ ' . number_format($property->price, 2) }} <small style="font-size: 0.9rem; color: gray;">Per Night</small>
-                                            <!-- Display regular price in NGN -->
-                                        @else
-                                            {{ $currency . ' ' . number_format($property->price_converted, 2) }} <small style="font-size: 0.9rem; color: gray;">Per Night</small>
-                                            <!-- Display converted regular price -->
-                                        @endif
-                                    @endif
+                                            @if ($property->type->type_name == 'Hotel' || $property->type->type_name == 'Shortlet')
+                                                @if ($currency == 'NGN')
+                                                    {{ '₦ ' . number_format($property->price_per_night, 2) }} <small
+                                                        style="font-size: 0.9rem; color: gray;">Per Night</small>
+                                                    <!-- Display price per night in NGN -->
+                                                @else
+                                                    {{ $currency . ' ' . number_format($property->price_per_night_converted, 2) }}
+                                                    <small style="font-size: 0.9rem; color: gray;">Per Night</small>
+                                                    <!-- Display converted price per night -->
+                                                @endif
+                                            @else
+                                                @if ($currency == 'NGN')
+                                                    {{ '₦ ' . number_format($property->price, 2) }} <small
+                                                        style="font-size: 0.9rem; color: gray;">Per Night</small>
+                                                    <!-- Display regular price in NGN -->
+                                                @else
+                                                    {{ $currency . ' ' . number_format($property->price_converted, 2) }}
+                                                    <small style="font-size: 0.9rem; color: gray;">Per Night</small>
+                                                    <!-- Display converted regular price -->
+                                                @endif
+                                            @endif
                                         @endif
                                     </h4>
                                     {{-- $<h4 id="basePrice"> <span>Night</span></h4> --}}
@@ -514,22 +525,25 @@
                                     <div>
                                         <div id="errorMessage" class="text-danger mb-3"></div>
                                     </div>
-                                    <div class="form-group message-btn">
-                                        <button type="submit" id="availabilityButton"  class="theme-btn btn-one">Check Availability</button>
-                                    </div>
                                     <div>
                                         <p id="availabilityMessage"></p>
                                     </div>
+                                    <div id="priceDetails" class="mt-4" style="display: none;">
+                                        <h5>Price Details</h5>
+                                        <p><strong>Total Nights:</strong> <span id="totalNights"></span></p>
+                                        <p><strong>Base Price:</strong> <span id="basePrice"></span></p>
+                                        {{-- <p><strong>Cleaning Fee:</strong> <span id="cleaningFee"></span></p> --}}
+                                        <p><strong>Eco Home Service Fee:</strong> <span id="ecoFee"></span></p>
+                                        <p><strong>Total Price:</strong> <span id="totalPrice"></span></p>
+                                    </div>
+                                    <div class="form-group message-btn">
+                                        <button type="submit" id="availabilityButton" class="theme-btn btn-one">Check
+                                            Availability</button>
+                                    </div>
+
                                 </form>
                             </div>
-                            <div id="priceDetails" class="mt-4" style="display: none;">
-                                <h5>Price Details</h5>
-                                <p><strong>Total Nights:</strong> <span id="totalNights"></span></p>
-                                <p><strong>Base Price:</strong> <span id="basePrice"></span></p>
-                                <p><strong>Cleaning Fee:</strong> <span id="cleaningFee"></span></p>
-                                <p><strong>Eco Home Service Fee:</strong> <span id="ecoFee"></span></p>
-                                <p><strong>Total Price:</strong> <span id="totalPrice"></span></p>
-                            </div>
+
 
                         </div>
                         <div class="calculator-widget sidebar-widget" id="ad-container">
@@ -698,6 +712,36 @@
     </section>
     <!-- property-details end -->
 
+
+    <!-- Modal for User Type Selection -->
+<div class="modal fade" id="userTypeModal" tabindex="-1" aria-labelledby="userTypeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userTypeModalLabel">Continue as</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Choose how you want to proceed:</p>
+                <div id="userTypeOptions" class="d-flex justify-content-between">
+                    <button id="guestUserButton" class="btn btn-primary">Guest User</button>
+                    <button id="regularUserButton" class="btn btn-secondary">Regular User</button>
+                </div>
+
+                <!-- Hidden email input field for Guest User -->
+                <div id="guestEmailInput" class="mt-3" style="display: none;">
+                    <label for="guestEmail" class="form-label">Enter your email to receive an OTP:</label>
+                    <p id="invalid_email" class="text-danger"></p>
+                    <input type="email" id="guestEmail" class="form-control" placeholder="Enter your email" required>
+                    <button id="sendOtpButton" class="btn btn-success mt-2">Send OTP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
     <script>
         // Get the current date
         const now = new Date();
@@ -769,91 +813,245 @@
 
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+            e.preventDefault();
 
-    const formData = new FormData(this);
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const priceDetailsElement = document.getElementById('priceDetails');
-    const messageElement = document.getElementById('availabilityMessage');
-    const errorMessage = document.getElementById('errorMessage');
-    const availabilityButton = document.getElementById('availabilityButton'); // Reference to the button
+            const formData = new FormData(this);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const priceDetailsElement = document.getElementById('priceDetails');
+            const messageElement = document.getElementById('availabilityMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const availabilityButton = document.getElementById('availabilityButton'); // Reference to the button
 
-    // Reset previous messages
-    messageElement.textContent = '';
-    errorMessage.textContent = '';
-    priceDetailsElement.style.display = 'none';
+            // Reset previous messages
+            messageElement.textContent = '';
+            errorMessage.textContent = '';
+            priceDetailsElement.style.display = 'none';
 
-    // Send availability check
-    fetch('/check-availability', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': csrfToken,
-            'Accept': 'application/json',
-        },
-        body: formData,
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to check availability. Please try again.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.available) {
-                messageElement.textContent = 'The room is available for the selected dates.';
-                messageElement.style.color = 'green';
-
-                // Change button text to "Reserve"
-                availabilityButton.textContent = 'Reserve';
-
-                // Fetch price details
-                return fetch('/calculate-price', {
+            // Send availability check
+            fetch('/check-availability', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
                     },
                     body: formData,
-                });
-            } else {
-                messageElement.textContent = 'Sorry, the room is not available for the selected dates.';
-                messageElement.style.color = 'red';
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to check availability. Please try again.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.available) {
+                        messageElement.textContent = 'The room is available for the selected dates.';
+                        messageElement.style.color = 'green';
 
-                // Reset button text if not available
-                availabilityButton.textContent = 'Check Availability';
-                throw new Error('Room not available.');
-            }
+                        // Change button text to "Reserve"
+                        availabilityButton.textContent = 'Reserve';
+
+                        // Fetch price details
+                        return fetch('/calculate-price', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json',
+                            },
+                            body: formData,
+                        });
+                    } else {
+                        messageElement.textContent = 'Sorry, the room is not available for the selected dates.';
+                        messageElement.style.color = 'red';
+
+                        // Reset button text if not available
+                        availabilityButton.textContent = 'Check Availability';
+                        throw new Error('Room not available.');
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to calculate price. Please try again.');
+                    }
+                    return response.json();
+                })
+                .then(priceData => {
+                    // Extract currency from response
+                    const currency = priceData.currency;
+
+                    // Populate price details
+                    document.getElementById('totalNights').textContent = priceData.days;
+                    document.getElementById('basePrice').textContent =
+                        `${currency} ${Number(priceData.base_price).toFixed(2)}`;
+                    // document.getElementById('cleaningFee').textContent =
+                    //     `${currency} ${Number(priceData.cleaning_fee).toFixed(2)}`;
+                    document.getElementById('ecoFee').textContent =
+                        `${currency} ${Number(priceData.eco_home_service_fee).toFixed(2)}`;
+                    document.getElementById('totalPrice').textContent =
+                        `${currency} ${Number(priceData.total_price).toFixed(2)}`;
+                    priceDetailsElement.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error(error);
+                    errorMessage.textContent = error.message ||
+                        'An unexpected error occurred. Please try again.';
+                });
+        });
+    </script>
+
+
+
+
+{{-- <script>
+    document.getElementById('availabilityButton').addEventListener('click', function (e) {
+        if (this.textContent === 'Reserve') {
+            e.preventDefault();
+            $('#userTypeModal').modal('show'); // Show the modal
+        }
+    });
+
+    // Show Guest User Email Input
+    document.getElementById('guestUserButton').addEventListener('click', function () {
+        // Hide user type options and show email input field
+        document.getElementById('userTypeOptions').style.display = 'none';
+        document.getElementById('guestEmailInput').style.display = 'block';
+    });
+
+    // Handle Send OTP Button Click
+    document.getElementById('sendOtpButton').addEventListener('click', function () {
+        const guestEmail = document.getElementById('guestEmail').value.trim();
+
+        // Validate email
+        if (!guestEmail || !validateEmail(guestEmail)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+
+        // Send OTP to Guest User Email
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        fetch('/send-guest-otp', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: guestEmail }),
         })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send OTP. Please try again.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('OTP sent to your email. Please verify to proceed.');
+                    window.location.href = `/verify-otp?email=${encodeURIComponent(data.email)}`;
+                } else {
+                    throw new Error(data.message || 'An error occurred.');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message || 'An unexpected error occurred.');
+            });
+    });
+
+    // Handle Regular User Button
+    document.getElementById('regularUserButton').addEventListener('click', function () {
+        $('#userTypeModal').modal('hide'); // Hide the modal
+        window.location.href = '/login'; // Redirect to login/signup page
+    });
+
+    // Email Validation Function
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+</script> --}}
+
+
+
+<script>
+document.getElementById('availabilityButton').addEventListener('click', function (e) {
+    if (this.textContent === 'Reserve') {
+        e.preventDefault();
+        $('#userTypeModal').modal('show'); // Show the modal
+    }
+});
+
+// Show Guest User Email Input
+document.getElementById('guestUserButton').addEventListener('click', function () {
+    document.getElementById('userTypeOptions').style.display = 'none';
+    document.getElementById('guestEmailInput').style.display = 'block';
+});
+
+// Toast Function
+function showToast(type, message) {
+    const toastEl = document.getElementById('toast');
+    const toastBody = toastEl.querySelector('.toast-body');
+
+    toastBody.textContent = message; // Set the toast message
+    toastEl.classList.remove('bg-success', 'bg-danger');
+    toastEl.classList.add(type === 'success' ? 'bg-success' : 'bg-danger');
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+}
+
+// Handle Send OTP Button Click
+document.getElementById('sendOtpButton').addEventListener('click', function () {
+    const guestEmail = document.getElementById('guestEmail').value.trim();
+
+    // Validate email
+    if (!guestEmail || !validateEmail(guestEmail)) {
+        const invalidEmail = document.getElementById('invalid_email')
+        invalidEmail.style.display = 'block';
+        invalidEmail.style.textAlign = 'center';
+        invalidEmail.textContent = "Please enter a valid email address"
+        showToast('danger', 'Please enter a valid email address.');
+        return;
+    }
+
+    // Send OTP to Guest User Email
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch('/send-guest-otp', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: guestEmail }),
+    })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to calculate price. Please try again.');
+                throw new Error('Failed to send OTP. Please try again.');
             }
             return response.json();
         })
-        .then(priceData => {
-            // Extract currency from response
-            const currency = priceData.currency;
-
-            // Populate price details
-            document.getElementById('totalNights').textContent = priceData.days;
-            document.getElementById('basePrice').textContent =
-                `${currency} ${Number(priceData.base_price).toFixed(2)}`;
-            document.getElementById('cleaningFee').textContent =
-                `${currency} ${Number(priceData.cleaning_fee).toFixed(2)}`;
-            document.getElementById('ecoFee').textContent =
-                `${currency} ${Number(priceData.eco_home_service_fee).toFixed(2)}`;
-            document.getElementById('totalPrice').textContent =
-                `${currency} ${Number(priceData.total_price).toFixed(2)}`;
-            priceDetailsElement.style.display = 'block';
+        .then(data => {
+            if (data.success) {
+                showToast('success', 'OTP sent to your email. Please verify to proceed.');
+                setTimeout(() => {
+                    window.location.href = `/verify-otp?email=${encodeURIComponent(data.email)}`;
+                }, 2000);
+            } else {
+                throw new Error(data.message || 'An error occurred.');
+            }
         })
         .catch(error => {
-            console.error(error);
-            errorMessage.textContent = error.message ||
-                'An unexpected error occurred. Please try again.';
+            showToast('danger', error.message || 'An unexpected error occurred.');
         });
 });
 
-    </script>
+// Email Validation Function
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+
+</script>
 
 
 @endsection

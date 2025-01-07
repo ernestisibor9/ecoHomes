@@ -103,13 +103,11 @@
                     <!-- Property Type Dropdown -->
                     <select name="property_type" class="form-select see inp">
                         <option value="">Select Property Type</option>
-                        <option value="Flat" {{ request('property_type') == 'Flat' ? 'selected' : '' }}>Flat</option>
-                        <option value="Bungalow" {{ request('property_type') == 'Bungalow' ? 'selected' : '' }}>Bungalow
+                        @foreach ($propertyTypes as $type)
+                        <option value="{{ $type->id }}" {{ request('property_type') == $type->id ? 'selected' : '' }}>
+                            {{ $type->type_name }}
                         </option>
-                        <option value="Duplex" {{ request('property_type') == 'Duplex' ? 'selected' : '' }}>Duplex</option>
-                        <option value="Hotel" {{ request('property_type') == 'Hotel' ? 'selected' : '' }}>Hotel</option>
-                        <option value="Shortlet" {{ request('property_type') == 'Shortlet' ? 'selected' : '' }}>Shortlet
-                        </option>
+                    @endforeach
                     </select>
                 </div>
                 <div class="col">
@@ -358,13 +356,9 @@
                                                             alt="" class="property-img"></figure>
                                                     <div class="batch"><i class="icon-11"></i></div>
                                                     <span class="category">
-                                                        @if ($item->featured == 1)
-                                                            <span>Featured</span>
-                                                        @else
-                                                            <span>Hot</span>
-                                                        @endif
+                                                            <span>{{ $item->city ? $item->city->name : 'Unknown City' }}</span>
                                                     </span>
-                                                    <div class="buy-btn"><a href="property-details.html">
+                                                    <div class="buy-btn"><a href="#">
                                                             {{ ucfirst($item->property_status) }} Now</a></div>
                                                 </div>
                                                 <div class="lower-content">
@@ -414,7 +408,7 @@
                                                             <figure class="author-thumb">
                                                                 <img src="{{ asset('frontend/assets/images/feature/author-1.jpg') }}"
                                                                     alt="">
-                                                                <span>{{ $item->type->type_name }}</span>
+                                                                <span>{{ $item->state->name }}</span>
                                                             </figure>
                                                         </div>
                                                     </div>
