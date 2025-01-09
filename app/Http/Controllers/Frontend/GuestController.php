@@ -38,15 +38,37 @@ class GuestController extends Controller
         return view('frontend.book.guest_verify_otp', ['email' => $request->query('email')]);
     }
 
+    // public function verifyOtp(Request $request)
+    // {
+    //     $otp = $request->input('otp');
+    //     if ($otp == session('guest_otp')) {
+    //         // OTP verified; proceed to payment
+    //         session()->forget(['guest_otp', 'guest_email']);
+    //         return view('frontend.book.guest_payment');
+    //     } else {
+    //         return back()->withErrors(['otp' => 'Invalid OTP.']);
+    //     }
+    // }
+
     public function verifyOtp(Request $request)
-    {
-        $otp = $request->input('otp');
-        if ($otp == session('guest_otp')) {
-            // OTP verified; proceed to payment
-            session()->forget(['guest_otp', 'guest_email']);
-            return redirect('/payment');
-        } else {
-            return back()->withErrors(['otp' => 'Invalid OTP.']);
-        }
+{
+    $otp = $request->input('otp');
+    if ($otp == session('guest_otp')) {
+        // OTP verified; proceed to payment
+        session()->forget('guest_otp'); // Remove OTP but retain email and booking details
+
+        // Assume `roomDetails` and `totalPrice` are stored in the session during the room reservation step
+        $roomDetails = session('room_details'); // Replace with actual data storage logic
+        $totalPrice = session('total_price');   // Replace with actual data storage logic
+
+        return view('frontend.book.guest_payment', [
+            'email' => session('guest_email'),
+            'roomDetails' => $roomDetails,
+            'totalPrice' => $totalPrice,
+        ]);
+    } else {
+        return back()->withErrors(['otp' => 'Invalid OTP.']);
     }
+}
+
 }

@@ -64,7 +64,8 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::get('search/price/properties', function () {
             return redirect()->back(); // Redirect back or to a default page
         });
-
+        // regular.user
+        Route::get('/regular/user', 'regularUser')->name('regular.user');
         // Route::get('/properties/{propertyId}/availability/{date}', [ViewingController::class, 'checkAvailability']);
         // Route::post('/properties/{propertyId}/viewing-request', [ViewingController::class, 'submitViewingRequest']);
         Route::post('/store/{propertyId}/viewing/request', 'SubmitRequest')->name('viewing.request');

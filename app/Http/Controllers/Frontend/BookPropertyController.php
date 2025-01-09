@@ -1943,5 +1943,27 @@ class BookPropertyController extends Controller
         ));
     }
 
+    // regularUser
+    public function regularUser(Request $request) {
+        if (!Auth::check()) {
+            $notification = [
+                'message' => "You have to have an account before you reserve a room",
+                'alert-type' => 'error',
+            ];
+            return redirect()->route('login')->with($notification);
+        }
+
+        $userData = Auth::user();
+
+        $totalPrice = $request->query('totalPrice');
+        $roomName = $request->query('roomName');
+
+        if (!$totalPrice || !$roomName) {
+            return redirect()->back()->with('error', 'Missing booking details.');
+        }
+
+        return view('frontend.book.payment', compact('totalPrice', 'roomName', 'userData'));
+    }
+
 
 }

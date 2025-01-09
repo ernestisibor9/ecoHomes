@@ -492,7 +492,8 @@
                                 </div>
                                 <form method="post" action="" class="default-form" id="bookingForm">
                                     @csrf
-                                    <input type="hidden" name="property_id" value="{{ $property->id }}">
+                                    <input type="hidden" name="property_id" id="roomId" value="{{ $property->id }}">
+                                    <input type="hidden" name="property_name" id="roomName" value="{{ $property->property_name }}">
                                     <small>Check In</small>
                                     <div class="form-group">
                                         <i class="fas fa-calendar"></i>
@@ -898,80 +899,6 @@
         });
     </script>
 
-
-
-
-{{-- <script>
-    document.getElementById('availabilityButton').addEventListener('click', function (e) {
-        if (this.textContent === 'Reserve') {
-            e.preventDefault();
-            $('#userTypeModal').modal('show'); // Show the modal
-        }
-    });
-
-    // Show Guest User Email Input
-    document.getElementById('guestUserButton').addEventListener('click', function () {
-        // Hide user type options and show email input field
-        document.getElementById('userTypeOptions').style.display = 'none';
-        document.getElementById('guestEmailInput').style.display = 'block';
-    });
-
-    // Handle Send OTP Button Click
-    document.getElementById('sendOtpButton').addEventListener('click', function () {
-        const guestEmail = document.getElementById('guestEmail').value.trim();
-
-        // Validate email
-        if (!guestEmail || !validateEmail(guestEmail)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
-
-        // Send OTP to Guest User Email
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        fetch('/send-guest-otp', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: guestEmail }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to send OTP. Please try again.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('OTP sent to your email. Please verify to proceed.');
-                    window.location.href = `/verify-otp?email=${encodeURIComponent(data.email)}`;
-                } else {
-                    throw new Error(data.message || 'An error occurred.');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                alert(error.message || 'An unexpected error occurred.');
-            });
-    });
-
-    // Handle Regular User Button
-    document.getElementById('regularUserButton').addEventListener('click', function () {
-        $('#userTypeModal').modal('hide'); // Hide the modal
-        window.location.href = '/login'; // Redirect to login/signup page
-    });
-
-    // Email Validation Function
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-</script> --}}
-
-
-
 <script>
 document.getElementById('availabilityButton').addEventListener('click', function (e) {
     if (this.textContent === 'Reserve') {
@@ -1049,7 +976,28 @@ function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
 }
+</script>
 
+
+<script>
+document.getElementById('regularUserButton').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    // Extract totalPrice and roomId
+    const totalPriceElement = document.getElementById('totalPrice');
+    const roomIdElement = document.getElementById('roomName');
+
+    const totalPrice = totalPriceElement ? totalPriceElement.textContent.trim() : null;
+    const roomName = roomIdElement ? roomIdElement.value : null;
+
+    if (totalPrice && roomId) {
+        // Redirect to the payment page with query parameters
+        const paymentUrl = `/regular/user?totalPrice=${encodeURIComponent(totalPrice)}&roomName=${encodeURIComponent(roomName)}`;
+        window.location.href = paymentUrl;
+    } else {
+        alert('Error: Missing total price or room information.');
+    }
+});
 
 </script>
 

@@ -53,6 +53,12 @@ class PropertyReserveController extends Controller
             $basePrice = $room->price_per_night * $days;
             $totalPrice = $basePrice + $room->cleaning_fee + $room->eco_home_service_fee;
 
+            session([
+                'room_details' => $room,
+                'total_price' => $totalPrice,
+            ]);
+
+
             return response()->json([
                 'days' => $days,
                 'total_price' => $totalPrice,
