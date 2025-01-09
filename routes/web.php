@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Backend\AmenitiesController;
 use App\Http\Controllers\Backend\AvailabilityController;
 use App\Http\Controllers\Backend\NotificationController;
@@ -222,6 +223,17 @@ Route::group(["middleware" => "prevent-back-history"], function () {
             Route::get('/notifications/mark-all-as-read', 'MarkAllAsRead')->name('notifications.markAllAsRead');
         });
     });
+
+
+    // Agent routes
+    Route::middleware(['auth', 'roles:agent'])->group(function () {
+            Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.dashboard');
+    });
+
+    Route::get('/agent/login', [AgentController::class, 'AgentLogin'])->name('agent.login')
+    ->middleware(RedirectIfAuthenticated::class);
+    Route::get('/agent/register', [AgentController::class, 'AgentRegister'])->name('register');
+    Route::post('/agent/store/register', [AgentController::class, 'AgentStoreRegister'])->name('agent.register');
 
 
     // User routes

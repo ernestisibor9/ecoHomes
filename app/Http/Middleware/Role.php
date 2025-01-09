@@ -22,6 +22,15 @@ class Role
         } elseif ($userRole === 'admin' && $role === 'user') {
             return redirect('/admin/dashboard');
         }
+        elseif ($userRole === 'agent' && $role === 'user') {
+            return redirect('/agent/dashboard');
+        }
+        elseif ($userRole === 'admin' && $role === 'agent') {
+            return redirect('/admin/dashboard');
+        }
+        elseif ($userRole === 'agent' && $role === 'admin') {
+            return redirect('/agent/dashboard');
+        }
         return $next($request);
     }
 }
