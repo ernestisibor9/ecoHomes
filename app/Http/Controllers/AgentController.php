@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -36,5 +37,10 @@ class AgentController extends Controller
 
         return redirect(RouteServiceProvider::AGENT);
         //return view('auth.login');
+    }
+    public function AgentManageRoom(){
+        $id = Auth::user()->id;
+        $rooms = Property::latest()->where('hotel_owner', $id)->paginate(12);
+        return view('frontend.agent.all_rooms', compact('rooms'));
     }
 }

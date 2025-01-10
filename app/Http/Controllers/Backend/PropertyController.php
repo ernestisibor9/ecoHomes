@@ -12,6 +12,7 @@ use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\SellMyProperty;
 use App\Models\State;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -23,10 +24,11 @@ class PropertyController extends Controller
     public function AddProperty()
     {
         $countries = Country::get();
+        $users = User::where('role', 'agent')->get();
         $propertyTypes = PropertyType::latest()->get();
         $amenities = Amenities::latest()->get();
         $sellers = SellMyProperty::orderBy('firstname', 'ASC')->get();
-        return view('admin.backend.property.add_property', compact('propertyTypes', 'amenities', 'sellers', 'countries'));
+        return view('admin.backend.property.add_property', compact('propertyTypes', 'amenities', 'sellers', 'countries', 'users'));
     }
     // AllProperty
     public function AllProperty()
@@ -52,6 +54,9 @@ class PropertyController extends Controller
                 'price' => 'nullable|numeric',
                 'price_per_night' => 'nullable|numeric',
                 'guest_capacity' => 'nullable|integer',
+                'hotel_owner' => 'nullable|string',
+                'room_number' => 'nullable|integer',
+                'room_size' => 'nullable|string',
             ]);
 
             $amenities = implode(',', $request->amenities_id); // Convert amenities array to string
@@ -98,6 +103,9 @@ class PropertyController extends Controller
                 'price' => $request->price,
                 'price_per_night' => $request->price_per_night,
                 'guest_capacity' => $request->guest_capacity,
+                'hotel_owner' => $request->hotel_owner,
+                'room_number' => $request->room_number,
+                'room_size' => $request->room_size,
                 // 'cleaning_fee' => $cleaning_fee,
                 'eco_home_service_fee' => $eco_home_service_fee,
                 'maximum_price' => $request->price,
@@ -180,6 +188,9 @@ class PropertyController extends Controller
         'address' => 'nullable|string|max:255',
         'featured' => 'nullable',
         'hot' => 'nullable',
+        'hotel_owner' => 'nullable|string',
+        'room_number' => 'nullable|integer',
+        'room_size' => 'nullable|string',
     ]);
 
     $propertyId = $request->id;
@@ -211,6 +222,9 @@ class PropertyController extends Controller
         'address' => $request->address,
         'featured' => $request->featured,
         'hot' => $request->hot,
+        'hotel_owner' => $request->hotel_owner,
+        'room_number' => $request->room_number,
+        'room_size' => $request->room_size,
         'updated_at' => Carbon::now(),
     ]);
 

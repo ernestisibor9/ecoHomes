@@ -9,7 +9,7 @@
     <title>Realshed - HTML 5 Template Preview</title>
 
     <!-- Fav Icon -->
-    <link rel="icon" href="{{asset('frontend/assets/images/favicon.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('frontend/assets/images/favicon.ico') }}" type="image/x-icon">
 
     <!-- Google Fonts -->
     <link
@@ -76,8 +76,13 @@
             <div class="auto-container">
                 <div class="row clearfix">
 
+                    @if (!Route::is('manage.rooms'))
+                        {{-- Replace with your route name --}}
+                        @include('frontend.agent.body.sidebar')
+                    @endif
 
-                    @include('frontend.agent.body.sidebar')
+
+                    {{-- @include('frontend.agent.body.sidebar') --}}
 
 
                     @yield('agentdashboard')

@@ -228,6 +228,7 @@ Route::group(["middleware" => "prevent-back-history"], function () {
     // Agent routes
     Route::middleware(['auth', 'roles:agent'])->group(function () {
             Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.dashboard');
+            Route::get('/agent/manage/rooms', [AgentController::class, 'AgentManageRoom'])->name('manage.rooms');
     });
 
     Route::get('/agent/login', [AgentController::class, 'AgentLogin'])->name('agent.login')

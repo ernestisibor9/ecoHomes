@@ -135,6 +135,36 @@
                                     <label for="input1" class="form-label">Guest Capacity</label>
                                     <input type="number" name="guest_capacity" class="form-control" id="input1" >
                                 </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="input1" class="form-label">Room Number</label>
+                                    <input type="number" name="room_number" class="form-control" id="input1" >
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="input1" class="form-label">Hotel/Shortlet Owner</label>
+                                   <select name="hotel_owner" id="" class="form-select">
+                                    <option value="">Select Hotel/Shortlet Owner</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{$user->name }}</option>
+                                    @endforeach
+                                   </select>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="input1" class="form-label">Room Type</label>
+                                    <select name="room_size" id="" class="form-select">
+                                        <option value="">Select Room Type</option>
+                                        <option value="single_room">Single Room</option>
+                                        <option value="double_room">Double Room</option>
+                                        <option value="twin_room">Twin Room</option>
+                                        <option value="king_size_room">King Size Room</option>
+                                        <option value="queen_size_room">Queen Size Room</option>
+                                        <option value="deluxe_room">Deluxe Room</option>
+                                        <option value="junior_suite">Junior Suite</option>
+                                        <option value="executive_suite">Executive Suite</option>
+                                        <option value="presidential_suite">Presidential Suite</option>
+                                        <option value="micro_room">Micro Room</option>
+                                        <option value="pool_side_room">Poolside Rooms</option>
+                                    </select>
+                                </div>
                             </div>
 
                         <div class="row g-3 mb-3">

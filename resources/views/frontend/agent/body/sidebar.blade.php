@@ -30,7 +30,7 @@
                     <li class="current"> <a href="{{ url('/dashboard') }}"><i class="fab fa fa-envelope "></i> Dashboard
                         </a></li>
 
-
+                        <li><a href="{{ route('manage.rooms') }}"><i class="fa fa-indent" aria-hidden="true"></i> Manage Rooms</a></li>
                     {{-- <li><a href="blog-details.html"><i class="fa fa-cog" aria-hidden="true"></i>
                             Settings</a></li>
                     <li><a href="blog-details.html"><i class="fa fa-credit-card"
