@@ -8,7 +8,6 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
 
-
     <style>
         .property-img {
             width: 770px !important;
@@ -16,14 +15,27 @@
             object-fit: cover;
             transition: transform 0.3s ease;
         }
-
-        .spinner-border {
-            vertical-align: middle;
-            text-align: center;
-        }
     </style>
 
     <!--Page Title-->
+    <section class="page-title-two bg-color-1 centred">
+        <div class="pattern-layer">
+            <div class="pattern-1" style="background-image: url(assets/images/shape/shape-9.png);"></div>
+            <div class="pattern-2" style="background-image: url(assets/images/shape/shape-10.png);"></div>
+        </div>
+        <div class="auto-container">
+            <div class="content-box clearfix">
+                <h1>Property Details</h1>
+                <ul class="bread-crumb clearfix">
+                    <li><a href="{{ url('/') }}">Home</a></li>
+                    <li><a href="{{ route('agent.dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ route('manage.rooms') }}">Back</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!--End Page Title-->
+
 
     <!-- property-details -->
     <section class="property-details property-details-one">
@@ -65,21 +77,15 @@
                 <div class="right-column pull-right clearfix">
                     <div class="price-inner clearfix">
                         <ul class="category clearfix pull-left">
-                            <li><a href="property-details.html" class="text-decoration-none">
-                                    @if ($property->type->type_name === 'Hotel' || $property->type->type_name == 'Shortlet')
-                                        Room {{ $property->room_number }}
-                                    @else
-                                        {{ $property->property_type->type_name }}
+                            <li><a href="property-details.html">
+                                    @if (isset($property))
+                                        {{ $property->type->type_name }}
                                     @endif
                                 </a>
                             </li>
-                            <li><a href="property-details.html" class="text-decoration-none">
+                            <li><a href="property-details.html">
                                     @if (isset($property))
-                                        @if ($property->type->type_name === 'Hotel' || $property->type->type_name == 'Shortlet')
-                                            {{ $property->room_size }}
-                                        @else
-                                            {{ $property->property_status }} Now
-                                        @endif
+                                        {{ $property->property_status }} Now
                                     @endif
                                 </a>
                             </li>
@@ -89,10 +95,12 @@
                                 @if (isset($property))
                                     @if ($property->type->type_name == 'Hotel' || $property->type->type_name == 'Shortlet')
                                         @if ($currency == 'NGN')
-                                            {{ '₦ ' . number_format($property->price_per_night, 2) }}
+                                            {{ '₦ ' . number_format($property->price_per_night, 2) }} <small
+                                                style="font-size: 0.9rem; color: gray;">Per Night</small>
                                             <!-- Display price per night in NGN -->
                                         @else
                                             {{ $currency . ' ' . number_format($property->price_per_night_converted, 2) }}
+                                            <small style="font-size: 0.9rem; color: gray;">Per Night</small>
                                             <!-- Display converted price per night -->
                                         @endif
                                     @else
@@ -117,15 +125,6 @@
                 </div>
             </div>
             <div class="row clearfix">
-                <div class="toast align-items-center text-white position-fixed bottom-0 end-0 p-3" id="toast"
-                    role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body"></div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                            aria-label="Close"></button>
-                    </div>
-                </div>
-
                 <div class="col-lg-8 col-md-12 col-sm-12 content-side">
                     <div class="property-details-content">
                         <div class="carousel-inner">
@@ -228,7 +227,64 @@
                                 @endif
                             </ul>
                         </div>
-
+                        {{-- <div class="floorplan-inner content-widget">
+                            <div class="title-box">
+                                <h4>Floor Plan</h4>
+                            </div>
+                            <ul class="accordion-box">
+                                <li class="accordion block active-block">
+                                    <div class="acc-btn active">
+                                        <div class="icon-outer"><i class="fas fa-angle-down"></i></div>
+                                        <h5>First Floor</h5>
+                                    </div>
+                                    <div class="acc-content current">
+                                        <div class="content-box">
+                                            <p>Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia
+                                                deserunt mollit anim est laborum. Sed perspiciatis unde omnis iste natus
+                                                error sit voluptatem accusa dolore mque laudant.</p>
+                                            <figure class="image-box">
+                                                <img src="{{ asset('frontend/assets/images/resource/floor-1.png') }}"
+                                                    alt="">
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="accordion block">
+                                    <div class="acc-btn">
+                                        <div class="icon-outer"><i class="fas fa-angle-down"></i></div>
+                                        <h5>Second Floor</h5>
+                                    </div>
+                                    <div class="acc-content">
+                                        <div class="content-box">
+                                            <p>Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia
+                                                deserunt mollit anim est laborum. Sed perspiciatis unde omnis iste natus
+                                                error sit voluptatem accusa dolore mque laudant.</p>
+                                            <figure class="image-box">
+                                                <img src="{{ asset('frontend/assets/images/resource/floor-1.png') }}"
+                                                    alt="">
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="accordion block">
+                                    <div class="acc-btn">
+                                        <div class="icon-outer"><i class="fas fa-angle-down"></i></div>
+                                        <h5>Third Floor</h5>
+                                    </div>
+                                    <div class="acc-content">
+                                        <div class="content-box">
+                                            <p>Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia
+                                                deserunt mollit anim est laborum. Sed perspiciatis unde omnis iste natus
+                                                error sit voluptatem accusa dolore mque laudant.</p>
+                                            <figure class="image-box">
+                                                <img src="{{ asset('frontend/assets/images/resource/floor-1.png') }}"
+                                                    alt="">
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div> --}}
                         <div class="location-box content-widget">
                             <div class="title-box">
                                 <h4>Location</h4>
@@ -248,7 +304,7 @@
                                 <li><span>Zip/Postal Code:</span>23401</li>
                                 <li><span>City:</span>
                                     @if (isset($property))
-                                        {{ $property->city->name }}
+                                        {{ optional($property->city)->name }}
                                     @endif
                                 </li>
                             </ul>
@@ -263,7 +319,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="nearby-box content-widget">
+                        {{-- <div class="nearby-box content-widget">
                             <div class="title-box">
                                 <h4>What’s Nearby?</h4>
                             </div>
@@ -394,7 +450,7 @@
                                         src="{{ asset('frontend/assets/images/resource/statistics-1.png') }}"
                                         alt=""></a>
                             </figure>
-                        </div>
+                        </div> --}}
                         <div class="schedule-box content-widget">
                             <div class="title-box">
                                 <h4>Schedule A Tour</h4>
@@ -451,8 +507,152 @@
                 </div>
                 <div class="col-lg-4 col-md-12 col-sm-12 sidebar-side">
                     <div class="property-sidebar default-sidebar">
-                        {{-- <div class="author-widget sidebar-widget">
+                        <div class="author-widget sidebar-widget">
+                            <div class="author-box">
+                                <figure class="author-thumb"><img
+                                        src="{{ asset('frontend/assets/images/resource/author-1.jpg') }}" alt="">
+                                </figure>
+                                <div class="inner">
+                                    <h4>
+                                        @if (isset($property))
+                                            Admin
+                                        @endif
+                                    </h4>
+                                    <ul class="info clearfix">
+                                        <li><i class="fas fa-map-marker-alt"></i>84 St. John Wood High Street,
+                                            St Johns Wood</li>
+                                        <li><i class="fas fa-phone"></i><a href="tel:03030571965">030 3057 1965</a></li>
+                                    </ul>
+                                    <div class="btn-box">
 
+                                        <button type="button" class="theme-btn btn-success" data-bs-toggle="modal"
+                                            data-bs-target="#modal-{{ $property->id }}"
+                                            @if (
+                                                $property->property_status !== 'buy' &&
+                                                    $property->property_status !== 'rent' &&
+                                                    $property->property_status !== 'lease') onclick="redirectToBookingPage('{{ $property->id }}')" @endif>
+                                            @if ($property->property_status === 'buy')
+                                                Buy Now
+                                            @elseif($property->property_status === 'rent')
+                                                Rent Now
+                                            @elseif($property->property_status === 'lease')
+                                                Lease Now
+                                            @else
+                                                Book Now
+                                            @endif
+                                        </button>
+
+
+                                    </div>
+                                </div>
+                                <!------Bootstrap Modal starts----->
+                                <!-- Modal -->
+                                <div class="modal fade" id="modal-{{ $property->id }}" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1"
+                                    aria-labelledby="modalLabel-{{ $property->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="modalLabel-{{ $property->id }}">
+                                                    Select The
+                                                    Type Of User</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-footer  mx-auto">
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#staticBackdrop2-{{ $property->id }}">Proceed
+                                                    as a Guest
+                                                </button>
+                                                @auth
+                                                    <a href="{{ route('user.auth.booking', $property->id) }}" type="button"
+                                                        class="btn btn-success">Book as a User
+                                                    </a>
+                                                @endauth
+
+                                                @guest
+                                                    <a href="{{ route('user.auth.booking', $property->id) }}" type="button"
+                                                        class="btn btn-primary">Login as a User
+                                                    </a>
+                                                @endguest
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop2-{{ $property->id }}"
+                                    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5"
+                                                    id="staticBackdrop2Label-{{ $property->id }}">
+                                                    {{-- @if ($item->property_status === 'buy')
+                                                                Buy Now
+                                                            @elseif($item->property_status === 'rent')
+                                                                Rent Now
+                                                            @elseif($item->property_status === 'lease')
+                                                                Lease Now
+                                                            @else
+                                                                Book Now
+                                                            @endif --}}
+                                                    Submit Request
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+
+                                                <form action="{{ route('viewing.request', $property->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Full
+                                                            Name</label>
+                                                        <input type="text" name="name" id=""
+                                                            class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Email</label>
+                                                        <input type="email" name="email" id=""
+                                                            class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Phone</label>
+                                                        <input type="text" name="phone" id=""
+                                                            class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Select
+                                                            Date</label>
+                                                        <input type="date" name="requested_date" id="requested_date"
+                                                            class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="requested_time" class="form-label">Select
+                                                            Time</label>
+                                                        <input type="time" name="requested_time" id="requested_time"
+                                                            class="form-control" required>
+                                                    </div>
+
+                                                    <div class="d-grid gap-2 form-group message-btn">
+                                                        <button type="submit" class="theme-btn btn-one">Request
+                                                            Viewing</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Understood</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-------Bootstrap Modal ends----->
+                            </div>
                             <div class="form-inner">
                                 <form action="property-details.html" method="post" class="default-form">
                                     <div class="form-group">
@@ -472,101 +672,48 @@
                                     </div>
                                 </form>
                             </div>
-                        </div> --}}
-                        <div class="calculator-widget sidebar-widget">
-                            <div class="calculate-inner">
-                                <div class="widget-title">
-                                    <h4 style="color: green">
-                                        @if (isset($property))
-                                            @if ($property->type->type_name == 'Hotel' || $property->type->type_name == 'Shortlet')
-                                                @if ($currency == 'NGN')
-                                                    {{ '₦ ' . number_format($property->price_per_night, 2) }} <small
-                                                        style="font-size: 0.9rem; color: gray;">Per Night</small>
-                                                    <!-- Display price per night in NGN -->
-                                                @else
-                                                    {{ $currency . ' ' . number_format($property->price_per_night_converted, 2) }}
-                                                    <small style="font-size: 0.9rem; color: gray;">Per Night</small>
-                                                    <!-- Display converted price per night -->
-                                                @endif
-                                            @else
-                                                @if ($currency == 'NGN')
-                                                    {{ '₦ ' . number_format($property->price, 2) }} <small
-                                                        style="font-size: 0.9rem; color: gray;">Per Night</small>
-                                                    <!-- Display regular price in NGN -->
-                                                @else
-                                                    {{ $currency . ' ' . number_format($property->price_converted, 2) }}
-                                                    <small style="font-size: 0.9rem; color: gray;">Per Night</small>
-                                                    <!-- Display converted regular price -->
-                                                @endif
-                                            @endif
-                                        @endif
-                                    </h4>
-                                    {{-- $<h4 id="basePrice"> <span>Night</span></h4> --}}
-                                </div>
-                                <form method="post" action="" class="default-form" id="bookingForm">
-                                    @csrf
-                                    <input type="hidden" name="property_id" id="roomId"
-                                        value="{{ $property->id }}">
-                                    <input type="hidden" name="property_name" id="roomName"
-                                        value="{{ $property->property_name }}">
-                                    <small>Check In</small>
-                                    <div class="form-group">
-                                        <i class="fas fa-calendar"></i>
-                                        <input type="date" id="check_in" name="check_in" class="form-control"
-                                            required placeholder="YYYY-MM-DD" min="<?php echo date('Y-m-d'); ?>">
-                                    </div>
-                                    <small>Check Out</small>
-                                    <div class="form-group">
-                                        <i class="fas fa-calendar"></i>
-                                        <input type="date" id="check_out" name="check_out" class="form-control"
-                                            required placeholder="YYYY-MM-DD" min="<?php echo date('Y-m-d'); ?>">
-                                    </div>
-                                    <small>Adults</small>
-                                    <div class="form-group">
-                                        <i class="fas fa-user"></i>
-                                        <input type="number" id="guest_adults" name="guest_adults" value="1"
-                                            min="1">
-                                    </div>
-                                    <small>Children</small>
-                                    <div class="form-group">
-                                        <i class="fas fa-user"></i>
-                                        <input type="number" id="guest_children" name="guest_children" value="0"
-                                            min="0">
-                                    </div>
-                                    <small>Pets</small>
-                                    <div class="form-group">
-                                        <i class="fas fa-dog"></i>
-                                        <input type="number" name="guest_pets" value="0" min="0">
-                                    </div>
-                                    <div>
-                                        <div id="errorMessage" class="text-danger mb-3"></div>
-                                    </div>
-                                    <div>
-                                        <p id="availabilityMessage"></p>
-                                    </div>
-                                    <div id="priceDetails" class="mt-4" style="display: none;">
-                                        <h5>Price Details</h5>
-                                        <p><strong>Total Nights:</strong> <span id="totalNights"></span></p>
-                                        <p><strong>Base Price:</strong> <span id="basePrice"></span></p>
-                                        {{-- <p><strong>Cleaning Fee:</strong> <span id="cleaningFee"></span></p> --}}
-                                        <p><strong>Eco Home Service Fee:</strong> <span id="ecoFee"></span></p>
-                                        <p><strong>Total Price:</strong> <span id="totalPrice"></span></p>
-                                    </div>
-                                    <div class="form-group message-btn">
-                                        <button type="submit" id="availabilityButton" class="theme-btn btn-one">Check
-                                            Availability</button>
-                                    </div>
-
-                                </form>
-                            </div>
-
-
                         </div>
                         <div class="calculator-widget sidebar-widget" id="ad-container">
                             <h2>ADVERTISEMENT</h2>
                             <!-- Initial Ad Placeholder -->
                             <img src="{{ asset('frontend/assets/images/adverts/ad1.jpg') }}" alt="Ad 1"
                                 class="img-fluid" id="current-ad">
+                        </div>
+                        <div class="calculator-widget sidebar-widget">
+                            <div class="calculate-inner">
+                                <div class="widget-title">
+                                    <h4>Mortgage Calculator</h4>
+                                </div>
+                                <form method="post" action="mortgage-calculator.html" class="default-form">
+                                    <div class="form-group">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        <input type="number" name="total_amount" placeholder="Total Amount">
+                                    </div>
+                                    <div class="form-group">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        <input type="number" name="down_payment" placeholder="Down Payment">
+                                    </div>
+                                    <div class="form-group">
+                                        <i class="fas fa-percent"></i>
+                                        <input type="number" name="interest_rate" placeholder="Interest Rate">
+                                    </div>
+                                    <div class="form-group">
+                                        <i class="far fa-calendar-alt"></i>
+                                        <input type="number" name="loan" placeholder="Loan Terms(Years)">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="select-box">
+                                            <select class="wide">
+                                                <option data-display="Monthly">Monthly</option>
+                                                <option value="1">Yearly</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group message-btn">
+                                        <button type="submit" class="theme-btn btn-one">Calculate Now</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -728,42 +875,6 @@
     </section>
     <!-- property-details end -->
 
-
-    <!-- Modal for User Type Selection -->
-    <div class="modal fade" id="userTypeModal" tabindex="-1" aria-labelledby="userTypeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="userTypeModalLabel">Continue as</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Choose how you want to proceed:</p>
-                    <div id="userTypeOptions" class="d-flex justify-content-between">
-                        <button id="guestUserButton" class="btn btn-primary">Guest User</button>
-                        <button id="regularUserButton" class="btn btn-secondary">Regular User</button>
-                    </div>
-
-                    <!-- Hidden email input field for Guest User -->
-                    <div id="guestEmailInput" class="mt-3" style="display: none;">
-                        <label for="guestEmail" class="form-label">Enter your email to receive an OTP:</label>
-                        <p id="invalid_email" class="text-danger"></p>
-                        <input type="email" id="guestEmail" class="form-control" placeholder="Enter your email"
-                            required>
-                            <div class="mt-3 mb-3">
-                                <span id="spinner" class="spinner-border spinner-border-sm text-success me-2" style="display: none;"></span>
-                            </div>
-                        <button id="sendOtpButton" class="btn btn-success mt-2">
-                            Send OTP
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
     <script>
         // Get the current date
         const now = new Date();
@@ -825,213 +936,11 @@
         showNextAd();
     </script>
 
-
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const priceDetailsElement = document.getElementById('priceDetails');
-            const messageElement = document.getElementById('availabilityMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            const availabilityButton = document.getElementById('availabilityButton'); // Reference to the button
-
-            // Reset previous messages
-            messageElement.textContent = '';
-            errorMessage.textContent = '';
-            priceDetailsElement.style.display = 'none';
-
-            // Send availability check
-            fetch('/check-availability', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json',
-                    },
-                    body: formData,
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to check availability. Please try again.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.available) {
-                        messageElement.textContent = 'The room is available for the selected dates.';
-                        messageElement.style.color = 'green';
-
-                        // Change button text to "Reserve"
-                        availabilityButton.textContent = 'Reserve';
-
-                        // Fetch price details
-                        return fetch('/calculate-price', {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json',
-                            },
-                            body: formData,
-                        });
-                    } else {
-                        messageElement.textContent = 'Sorry, the room is not available for the selected dates.';
-                        messageElement.style.color = 'red';
-
-                        // Reset button text if not available
-                        availabilityButton.textContent = 'Check Availability';
-                        throw new Error('Room not available.');
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to calculate price. Please try again.');
-                    }
-                    return response.json();
-                })
-                .then(priceData => {
-                    // Extract currency from response
-                    const currency = priceData.currency;
-
-                    // Populate price details
-                    document.getElementById('totalNights').textContent = priceData.days;
-                    document.getElementById('basePrice').textContent =
-                        `${currency} ${Number(priceData.base_price).toFixed(2)}`;
-                    // document.getElementById('cleaningFee').textContent =
-                    //     `${currency} ${Number(priceData.cleaning_fee).toFixed(2)}`;
-                    document.getElementById('ecoFee').textContent =
-                        `${currency} ${Number(priceData.eco_home_service_fee).toFixed(2)}`;
-                    document.getElementById('totalPrice').textContent =
-                        `${currency} ${Number(priceData.total_price).toFixed(2)}`;
-                    priceDetailsElement.style.display = 'block';
-                })
-                .catch(error => {
-                    console.error(error);
-                    errorMessage.textContent = error.message ||
-                        'An unexpected error occurred. Please try again.';
-                });
-        });
-    </script>
-
-    <script>
-        document.getElementById('availabilityButton').addEventListener('click', function(e) {
-            if (this.textContent === 'Reserve') {
-                e.preventDefault();
-                $('#userTypeModal').modal('show'); // Show the modal
-            }
-        });
-
-        // Show Guest User Email Input
-        document.getElementById('guestUserButton').addEventListener('click', function() {
-            document.getElementById('userTypeOptions').style.display = 'none';
-            document.getElementById('guestEmailInput').style.display = 'block';
-        });
-
-        // Toast Function
-        function showToast(type, message) {
-            const toastEl = document.getElementById('toast');
-            const toastBody = toastEl.querySelector('.toast-body');
-
-            toastBody.textContent = message; // Set the toast message
-            toastEl.classList.remove('bg-success', 'bg-danger');
-            toastEl.classList.add(type === 'success' ? 'bg-success' : 'bg-danger');
-            const toast = new bootstrap.Toast(toastEl);
-            toast.show();
-        }
-
-        // Handle Send OTP Button Click
-        document.getElementById('sendOtpButton').addEventListener('click', function() {
-            const guestEmail = document.getElementById('guestEmail').value.trim();
-            document.getElementById('spinner').style.display = 'block';
-
-
-            // Validate email
-            if (!guestEmail || !validateEmail(guestEmail)) {
-                const invalidEmail = document.getElementById('invalid_email')
-                invalidEmail.style.display = 'block';
-                invalidEmail.style.textAlign = 'center';
-                invalidEmail.textContent = "Please enter a valid email address"
-                showToast('danger', 'Please enter a valid email address.');
-                document.getElementById('spinner').style.display = 'none';
-                return;
-            }
-
-            // Send OTP to Guest User Email
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            fetch('/send-guest-otp', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: guestEmail
-                    }),
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to send OTP. Please try again.');
-                        document.getElementById('spinner').style.display = 'none';
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        showToast('success', 'OTP sent to your email. Please verify to proceed.');
-                        setTimeout(() => {
-                            window.location.href =
-                                `/verify-otp?email=${encodeURIComponent(data.email)}`;
-                        }, 2000);
-                        document.getElementById('spinner').style.display = 'none';
-                    } else {
-                        throw new Error(data.message || 'An error occurred.');
-                        document.getElementById('spinner').style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    showToast('danger', error.message || 'An unexpected error occurred.');
-                    document.getElementById('spinner').style.display = 'none';
-                });
-
-        });
-
-        // Email Validation Function
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-    </script>
-
-
-    <script>
-        document.getElementById('regularUserButton').addEventListener('click', function(e) {
-            e.preventDefault();
-
-            // Extract totalPrice and roomId
-            const totalPriceElement = document.getElementById('totalPrice');
-            const roomIdElement = document.getElementById('roomName');
-
-            const totalPrice = totalPriceElement ? totalPriceElement.textContent.trim() : null;
-            const roomName = roomIdElement ? roomIdElement.value : null;
-
-            if (totalPrice && roomId) {
-                // Redirect to the payment page with query parameters
-                const paymentUrl =
-                    `/regular/user?totalPrice=${encodeURIComponent(totalPrice)}&roomName=${encodeURIComponent(roomName)}`;
-                window.location.href = paymentUrl;
-            } else {
-                alert('Error: Missing total price or room information.');
-            }
-        });
-    </script>
-
+<script>
+    function redirectToBookingPage(propertyId) {
+        // Redirect to a different route when "Book Now" is clicked
+        window.location.href = "{{ url('property/book') }}/" + propertyId;
+    }
+</script>
 
 @endsection

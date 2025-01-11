@@ -227,12 +227,20 @@ Route::group(["middleware" => "prevent-back-history"], function () {
 
     // Agent routes
     Route::middleware(['auth', 'roles:agent'])->group(function () {
-            Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.dashboard');
-            Route::get('/agent/manage/rooms', [AgentController::class, 'AgentManageRoom'])->name('manage.rooms');
+        Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.dashboard');
+        Route::get('/agent/manage/rooms', [AgentController::class, 'AgentManageRoom'])->name('manage.rooms');
+        Route::get('/agent/details/room/{id}', [AgentController::class, 'AgentDetailsRoom'])->name('room.details');
+        Route::get('/agent/edit/room/{id}', [AgentController::class, 'AgentEditRoom'])->name('room.edit');
+        Route::post('/agent/update/rooms', [AgentController::class, 'AgentUpdateRoom'])->name('update.room');
+        Route::get('/agent/delete//room/{id}', [AgentController::class, 'AgentDeleteRoom'])->name('room.delete');
+        Route::post('/update/room/thumbnail', [AgentController::class, 'UpdateRoomThumbnail'])->name('update.room.thumbnail');
+        Route::post('/update/room/multiimg', [AgentController::class, 'UpdateRoomMultiImg'])->name('update.room.multiimg');
+        Route::get('/change/room/status/{id}', [AgentController::class, 'ChangeRoomStatus'])->name('change.room.status');
     });
 
+
     Route::get('/agent/login', [AgentController::class, 'AgentLogin'])->name('agent.login')
-    ->middleware(RedirectIfAuthenticated::class);
+        ->middleware(RedirectIfAuthenticated::class);
     Route::get('/agent/register', [AgentController::class, 'AgentRegister'])->name('register');
     Route::post('/agent/store/register', [AgentController::class, 'AgentStoreRegister'])->name('agent.register');
 

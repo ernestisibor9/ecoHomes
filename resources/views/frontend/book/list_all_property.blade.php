@@ -358,13 +358,13 @@
                                                     <span class="category">
                                                             <span>{{ $item->city ? $item->city->name : 'Unknown City' }}</span>
                                                     </span>
-                                                    <div class="buy-btn"><a href="#">
+                                                    <div class="buy-btn"><a href="#" class="text-decoration-none">
                                                             {{ ucfirst($item->property_status) }} Now</a></div>
                                                 </div>
                                                 <div class="lower-content">
                                                     <div class="title-text d-flex justify-content-between">
                                                         <h4><a
-                                                                href="property-details.html">{{ ucwords($item->property_name) }}</a>
+                                                                href="property-details.html" class="text-decoration-none">{{ ucwords($item->property_name) }}</a>
                                                         </h4>
                                                         <div class="text-center">
                                                             @if ($item->verification_status == '1')
@@ -390,6 +390,9 @@
                                                                             Night</small>
                                                                         <!-- Display converted price per night -->
                                                                     @endif
+                                                                    <div>
+                                                                        <span class="badge text-bg-danger">{{$item->room_size}}</span>
+                                                                    </div>
                                                                 @else
                                                                     @if ($currency == 'NGN')
                                                                         {{ '₦ ' . number_format($item->price, 2) }}

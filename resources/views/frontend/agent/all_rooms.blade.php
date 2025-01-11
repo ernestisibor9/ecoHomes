@@ -18,17 +18,22 @@
                 <div class="inner-box">
 
                     <div class="lower-content">
-                        <h3>Welcome Agent {{ $profileData->name }}</h3>
+                        <div class="d-flex pt-3 pb-3" style="justify-content: space-between">
+                            <h3>Welcome {{ $profileData->name }}</h3>
+                            <a href="{{ route('agent.dashboard') }}" type="button" class="btn btn-primary">Dashboard
+                            </a>
+                        </div>
 
 
-                        <ul class="post-info clearfix">
+
+                        {{-- <ul class="post-info clearfix">
                             <li class="author-box">
                                 <figure class="author-thumb"><img src="assets/images/news/author-1.jpg" alt="">
                                 </figure>
                                 <h5><a href="blog-details.html">{{ $profileData->role }}</a></h5>
                             </li>
                             <li>December 2, 2024</li>
-                        </ul>
+                        </ul> --}}
 
                         <table class="table table-responsive table-striped">
                             <thead>
@@ -52,26 +57,24 @@
                                         <td>{{ $property->property_name }}</td>
                                         <td>{{ $property->room_size }}</td>
                                         <td>{{ $property->room_number }}</td>
-                                        <td>{{ $property->price_per_night }}</td>
+                                        <td>{{ number_format($property->price_per_night, 2) }}</td>
                                         <td>
-                                            @if ($property->status === true)
+                                            @if ($property->is_available == '1')
                                                 <span class="badge rounded-pill bg-success text-white">Available</span>
                                             @else
                                                 <span class="badge rounded-pill bg-danger text-white">Booked</span>
                                             @endif
                                         </td>
                                         <td>
-                                            {{-- <a href="{{ route('change.property.status', $property->id) }}"
-                                                class="btn btn-{{ $property->status === '0' ? 'success' : 'danger' }}">{{ $property->status === '0' ? 'Active' : 'Inactive' }}
-                                            </a> &nbsp; --}}
-                                            <a href="{{ route('property.details', $property->id) }}" title="Details"
+                                            <a href="{{ route('room.details', $property->id) }}" title="Details"
                                                 class="btn btn-warning">View</a>
-                                            <a href="{{ route('property.edit', $property->id) }}" title="Edit"
+                                            <a href="{{ route('room.edit', $property->id) }}" title="Edit"
                                                 class="btn btn-primary">Edit</a>
-                                            <a href="{{ route('property.delete', $property->id) }}" title="Delete"
+                                            <a href="{{ route('room.delete', $property->id) }}" title="Delete"
                                                 class="btn btn-danger" id="delete">Delete</a>
-                                            <a href="{{ route('availability.create', $property->id) }}"
-                                                title="Availability" class="btn btn-success">Room Status</a>
+                                            <a href="{{ route('change.room.status', $property->id) }}"
+                                                class="btn btn-{{ $property->is_available == '1' ? 'secondary' : 'success' }}">{{ $property->is_available  == '1' ? 'Book' : 'Available' }}
+                                            </a> &nbsp;
                                         </td>
                                     </tr>
                     </div>

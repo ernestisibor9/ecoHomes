@@ -20,8 +20,8 @@
                 <h2>Payment Summary</h2>
                 <p>Email: {{ $email }}</p>
                 <p>Room Reserved: {{ $roomDetails->property_name }}</p>
-                <p>Check-In: {{ $roomDetails['check_in'] }}</p>
-                <p>Check-Out: {{ $roomDetails['check_out'] }}</p>
+                <p>Room Number: {{ $roomDetails->room_number }}</p>
+                <p>Room Type: {{ $roomDetails->room_size }}</p>
                 <p>Total Price: {{ $totalPrice }}</p>
             </div>
 

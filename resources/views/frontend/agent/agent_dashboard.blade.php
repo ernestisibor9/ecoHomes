@@ -56,18 +56,20 @@
 
 
         <!--Page Title-->
-        <section class="page-title centred"
-            style="background-image: url('{{ asset('frontend/assets/images/banner/banner_dash.png') }}');">
-            <div class="auto-container">
-                <div class="content-box clearfix">
-                    <h1>Agent Dashboard </h1>
-                    <ul class="bread-crumb clearfix">
-                        <li><a href="{{ url('/') }}">Home</a></li>
-                        <li>Agent Dashboard </li>
-                    </ul>
+        @if (!Route::is('manage.rooms') && !Route::is('room.edit'))
+            <section class="page-title centred"
+                style="background-image: url('{{ asset('frontend/assets/images/banner/banner_dash.png') }}');">
+                <div class="auto-container">
+                    <div class="content-box clearfix">
+                        <h1>Agent Dashboard </h1>
+                        <ul class="bread-crumb clearfix">
+                            <li><a href="{{ url('/') }}">Home</a></li>
+                            <li>Agent Dashboard </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
         <!--End Page Title-->
 
 
@@ -76,10 +78,11 @@
             <div class="auto-container">
                 <div class="row clearfix">
 
-                    @if (!Route::is('manage.rooms'))
+                    @if (!Route::is('manage.rooms') && !Route::is('room.edit'))
                         {{-- Replace with your route name --}}
                         @include('frontend.agent.body.sidebar')
                     @endif
+
 
 
                     {{-- @include('frontend.agent.body.sidebar') --}}
@@ -282,6 +285,57 @@
             }
         @endif
     </script>
+
+
+<script>
+    $(function() {
+        $(document).on("click", "#delete", function(e) {
+            e.preventDefault();
+            let link = $(this).attr("href");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = link;
+                    Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                }
+            });
+        });
+    });
+</script>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(function() {
+        $(document).on("click", "#confirm", function(e) {
+            e.preventDefault();
+            let link = $(this).attr("href");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Confirm the Data!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, confirm it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = link;
+                    Swal.fire("Confirm!", "Your file has been confirmed.", "success");
+                }
+            });
+        });
+    });
+</script>
 
 </body><!-- End of .page_wrapper -->
 
