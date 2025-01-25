@@ -3,7 +3,7 @@
 @section('admin')
 
 @section('title')
-    Cedar - Admin Dashboard
+    EcoHomes - Admin Dashboard
 @endsection
 
 {{-- @php

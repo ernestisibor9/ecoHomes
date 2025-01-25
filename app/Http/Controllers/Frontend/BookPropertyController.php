@@ -1833,23 +1833,23 @@ class BookPropertyController extends Controller
         $query = Property::query();
 
         // Filter by location (city or state)
-    // Filter by location
-    if ($request->filled('location')) {
-        $location = $request->input('location');
-        $query->where(function ($q) use ($location) {
-            $q->whereHas('city', function ($cityQuery) use ($location) {
-                $cityQuery->where('name', 'like', '%' . $location . '%');
-            })->orWhereHas('state', function ($stateQuery) use ($location) {
-                $stateQuery->where('name', 'like', '%' . $location . '%');
+        // Filter by location
+        if ($request->filled('location')) {
+            $location = $request->input('location');
+            $query->where(function ($q) use ($location) {
+                $q->whereHas('city', function ($cityQuery) use ($location) {
+                    $cityQuery->where('name', 'like', '%' . $location . '%');
+                })->orWhereHas('state', function ($stateQuery) use ($location) {
+                    $stateQuery->where('name', 'like', '%' . $location . '%');
+                });
             });
-        });
-    }
+        }
 
         // Filter by property type
-    // Filter by property type
-    if ($request->filled('property_type')) {
-        $query->where('ptype_id', $request->input('property_type'));
-    }
+        // Filter by property type
+        if ($request->filled('property_type')) {
+            $query->where('ptype_id', $request->input('property_type'));
+        }
         // Fetch filtered properties with pagination
         $properties = $query->latest()->paginate(12);
 
@@ -1944,7 +1944,8 @@ class BookPropertyController extends Controller
     }
 
     // regularUser
-    public function regularUser(Request $request) {
+    public function regularUser(Request $request)
+    {
         if (!Auth::check()) {
             $notification = [
                 'message' => "You have to have an account before you reserve a room",
@@ -1962,8 +1963,16 @@ class BookPropertyController extends Controller
             return redirect()->back()->with('error', 'Missing booking details.');
         }
 
-        return view('frontend.book.payment', compact('totalPrice', 'roomName', 'userData'));
+        // Fetch room details from the database
+        $roomDetails = Property::where('property_name', $roomName)->first();
+        $notification = [
+            'message' => "Room not found",
+            'alert-type' => 'error',
+        ];
+        if (!$roomDetails) {
+            return redirect()->back()->with($notification);
+        }
+
+        return view('frontend.book.payment', compact('totalPrice', 'roomName', 'roomDetails', 'userData'));
     }
-
-
 }

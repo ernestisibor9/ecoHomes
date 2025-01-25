@@ -39,6 +39,12 @@ class PropertyReserveController extends Controller
             ], 422);
         }
 
+        if($room->is_available == '0'){
+            return response()->json([
+                'error' => 'Sorry! Room is not available.',
+            ], 422);
+        }
+
         $currency = 'NGN'; // Default currency
         $exchangeRate = 1.0; // Default exchange rate
 

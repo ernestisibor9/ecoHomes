@@ -1,82 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Payment for Room</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-<body>
-    <div class="container mt-5">
-        <h1 class="text-center">Payment for Room {{ $roomName }} - {{ $userData->email }} - Total Price: {{ $totalPrice }}</h1>
-        <p class="text-center text-muted">Complete the form below to proceed with your payment.</p>
+@extends('frontend.master')
 
-        <div class="card mx-auto shadow-lg" style="max-width: 500px;">
-            <div class="card-body">
-                <form id="paymentForm">
-                    <!-- Full Name -->
-                    <div class="mb-3">
-                        <label for="fullName" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
-                    </div>
+@section('home')
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    <style>
+        .see {
+            display: block !important;
+        }
 
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-                    </div>
+        .nice-select {
+            display: none !important;
+        }
 
-                    <!-- Room Details -->
-                    <div class="mb-3">
-                        <label for="roomType" class="form-label">Room Type</label>
-                        <select id="roomType" class="form-select" required>
-                            <option value="" disabled selected>Select your room type</option>
-                            <option value="standard">Standard Room - $100</option>
-                            <option value="deluxe">Deluxe Room - $150</option>
-                            <option value="suite">Suite - $200</option>
-                        </select>
-                    </div>
+        .progress-bar-animated {
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+    <div>
+        {{-- GUEST PAYMENT - <div>
+            <h2>Payment Summary</h2>
+            <p>Email: {{ $email }}</p>
+            <p>Room Reserved: {{ $roomDetails->property_name }}</p>
+            <p>Room Number: {{ $roomDetails->room_number }}</p>
+            <p>Room Type: {{ $roomDetails->room_size }}</p>
+            <p>Total Price: {{ $totalPrice }}</p>
+        </div> --}}
 
-                    <!-- Payment Details -->
-                    <h5 class="mt-4">Payment Details</h5>
-                    <div class="mb-3">
-                        <label for="cardNumber" class="form-label">Card Number</label>
-                        <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="expiryDate" class="form-label">Expiry Date</label>
-                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
-                        </div>
-                        <div class="col">
-                            <label for="cvv" class="form-label">CVV</label>
-                            <input type="password" class="form-control" id="cvv" placeholder="123" maxlength="3" required>
-                        </div>
-                    </div>
+    </div>
 
-                    <!-- Submit Button -->
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary w-100">Pay Now</button>
-                    </div>
-                </form>
-            </div>
+    <div class="card mx-auto shadow-lg mt-5 mb-5" style="max-width: 700px;">
+        <div class="card-body">
+            <form id="paymentForm">
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" readonly id="email"
+                        value="{{ $userData->email }}">
+                </div>
+
+                <!-- Room Number -->
+                <div class="mb-3">
+                    <label for="roomNumber" class="form-label">Room Number</label>
+                    <input type="text" name="room_number" class="form-control" readonly id="roomNumber"
+                        value="{{ $roomDetails->room_number }}">
+                </div>
+
+                <!-- Room Type -->
+                <div class="mb-3">
+                    <label for="roomType" class="form-label">Room Type</label>
+                    <input type="text" name="room_type" class="form-control" readonly id="roomType"
+                        value="{{ $roomDetails->room_size }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Total Price</label>
+                    <input type="text" name="total_price" class="form-control" readonly id=""
+                        value="{{ $totalPrice }}">
+                </div>
+
+
+                <!-- Submit Button -->
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary w-100 mb-3">Pay By PayPal</button>
+                    <button type="submit" class="btn btn-success w-100 mb-3">Pay By PayStack</button>
+                    <button type="submit" class="btn btn-danger w-100 mb-3">Pay By Google Pay</button>
+                </div>
+            </form>
         </div>
+    </div>
     </div>
 
     <!-- Toast Notification -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
-        <div id="toast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="toast" class="toast align-items-center text-white bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body"></div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('paymentForm').addEventListener('submit', function (e) {
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const fullName = document.getElementById('fullName').value.trim();
@@ -109,5 +119,4 @@
             toast.show();
         }
     </script>
-</body>
-</html>
+@endsection

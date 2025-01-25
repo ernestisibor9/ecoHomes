@@ -19,7 +19,7 @@
                             <li><a href="index.html"><i class="fab fa-vimeo-v"></i></a></li>
                         </ul>
                         <div class="sign-box">
-                            <a href="{{ route('register') }}"><i class="fas fa-user"></i>Sign Up</a> &nbsp;
+                            <a href="{{ route('register.user') }}"><i class="fas fa-user"></i>Sign Up</a> &nbsp;
                             <a href="{{ route('login') }}"><i class="fas fa-user"></i>Sign In</a>
                         </div>
                     </div>

@@ -207,10 +207,10 @@
                                 <div class="tab active-tab" id="tab-1">
                                     <div class="inner-box">
                                         <h4>Sign up</h4>
-                                        <form action="{{ route('agent.register') }}" method="post" class="default-form">
+                                        <form action="{{ route('register.store') }}" method="post" class="default-form">
                                             @csrf
                                             <div class="form-group">
-                                                <label>Agent Company Name</label>
+                                                <label>Company Name</label>
                                                 <input type="text" name="name" required=""
                                                     class="form-control
                                                 @error('name')is-invalid @enderror">

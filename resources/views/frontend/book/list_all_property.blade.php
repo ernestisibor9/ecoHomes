@@ -359,7 +359,7 @@
                                                             <span>{{ $item->city ? $item->city->name : 'Unknown City' }}</span>
                                                     </span>
                                                     <div class="buy-btn"><a href="#" class="text-decoration-none">
-                                                            {{ ucfirst($item->property_status) }} Now</a></div>
+                                                            {{ ucfirst($item->type->type_name) }} </a></div>
                                                 </div>
                                                 <div class="lower-content">
                                                     <div class="title-text d-flex justify-content-between">
@@ -411,7 +411,7 @@
                                                             <figure class="author-thumb">
                                                                 <img src="{{ asset('frontend/assets/images/feature/author-1.jpg') }}"
                                                                     alt="">
-                                                                <span>{{ $item->state->name }}</span>
+                                                                <span> {{ $item->state->name }}</span>
                                                             </figure>
                                                         </div>
                                                     </div>

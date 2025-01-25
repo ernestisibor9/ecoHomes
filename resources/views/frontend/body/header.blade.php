@@ -50,6 +50,7 @@ const pusher = new Pusher('01d01f2b254eac705136', {
                             <nav class="main-menu navbar-expand-md navbar-light">
                                 <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
                                     <ul class="navigation clearfix">
+
                                         <li class="current "><a href="{{url('/')}}"><span>Home</span></a>
                                             {{-- <ul>
                                                 <li><a href="index.html">Main Home</a></li>
@@ -151,13 +152,21 @@ const pusher = new Pusher('01d01f2b254eac705136', {
                                             </ul> --}}
                                         </li>
                                         <li><a href="contact.html"><span>Contact</span></a></li>
+                                         {{-- <li><a href="{{route('hotel.create')}}" class="theme-btn btn-one text-decoration-none"><span class="text-white"><span>+</span> List Your Property</span></a></li> --}}
+                                        <li class="current dropdown  text-decoration-none"><a href="index.html"><span>List Your Property</span></a>
+                                            <ul>
+                                                <li><a href="{{route('hotel.create')}}" class="text-decoration-none">Hotel</a></li>
+                                                <li><a href="index-2.html" class="text-decoration-none">Shortlet</a></li>
+                                                <li><a href="index-3.html" class="text-decoration-none">Market Property</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </div>
                             </nav>
                         </div>
-                        <div class="btn-box">
+                        {{-- <div class="btn-box">
                             <a href="index.html" class="theme-btn btn-one"><span>+</span>Add Listing</a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

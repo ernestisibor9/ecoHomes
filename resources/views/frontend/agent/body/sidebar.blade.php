@@ -42,9 +42,11 @@
                             Property </a></li>
                     <li><a href="{{ route('list.all.property') }}"><i class="fa fa-indent" aria-hidden="true"></i> Book
                             Property </a></li>
+                            <li><a href="{{ route('hotel.create') }}"><i class="fa fa-indent" aria-hidden="true"></i> List Your
+                                Property </a></li>
                     <li><a href="blog-details.html"><i class="fa fa-key" aria-hidden="true"></i>
                             Change Password </a></li>
-                    <li><a href="{{ route('user.logout') }}"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
+                    <li><a href="{{ route('agent.logout') }}"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
                             Logout </a></li>
                     @if ($sellerDoc)
                         <li><a href="{{ route('upload.property') }}"><i class="fa fa-list-alt"

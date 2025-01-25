@@ -39,10 +39,35 @@
             object-fit: cover;
             transition: transform 0.3s ease;
         }
+
+        .search-con {
+            margin-top: 30px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        #suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            max-width: 100%;
+            z-index: 1000;
+        }
+
+        #suggestions div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #suggestions div:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 
+
     <!-- Page Title -->
-    <section class="page-title-two bg-color-1 centred">
+    {{-- <section class="page-title-two bg-color-1 centred">
         <div class="pattern-layer">
             <div class="pattern-1" style="background-image: url({{ asset('frontend/assets/images/shape/shape-9.png') }});">
             </div>
@@ -51,15 +76,47 @@
         </div>
         <div class="auto-container">
             <div class="content-box clearfix">
-                <h1>Book Property</h1>
+                <h1>All Property</h1>
                 <ul class="bread-crumb clearfix">
                     <li><a href="{{ url('/') }}">Home</a></li>
                     <li>Book Property</li>
                 </ul>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- End Page Title -->
+
+    <!-- property-page-section -->
+    <div class="container search-con">
+        <form action="{{route('properties.search')}}" method="get">
+            @csrf
+            <div class="row ">
+                <div class="col">
+                    <!-- Location Input -->
+                    <input type="text" id="location" name="location" placeholder="Enter city or state"
+                        value="{{ request('location') }}" autocomplete="off" class="form-control inp" />
+                    <div id="suggestions" style="display: none; border: 1px solid #ccc; max-height: 150px; overflow-y: auto;">
+                    </div>
+
+                </div>
+                <div class="col">
+                    <!-- Property Type Dropdown -->
+                    <select name="property_type" class="form-select see inp">
+                        <option value="">Select Property Type</option>
+                        @foreach ($propertyTypes as $type)
+                        <option value="{{ $type->id }}" {{ request('property_type') == $type->id ? 'selected' : '' }}>
+                            {{ $type->type_name }}
+                        </option>
+                    @endforeach
+                    </select>
+                </div>
+                <div class="col">
+                    <button type="submit" id="search-pro" class="theme-btn btn-one">Search Property</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!---- property-list-section -->
 
     <!-- property-page-section -->
     <section class="property-page-section property-list">
@@ -93,7 +150,8 @@
                                         </select>
                                     </div>
                                 </form>
-                                <form id="property-type-form" method="GET" action="{{ route('filter.type.properties') }}">
+                                <form id="property-type-form" method="GET"
+                                    action="{{ route('filter.type.properties') }}">
                                     @csrf
                                     <div class="select-box">
                                         <select class="wide see form-control" id="type_id" name="ptype_id">
@@ -154,18 +212,33 @@
                                     <div class="select-box">
                                         <select class="wide see form-control" name="price">
                                             <option data-display="Select Location">Minimum Price</option>
+                                            <!-- Loop through priceLowest -->
                                             @foreach ($priceLowest as $price)
-                                                <option value="{{ $price->price }}">
-                                                    {{ $currency }}{{ $price->price }}</option>
+                                                <option
+                                                    value="{{ $currency == 'NGN' ? $price->price : $price->converted_price }}">
+                                                    @if ($currency == 'NGN')
+                                                        ₦ {{ number_format($price->price, 2) }}
+                                                    @else
+                                                        {{ $currency }}
+                                                        {{ number_format($price->converted_price, 2) }}
+                                                    @endif
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="select-box">
                                         <select class="wide see form-control" name="maximum_price">
                                             <option data-display="Select Location">Maximum Price</option>
-                                            @foreach ($priceMax as $maximum_price)
-                                                <option value="{{ $maximum_price->maximum_price }}">
-                                                    {{ $currency }}{{ $maximum_price->maximum_price }}</option>
+                                            @foreach ($priceMax as $price)
+                                                <option
+                                                    value="{{ $currency == 'NGN' ? $price->price : $price->converted_price }}">
+                                                    @if ($currency == 'NGN')
+                                                        ₦ {{ number_format($price->maximum_price, 2) }}
+                                                    @else
+                                                        {{ $currency }}
+                                                        {{ number_format($price->converted_price, 2) }}
+                                                    @endif
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -178,14 +251,14 @@
                         </div>
                         <div class="category-widget sidebar-widget">
                             <a href="#">
-                                <img src="{{asset('frontend/assets/images/adverts/adverts.png')}}" alt=""
-                            class="img-fluid">
+                                <img src="{{ asset('frontend/assets/images/adverts/adverts.png') }}" alt=""
+                                    class="img-fluid">
                             </a>
                         </div>
                         <div class="category-widget sidebar-widget">
-                            <a href="{{route('sell.my.property.details')}}">
-                                <img src="{{asset('frontend/assets/images/adverts/adverts2.png')}}" alt=""
-                            class="img-fluid">
+                            <a href="{{ route('sell.my.property.details') }}">
+                                <img src="{{ asset('frontend/assets/images/adverts/adverts2.png') }}" alt=""
+                                    class="img-fluid">
                             </a>
                         </div>
                         <div class="category-widget sidebar-widget">
@@ -236,6 +309,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-8 col-md-12 col-sm-12 content-side">
                     <div class="property-content-side">
                         <div class="item-shorting clearfix">
@@ -282,39 +356,62 @@
                                                             alt="" class="property-img"></figure>
                                                     <div class="batch"><i class="icon-11"></i></div>
                                                     <span class="category">
-                                                        @if ($item->featured == 1)
-                                                            <span>Featured</span>
-                                                        @else
-                                                            <span>Hot</span>
-                                                        @endif
+                                                            <span>{{ $item->city ? $item->city->name : 'Unknown City' }}</span>
                                                     </span>
-                                                    <div class="buy-btn"><a href="property-details.html">
-                                                            {{ ucfirst($item->property_status) }} Now</a></div>
+                                                    <div class="buy-btn"><a href="#" class="text-decoration-none">
+                                                        {{ ucfirst($item->type->type_name) }} </a></div>
                                                 </div>
                                                 <div class="lower-content">
                                                     <div class="title-text d-flex justify-content-between">
                                                         <h4><a
-                                                                href="property-details.html">{{ ucwords($item->property_name) }}</a>
+                                                                href="property-details.html" class="text-decoration-none">{{ ucwords($item->property_name) }}</a>
                                                         </h4>
                                                         <div class="text-center">
                                                             @if ($item->verification_status == '1')
-                                                            <span class="badge text-bg-success p-1">verified</span>
+                                                                <span class="badge text-bg-success p-1">verified</span>
                                                             @else
-                                                            <span class="badge text-bg-danger p-1">unverified</span>
+                                                                <span class="badge text-bg-danger p-1">unverified</span>
                                                             @endif
-                                                    </div>
+                                                        </div>
                                                     </div>
                                                     <div class="price-box clearfix">
                                                         <div class="price-info pull-left">
                                                             <h6>Start From</h6>
-                                                            <h4>{{ $currency }} {{ number_format($item->price, 2) }}
+                                                            <h4>
+                                                                @if ($item->type->type_name == 'Hotel' || $item->type->type_name == 'Shortlet')
+                                                                    @if ($currency == 'NGN')
+                                                                        {{ '₦ ' . number_format($item->price_per_night, 2) }}
+                                                                        <small style="font-size: 0.9rem; color: gray;">Per
+                                                                            Night</small>
+                                                                        <!-- Display price per night in NGN -->
+                                                                    @else
+                                                                        {{ $currency . ' ' . number_format($item->price_per_night_converted, 2) }}
+                                                                        <small style="font-size: 0.9rem; color: gray;">Per
+                                                                            Night</small>
+                                                                        <!-- Display converted price per night -->
+                                                                    @endif
+                                                                    <div>
+                                                                        <span class="badge text-bg-danger">{{$item->room_size}}</span>
+                                                                    </div>
+                                                                @else
+                                                                    @if ($currency == 'NGN')
+                                                                        {{ '₦ ' . number_format($item->price, 2) }}
+                                                                        <!-- Display regular price in NGN -->
+                                                                    @else
+                                                                        {{ $currency . ' ' . number_format($item->price_converted, 2) }}
+                                                                        <!-- Display converted regular price -->
+                                                                    @endif
+                                                                @endif
+
                                                             </h4>
+                                                            {{-- <h4>{{ $currency }} {{ number_format($item->price * $exchangeRate, 2) }}
+                                                            </h4> --}}
                                                         </div>
                                                         <div class="author-box pull-right">
                                                             <figure class="author-thumb">
                                                                 <img src="{{ asset('frontend/assets/images/feature/author-1.jpg') }}"
                                                                     alt="">
-                                                                <span>{{ $item->type->type_name }}</span>
+                                                                <span> {{ $item->state->name }}</span>
                                                             </figure>
                                                         </div>
                                                     </div>
@@ -333,11 +430,11 @@
                                                                 href="{{ url('property/details/' . $item->id . '/' . $item->property_slug) }}"
                                                                 class="theme-btn btn-two">See Details</a></div>
                                                         <ul class="other-option pull-right clearfix">
-
                                                             <div class="btn-box pull-left">
                                                                 <button type="button" class="theme-btn btn-success"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#modal-{{ $item->id }}">
+                                                                    data-bs-target="#modal-{{ $item->id }}"
+                                                                    @if ($item->property_status !== 'buy' && $item->property_status !== 'rent' && $item->property_status !== 'lease') onclick="redirectToBookingPage('{{ $item->id }}')" @endif>
                                                                     @if ($item->property_status === 'buy')
                                                                         Buy Now
                                                                     @elseif($item->property_status === 'rent')
@@ -349,7 +446,6 @@
                                                                     @endif
                                                                 </button>
                                                             </div>
-
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -369,9 +465,6 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
-                                                    {{-- <div class="modal-body">
-
-                </div> --}}
                                                     <div class="modal-footer  mx-auto">
                                                         <button type="button" class="btn btn-danger"
                                                             data-bs-toggle="modal"
@@ -379,15 +472,15 @@
                                                             as a Guest
                                                         </button>
                                                         @auth
-                                                        <a href="{{ route('user.auth.booking', $item->id) }}"
-                                                            type="button" class="btn btn-success">Book as a User
-                                                        </a>
+                                                            <a href="{{ route('user.auth.booking', $item->id) }}"
+                                                                type="button" class="btn btn-success">Book as a User
+                                                            </a>
                                                         @endauth
 
                                                         @guest
-                                                        <a href="{{ route('user.auth.booking', $item->id) }}"
-                                                            type="button" class="btn btn-primary">Login as a User
-                                                        </a>
+                                                            <a href="{{ route('user.auth.booking', $item->id) }}"
+                                                                type="button" class="btn btn-primary">Login as a User
+                                                            </a>
                                                         @endguest
                                                     </div>
                                                 </div>
@@ -413,37 +506,74 @@
                                                                 Book Now
                                                             @endif --}}
                                                             Submit Request
+                                                            <small>
+                                                                @php
+
+                                                                    $availabilities = App\Models\Availability::where(
+                                                                        'property_id',
+                                                                        $item->id,
+                                                                    )->first();
+                                                                @endphp
+                                                                @if ($availabilities)
+                                                                    <div class="alert alert-success" role="alert">
+                                                                        Available date for inspection: <br>
+                                                                        {{ \Carbon\Carbon::parse($availabilities->start_date)->format('jS F Y') }}
+                                                                        -
+                                                                        {{ \Carbon\Carbon::parse($availabilities->end_date)->format('jS F Y') }}
+                                                                        <br>
+                                                                        <div>
+                                                                            Time:
+                                                                            {{ \Carbon\Carbon::parse($availabilities->start_time)->format('g:i A') }}
+                                                                        </div>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="alert alert-success" role="alert">
+                                                                        No available date for inspection
+                                                                    </div>
+                                                                @endif
+                                                            </small>
                                                         </h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body p-4">
 
-                                                        <form action="{{ route('viewing.request', $item->id) }}"  method="post">
+                                                        <form action="{{ route('viewing.request', $item->id) }}"
+                                                            method="post">
                                                             @csrf
                                                             <div class="mb-3">
-                                                                <label for="requested_time" class="form-label">Full Name</label>
-                                                                <input type="text" name="name" id="" class="form-control" required>
+                                                                <label for="requested_time" class="form-label">Full
+                                                                    Name</label>
+                                                                <input type="text" name="name" id=""
+                                                                    class="form-control" required>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="requested_time" class="form-label">Email</label>
-                                                                <input type="email" name="email" id="" class="form-control" required>
+                                                                <label for="requested_time"
+                                                                    class="form-label">Email</label>
+                                                                <input type="email" name="email" id=""
+                                                                    class="form-control" required>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="requested_time" class="form-label">Phone</label>
-                                                                <input type="text" name="phone" id="" class="form-control" required>
+                                                                <label for="requested_time"
+                                                                    class="form-label">Phone</label>
+                                                                <input type="text" name="phone" id=""
+                                                                    class="form-control" required>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="requested_time" class="form-label">Select Date</label>
-                                                                <input type="date" name="requested_date" id="requested_date" class="form-control" required>
+                                                                <label for="requested_time" class="form-label">Select
+                                                                    Date</label>
+                                                                <input type="date" name="requested_date"
+                                                                    id="requested_date" class="form-control" required>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="requested_time" class="form-label">Select Time</label>
-                                                                <input type="time" name="requested_time" id="requested_time" class="form-control" required>
+                                                                <label for="requested_time" class="form-label">Select
+                                                                    Time</label>
+                                                                <input type="time" name="requested_time"
+                                                                    id="requested_time" class="form-control" required>
                                                             </div>
-
                                                             <div class="d-grid gap-2 form-group message-btn">
-                                                                <button type="submit" class="theme-btn btn-one">Request Viewing</button>
+                                                                <button type="submit" class="theme-btn btn-one">Request
+                                                                    Viewing</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -651,19 +781,68 @@
         });
     </script>
 
-<script>
-    // Get the current date
-    const now = new Date();
+    <script>
+        // Get the current date
+        const now = new Date();
 
-    // Format date as YYYY-MM-DD
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
+        // Format date as YYYY-MM-DD
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
 
-    const currentDate = `${year}-${month}-${day}`;
+        const currentDate = `${year}-${month}-${day}`;
 
-    // Set the min attribute for the input field
-    document.getElementById('requested_date').setAttribute('min', currentDate);
-</script>
+        // Set the min attribute for the input field
+        document.getElementById('requested_date').setAttribute('min', currentDate);
+    </script>
+
+    <script>
+        function redirectToBookingPage(propertyId) {
+            // Redirect to a different route when "Book Now" is clicked
+            window.location.href = "{{ url('property/book') }}/" + propertyId;
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('location').addEventListener('input', function() {
+                const query = this.value;
+                if (query.length > 2) {
+                    fetch(`/api/locations?query=${query}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Suggestions:', data); // Debugging
+                            const suggestionsDiv = document.getElementById('suggestions');
+                            suggestionsDiv.innerHTML = ''; // Clear previous suggestions
+
+                            if (data.length > 0) {
+                                data.forEach(item => {
+                                    const suggestion = document.createElement('div');
+                                    suggestion.textContent = item.name;
+                                    suggestion.style.cursor = 'pointer';
+                                    suggestion.addEventListener('click', () => {
+                                        document.getElementById('location').value = item
+                                            .name;
+                                        suggestionsDiv.style.display = 'none';
+                                    });
+                                    suggestionsDiv.appendChild(suggestion);
+                                });
+                                suggestionsDiv.style.display = 'block';
+                            } else {
+                                suggestionsDiv.style.display = 'none';
+                            }
+                        })
+                        .catch(error => console.error('Fetch error:', error));
+                } else {
+                    document.getElementById('suggestions').style.display = 'none';
+                }
+            });
+        });
+    </script>
 
 @endsection

@@ -22,6 +22,11 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
 
+                            // Allow access to the OTP input route
+            if ($request->routeIs('otp.input')) {
+                return $next($request);
+            }
+
                 if (Auth::check() && Auth::user()->role == 'user') {
                     return redirect('/dashboard');
                 }

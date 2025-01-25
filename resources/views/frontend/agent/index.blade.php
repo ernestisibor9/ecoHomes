@@ -18,7 +18,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 <div class="inner-box">
 
                     <div class="lower-content">
-                        <h3>Welcome Agent {{ $profileData->name }}</h3>
+                        <h3>Welcome {{ $profileData->name }}</h3>
                         {{-- <h3>
                             @if (!empty($userProgress))
                                 <h3><strong>PROPERTY STATUS:</strong> &nbsp;&nbsp;&nbsp; {{ ucfirst($userProgress->current_step) }}</h3>

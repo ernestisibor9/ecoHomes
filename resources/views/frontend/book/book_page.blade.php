@@ -866,7 +866,7 @@
                 })
                 .then(data => {
                     if (data.available) {
-                        messageElement.textContent = 'The room is available for the selected dates.';
+                        // messageElement.textContent = 'The room is available for the selected dates.';
                         messageElement.style.color = 'green';
 
                         // Change button text to "Reserve"

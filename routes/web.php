@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\OtpController;
 use App\Http\Controllers\Backend\AmenitiesController;
 use App\Http\Controllers\Backend\AvailabilityController;
 use App\Http\Controllers\Backend\NotificationController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
 use App\Http\Controllers\Backend\SellerController as BackendSellerController;
+use App\Http\Controllers\CustomRegistrationController;
 use App\Http\Controllers\Frontend\BookPropertyController;
 use App\Http\Controllers\frontend\FeaturedPropertyController;
 use App\Http\Controllers\Frontend\GuestController;
@@ -17,6 +19,8 @@ use App\Http\Controllers\Frontend\PropertyReserveController;
 use App\Http\Controllers\Frontend\SellerController;
 use App\Http\Controllers\Frontend\UserController as FrontendUserController;
 use App\Http\Controllers\Frontend\ViewingController;
+use App\Http\Controllers\HotelController;
+use App\Http\Controllers\ShortletController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -38,6 +42,16 @@ Route::get('/', [UserController::class, 'Index'])->name('index');
 
 
 Route::group(["middleware" => "prevent-back-history"], function () {
+
+
+    Route::get('/otp-input', [OtpController::class, 'otpInput'])->name('otp.input');
+    Route::post('/verify-otp/user', [OtpController::class, 'verify'])->name('verify.otp');
+
+    Route::get('/register/user', [CustomRegistrationController::class, 'create'])->name('register.user');
+    Route::post('/store/register', [CustomRegistrationController::class, 'store'])->name('register.store');
+
+    // Step 5: Complete
+    Route::get('/view/hotel/{hotel}', [HotelController::class, 'viewHotel'])->name('view.hotel');
 
     Route::post('/send-guest-otp', [GuestController::class, 'sendOtp'])->name('guest.sendOtp');
     Route::get('/verify-otp', [GuestController::class, 'verifyOtpForm'])->name('guest.verifyOtpForm');
@@ -126,6 +140,25 @@ Route::group(["middleware" => "prevent-back-history"], function () {
 
         // smart.search.details
         Route::get('/smart/search/details', [LocationController::class, 'SmartSearchDetails'])->name('smart.search.details');
+
+        // Step 1: Create Hotel
+        Route::get('/create/hotel', [HotelController::class, 'createStep1'])->name('hotel.create');
+        Route::post('/store/hotel', [HotelController::class, 'postStep1'])->name('hotel.store');
+
+        // Step 2: Add Facilities
+        Route::get('/facilities/{hotel}', [HotelController::class, 'createStep2'])->name('hotel.facilities');
+        Route::post('/store/facilities/{hotel}', [HotelController::class, 'postStep2'])->name('hotel.facilities.store');
+
+        // Step 3: Add Rooms
+        Route::get('/rooms/{hotel}', [HotelController::class, 'createStep3'])->name('hotel.rooms');
+        Route::post('/store/rooms/{hotel}', [HotelController::class, 'postStep3'])->name('hotel.store.rooms');
+
+        // Step 4: Photos
+        Route::get('/add/photos/{hotel}', [HotelController::class, 'createStep4'])->name('hotel.photos');
+        Route::post('/store/photos/{hotel}/{room}', [HotelController::class, 'postStep4'])->name('hotel.photos.store');
+
+        // Step 5: Complete
+        Route::get('/complete/{hotel}', [HotelController::class, 'complete'])->name('hotel.complete');
     });
 
     // Route::get('/dashboard', function () {
@@ -140,6 +173,53 @@ Route::group(["middleware" => "prevent-back-history"], function () {
             Route::get('/get-cities/ajax/{stateId}', 'GetCities');
             Route::get('/sell/my/property/details', 'SellMyPropertyDetails')->name('sell.my.property.details');
         });
+
+        // Step 1: Create Hotel
+        Route::get('/create/hotel', [HotelController::class, 'createStep1'])->name('hotel.create');
+        Route::post('/store/hotel', [HotelController::class, 'postStep1'])->name('hotel.store');
+
+        // Step 2: Add Facilities
+        Route::get('/facilities/{hotel}', [HotelController::class, 'createStep2'])->name('hotel.facilities');
+        Route::post('/store/facilities/{hotel}', [HotelController::class, 'postStep2'])->name('hotel.facilities.store');
+
+        // Step 3: Add Rooms
+        Route::get('/rooms/{hotel}', [HotelController::class, 'createStep3'])->name('hotel.rooms');
+        Route::post('/store/rooms/{hotel}', [HotelController::class, 'postStep3'])->name('hotel.store.rooms');
+
+        // Step 4: Photos
+        Route::get('/add/photos/{hotel}', [HotelController::class, 'createStep4'])->name('hotel.photos');
+        Route::post('/store/photos/{hotel}/{room}', [HotelController::class, 'postStep4'])->name('hotel.photos.store');
+
+        // Step 5: Complete
+        Route::get('/complete/{hotel}', [HotelController::class, 'complete'])->name('hotel.complete');
+
+
+
+
+
+
+
+
+
+
+        // Step 1: Create Hotel
+        Route::get('/create/shortlet', [ShortletController::class, 'createStep1'])->name('shortlet.create');
+        Route::post('/store/shortlet', [ShortletController::class, 'postStep1'])->name('shortlet.store');
+
+        // Step 2: Add Facilities
+        Route::get('/facilities/{shortlet}', [ShortletController::class, 'createStep2'])->name('shortlet.facilities');
+        Route::post('/store/facilities/{shortlet}', [ShortletController::class, 'postStep2'])->name('shortlet.facilities.store');
+
+        // Step 3: Add Rooms
+        Route::get('/rooms/{shortlet}', [ShortletController::class, 'createStep3'])->name('shortlet.rooms');
+        Route::post('/store/rooms/{shortlet}', [ShortletController::class, 'postStep3'])->name('shortlet.store.rooms');
+
+        // Step 4: Photos
+        Route::get('/add/photos/{shortlet}', [ShortletController::class, 'createStep4'])->name('shortlet.photos');
+        Route::post('/store/photos/{shortlet}/{room}', [ShortletController::class, 'postStep4'])->name('shortlet.photos.store');
+
+        // Step 5: Complete
+        Route::get('/complete/{shortlet}', [ShortletController::class, 'complete'])->name('shortlet.complete');
     });
 
     require __DIR__ . '/auth.php';
@@ -236,13 +316,14 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::post('/update/room/thumbnail', [AgentController::class, 'UpdateRoomThumbnail'])->name('update.room.thumbnail');
         Route::post('/update/room/multiimg', [AgentController::class, 'UpdateRoomMultiImg'])->name('update.room.multiimg');
         Route::get('/change/room/status/{id}', [AgentController::class, 'ChangeRoomStatus'])->name('change.room.status');
+        Route::get('/agent/logout', [AgentController::class, 'AgentLogout'])->name('agent.logout');
     });
 
 
     Route::get('/agent/login', [AgentController::class, 'AgentLogin'])->name('agent.login')
         ->middleware(RedirectIfAuthenticated::class);
     Route::get('/agent/register', [AgentController::class, 'AgentRegister'])->name('register');
-    Route::post('/agent/store/register', [AgentController::class, 'AgentStoreRegister'])->name('agent.register');
+    Route::post('/agent/store/register', [AgentController::class, 'store'])->name('register.store');
 
 
     // User routes

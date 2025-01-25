@@ -72,7 +72,7 @@
                         <div class="col-md-6">
                             <label for="input2" class="form-label">Multipe Image (max size:1mb)</label>
                             <input type="file" name="multi_img[]" id="multiImg"
-                                class="form-control @error('multi_img')is-invalid @enderror" id="input1"
+                                class="form-control @error('multi_img')is-invalid @enderror"
                                 multiple="">
                             <div class="mt-2">
                                 @error('multi_img')
