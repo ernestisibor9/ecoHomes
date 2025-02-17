@@ -15,16 +15,18 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('shortlet_id');
             $table->string('room_name');
-            $table->string('room_type');
             $table->string('number_of_guest');
-            $table->string('guest_used');
+            $table->string('number_of_rooms');
             $table->string('smoking');
-            $table->integer('room_capacity');
-            $table->integer('bed_type');
-            $table->integer('bathroom_item');
-            $table->decimal('price_per_night', 10, 2);
+            $table->string('bathroom_status');
+            $table->integer('bed_count')->nullable();
+            $table->string('bed_type');
             $table->boolean('is_available')->default(true);
             $table->text('description')->nullable();
+            $table->string('guest_facilities')->nullable();
+            $table->timestamps();
+
+            $table->foreign('shortlet_id')->references('id')->on('shortlets')->onDelete('cascade');
         });
     }
 

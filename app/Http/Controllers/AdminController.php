@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RequestProperty;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -131,4 +132,10 @@ class AdminController extends Controller
         );
         return redirect()->back()->with($notification);
     }
+    // allRequest
+    public function allRequest(){
+        $requests = RequestProperty::latest()->get();
+        return view('admin.backend.request.all_request', compact('requests'));
+    }
+
 }

@@ -20,6 +20,6 @@ class Shortlet extends Model
     // Relationship with Room
     public function rooms()
     {
-        return $this->hasMany(Room::class);
+        return $this->hasMany(RoomShortlet::class);
     }
 }

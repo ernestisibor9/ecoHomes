@@ -6,7 +6,8 @@
     <div class="text-center p-2">
         <h2>Congratulations!</h2>
         <p>Your hotel has been successfully listed.</p>
-        <a href="{{ route('view.hotel', ['hotel' => $hotel->id]) }}" class="btn btn-success">View Listings</a>
+        {{-- <a href="{{ route('view.hotel', ['hotel' => $hotel->id]) }}" class="btn btn-success">View Listings</a> --}}
+        <a href="{{ url('/') }}" class="btn btn-success">View Listings</a>
     </div>
 
     <div class="container text-justify mt-5">

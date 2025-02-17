@@ -88,14 +88,15 @@
 
     <!-- property-page-section -->
     <div class="container search-con">
-        <form action="{{route('properties.search')}}" method="get">
+        <form action="{{ route('properties.search') }}" method="get">
             @csrf
             <div class="row ">
                 <div class="col">
                     <!-- Location Input -->
                     <input type="text" id="location" name="location" placeholder="Enter city or state"
                         value="{{ request('location') }}" autocomplete="off" class="form-control inp" />
-                    <div id="suggestions" style="display: none; border: 1px solid #ccc; max-height: 150px; overflow-y: auto;">
+                    <div id="suggestions"
+                        style="display: none; border: 1px solid #ccc; max-height: 150px; overflow-y: auto;">
                     </div>
 
                 </div>
@@ -104,10 +105,11 @@
                     <select name="property_type" class="form-select see inp">
                         <option value="">Select Property Type</option>
                         @foreach ($propertyTypes as $type)
-                        <option value="{{ $type->id }}" {{ request('property_type') == $type->id ? 'selected' : '' }}>
-                            {{ $type->type_name }}
-                        </option>
-                    @endforeach
+                            <option value="{{ $type->id }}"
+                                {{ request('property_type') == $type->id ? 'selected' : '' }}>
+                                {{ $type->type_name }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col">
@@ -356,15 +358,15 @@
                                                             alt="" class="property-img"></figure>
                                                     <div class="batch"><i class="icon-11"></i></div>
                                                     <span class="category">
-                                                            <span>{{ $item->city ? $item->city->name : 'Unknown City' }}</span>
+                                                        <span>{{ $item->city ? $item->city->name : 'Unknown City' }}</span>
                                                     </span>
                                                     <div class="buy-btn"><a href="#" class="text-decoration-none">
-                                                        {{ ucfirst($item->type->type_name) }} </a></div>
+                                                            {{ ucfirst($item->type->type_name) }} </a></div>
                                                 </div>
                                                 <div class="lower-content">
                                                     <div class="title-text d-flex justify-content-between">
-                                                        <h4><a
-                                                                href="property-details.html" class="text-decoration-none">{{ ucwords($item->property_name) }}</a>
+                                                        <h4><a href="property-details.html"
+                                                                class="text-decoration-none">{{ ucwords($item->property_name) }}</a>
                                                         </h4>
                                                         <div class="text-center">
                                                             @if ($item->verification_status == '1')
@@ -391,7 +393,8 @@
                                                                         <!-- Display converted price per night -->
                                                                     @endif
                                                                     <div>
-                                                                        <span class="badge text-bg-danger">{{$item->room_size}}</span>
+                                                                        <span
+                                                                            class="badge text-bg-danger">{{ $item->room_size }}</span>
                                                                     </div>
                                                                 @else
                                                                     @if ($currency == 'NGN')

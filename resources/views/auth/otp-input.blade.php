@@ -197,7 +197,11 @@
                 <div class="row clearfix">
                     <div class="col-xl-8 col-lg-12 col-md-12 offset-xl-2 big-column">
                         <div class="sec-title">
-                            <h5>You can also check your email or phone for the OTP.</h5>
+                            @if ($otpDelivery === 'email')
+                            <h5>Check your email for the OTP.</h5>
+                        @else
+                            <h5>Check your phone for the OTP.</h5>
+                        @endif
                             <h2>VERIFY OTP</h2>
                         </div>
                         <div class="tabs-box">

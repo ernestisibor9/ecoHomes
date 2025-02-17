@@ -8,7 +8,7 @@
     <div class="blog-sidebar">
         <div class="sidebar-widget post-widget">
             <div class="widget-title">
-                <h4>User Profile 66</h4>
+                <h4>User Profile</h4>
             </div>
             <div class="post-inner">
                 <div class="post">
@@ -22,12 +22,12 @@
 
         <div class="sidebar-widget category-widget">
             <div class="widget-title">
-                <h4>Category</h4>
+                <h4>Menu</h4>
             </div>
             <div class="widget-content">
                 <ul class="category-list ">
 
-                    <li class="current"> <a href="{{ url('/dashboard') }}"><i class="fab fa fa-envelope "></i> Dashboard
+                    <li class="current"> <a href="{{ url('/dashboard') }}"><i class="fab fa fa-cog "></i> Dashboard
                         </a></li>
 
 
@@ -38,12 +38,11 @@
                                 class="badge badge-info">( 10 credits)</span></a></li>
                     <li><a href="blog-details.html"><i class="fa fa-list-alt"
                                 aria-hidden="true"></i></i> Properties </a></li> --}}
-                    <li><a href="{{ route('form.step1') }}"><i class="fa fa-indent" aria-hidden="true"></i> Add
+                    <li><a href="{{ route('form.step1') }}"><i class="fa fa-home" aria-hidden="true"></i> Add
                             Property </a></li>
-                    <li><a href="{{ route('list.all.property') }}"><i class="fa fa-indent" aria-hidden="true"></i> Book
-                            Property </a></li>
-                            <li><a href="{{ route('hotel.create') }}"><i class="fa fa-indent" aria-hidden="true"></i> List Your
-                                Property </a></li>
+                    <li><a href="#"><i class="fa fa-book" aria-hidden="true"></i> My Adverts</a></li>
+                            <li><a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i> Boost Sales </a></li>
+                            <li><a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i> No. Of Adverts </a></li>
                     <li><a href="blog-details.html"><i class="fa fa-key" aria-hidden="true"></i>
                             Change Password </a></li>
                     <li><a href="{{ route('user.logout') }}"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i>

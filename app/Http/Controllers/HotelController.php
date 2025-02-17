@@ -42,7 +42,7 @@ class HotelController extends Controller
                 'countries' => $countries,
                 'steps' => $this->steps,
                 'current' => $currentStep
-            ]);
+            ], compact('countries'));
         } else {
             return redirect()->route('login')->with($notification);
         }
@@ -58,15 +58,20 @@ class HotelController extends Controller
             'hotel_name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
             'postal_code' => 'nullable|string|max:20',
-            'zip_code' => 'nullable|string|max:20',
-            'description' => 'nullable|string',
-            'channel_manager' => 'nullable|string',
-            'number_of_hotels' => 'nullable',
-            'children' => 'nullable|string',
+
+            'country_id' => 'required',
+            'state_id' => 'required',
+            'city_id' => 'nullable',
+
+            'description' => 'required|string',
+            'channel_manager' => 'required|string',
+            'number_of_hotels' => 'required',
+            'children' => 'required|string',
             'pet' => 'nullable|string',
             'language' => 'nullable|string',
             'guest_facilities' => 'nullable|array', // Validate facilities as an array
             'guest_facilities.*' => 'string', // Validate each facility as a string
+            'rating' => 'required|integer|min:1|max:5', // Validate the rating
         ]);
 
         // Convert facilities array to a comma-separated string
@@ -131,47 +136,138 @@ class HotelController extends Controller
         ]);
     }
 
+    // public function postStep3(Request $request, $hotelId)
+    // {
+    //     $request->validate([
+    //         // 'rooms' => 'required|array',
+    //         // 'rooms.*.room_type' => 'required',
+    //         // 'rooms.*.room_capacity' => 'required|integer',
+    //         'guest_facilities' => 'nullable|array',
+    //         'guest_facilities.*' => 'string',
+    //         'bed_type' => 'required|string',
+    //         'smoking' => 'required|string',
+    //         'bathroom_status' => 'required|string',
+    //         'description' => 'required|string',
+    //         'number_of_rooms' => 'required',
+    //         'price_per_night' => 'nullable',
+    //         'rooms' => 'required|array',
+    //         'rooms.*.room_type' => 'required|string',
+    //         'rooms.*.room_capacity' => 'required|integer',
+    //         'rooms.*.price_per_night' => 'required|numeric',
+    //         'rooms.*.images' => 'nullable|array',
+    //         'rooms.*.images.*' => 'file|image|max:1048', // Validate each image
+    //     ]);
+
+    //     $hotel = Hotel::findOrFail($hotelId);
+
+    //     // $price = 0.15 * $request->price_per_night;
+
+    //     // foreach ($request->rooms as $room) {
+    //     //     Room::create([
+    //     //         'hotel_id' => $hotel->id,
+    //     //         'room_name' => $request->room_name,
+    //     //         'number_of_guest' => $request->number_of_guest,
+    //     //         'smoking' => $request->smoking,
+    //     //         'number_of_rooms' => $request->number_of_rooms,
+    //     //         'price_per_night' => $request->price_per_night,
+    //     //         'bathroom_status' => $request->bathroom_status,
+    //     //         'bed_type' => $request->bed_type,
+    //     //         'description' => $request->description,
+    //     //         'room_type' => $room['room_type'],
+    //     //         'room_capacity' => $room['room_capacity'],
+    //     //         'guest_facilities' => $request->guest_facilities ? json_encode($request->guest_facilities) : null,
+    //     //     ]);
+    //     // }
+
+
+    //     foreach ($request->rooms as $room) {
+    //         $newRoom = Room::create([
+    //             'hotel_id'        => $hotel->id,
+    //             'room_type'       => $room['room_type'],
+    //             'room_capacity'   => $room['room_capacity'],
+    //             'price_per_night' => $room['price_per_night'],
+    //             'room_name'       => $request->room_name,
+    //             'number_of_guest' => $request->number_of_guest,
+    //             'smoking'         => $request->smoking,
+    //             'number_of_rooms' => $request->number_of_rooms,
+    //             'bathroom_status' => $request->bathroom_status,
+    //             'bed_type'        => $request->bed_type,
+    //             'description'     => $request->description,
+    //             'guest_facilities'=> $request->guest_facilities ? json_encode($request->guest_facilities) : null,
+    //         ]);
+
+    //         // Handle image uploads
+    //         if (!empty($room['images'])) {
+    //             foreach ($room['images'] as $image) {
+    //                 $path = $image->store('rooms/images', 'upload/multi_photos'); // Store image in public folder
+    //                 $newRoom->images()->create(['path' => $path]);
+    //             }
+    //         }
+    //     }
+
+
+    //     return redirect()->route('hotel.photos', ['hotel' => $hotel->id]);
+    // }
+
+
     public function postStep3(Request $request, $hotelId)
     {
-        $request->validate([
-            'rooms' => 'required|array',
-            'rooms.*.room_type' => 'required',
-            'rooms.*.room_capacity' => 'required|integer',
-            'guest_facilities' => 'nullable|array',
-            'guest_facilities.*' => 'string',
-            'bathroom_item' => 'required|string',
-            'bed_type' => 'required|string',
-            'smoking' => 'required|string',
-            'bathroom_status' => 'required|string',
-            'description' => 'required|string',
-            'number_of_rooms' => 'required',
-            'price_per_night' => 'required',
-        ]);
-
         $hotel = Hotel::findOrFail($hotelId);
 
-        // $price = 0.15 * $request->price_per_night;
+        $validated = $request->validate([
+            'room_name' => 'required|string|max:255',
+            'number_of_guest' => 'required|integer',
+            'smoking' => 'required|string|in:Yes,No',
+            'bathroom_status' => 'required|string|in:Yes,No',
+            'guest_facilities' => 'array',
+            'bed_type' => 'required|string',
+            'number_of_rooms' => 'required|integer',
+            'description' => 'required|string',
+            'rooms.*.room_type' => 'required|string',
+            'rooms.*.room_capacity' => 'required|integer',
+            'rooms.*.price_per_night' => 'required|numeric',
+            'rooms.*.images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate image files
+        ]);
 
-        foreach ($request->rooms as $room) {
-            Room::create([
-                'hotel_id' => $hotel->id,
+        foreach ($request->rooms as $roomData) {
+            $room = $hotel->rooms()->create([
                 'room_name' => $request->room_name,
                 'number_of_guest' => $request->number_of_guest,
-                'bathroom_item' => $request->bathroom_item,
                 'smoking' => $request->smoking,
-                'number_of_rooms' => $request->number_of_rooms,
-                'price_per_night' => $request->price_per_night,
                 'bathroom_status' => $request->bathroom_status,
-                'bed_type' => $request->bed_type,
-                'description' => $request->description,
-                'room_type' => $room['room_type'],
-                'room_capacity' => $room['room_capacity'],
                 'guest_facilities' => $request->guest_facilities ? json_encode($request->guest_facilities) : null,
+                'bed_type' => $request->bed_type,
+                'number_of_rooms' => $request->number_of_rooms,
+                'description' => $request->description,
+            ]);
+
+            if (isset($roomData['images'])) {
+                foreach ($roomData['images'] as $image) {
+                    if ($image->isValid()) {
+                        $imagePath = $image->store('rooms', 'public');
+                        Log::info('Image uploaded: ' . $imagePath);
+                        $room->roomImages()->create([
+                            'image_path' => $imagePath,
+                        ]);
+                    } else {
+                        Log::error('Invalid image: ' . $image->getClientOriginalName());
+                    }
+
+                }
+            }
+
+            $room->details()->create([
+                'room_type' => $roomData['room_type'],
+                'room_capacity' => $roomData['room_capacity'],
+                'price_per_night' => $roomData['price_per_night'],
             ]);
         }
 
         return redirect()->route('hotel.photos', ['hotel' => $hotel->id]);
     }
+
+
+
 
 
     // Step 4: Photos

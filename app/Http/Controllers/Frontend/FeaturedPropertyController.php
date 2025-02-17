@@ -4,9 +4,11 @@ namespace App\Http\Controllers\frontend;
 
 
 use App\Http\Controllers\Controller;
-
+use App\Models\Hotel;
+use App\Models\ListProperty;
 use App\Models\Property;
-
+use App\Models\Room;
+use App\Models\Shortlet;
 use Illuminate\Http\Request;
 use GeoIp2\Database\Reader;
 use Illuminate\Support\Facades\Log;
@@ -19,12 +21,13 @@ class FeaturedPropertyController extends Controller
     //
     public function showFeaturedProperties()
 {
+    $listProperties = ListProperty::latest()->limit(12)->get();
     $properties = Property::where('status', '1')
         ->where('featured', '1')
         ->limit(12)
         ->get();
 
-        Log::info('Number of properties retrieved: ' . $properties->count());
+       // Log::info('Number of properties retrieved: ' . $properties->count());
 
     $currency = 'NGN'; // Default currency
     $exchangeRate = 1.0; // Default exchange rate
@@ -50,7 +53,7 @@ class FeaturedPropertyController extends Controller
         $property->price_converted = $property->price * $exchangeRate; // Apply exchange rate conversion
     }
 
-    return view('frontend.home.features', compact('properties', 'currency', 'exchangeRate'));
+    return view('frontend.home.features', compact('properties', 'listProperties', 'currency', 'exchangeRate'));
 }
 
 private function getCurrencyForCountry($country)
@@ -104,6 +107,34 @@ private function fetchExchangeRate($baseCurrency, $targetCurrency)
             return 1.0; // Default exchange rate in case of error
         }
     });
+}
+
+
+
+
+
+
+
+
+
+
+
+public function showFeaturedHotel()
+{
+        // Eager load rooms, roomDetails, roomImages, and facilities
+        $hotel = Hotel::with(['rooms.details', 'rooms.roomImages', 'facilities'])->latest()->get();
+
+    return view('frontend.home.features', compact('hotels'));
+}
+
+// showFeaturedShortlet
+
+public function showFeaturedShortlet()
+{
+        // Eager load rooms, roomDetails, roomImages, and facilities
+        $shortlets = Shortlet::with(['rooms.details', 'rooms.roomImages', 'facilities'])->latest()->get();
+
+    return view('frontend.home.features', compact('shortlets'));
 }
 
 }

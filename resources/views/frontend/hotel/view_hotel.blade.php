@@ -29,14 +29,16 @@
                     <div class="author-info clearfix">
                         <div class="author-box pull-left">
                             <figure class="author-thumb"><img src="assets/images/feature/author-1.jpg" alt=""></figure>
-                            <h6>{{$profileData->name}}</h6>
+                            {{-- <h6>{{$profileData->name}}</h6> --}}
                         </div>
                         <ul class="rating clearfix pull-left">
-                            <li><i class="icon-39"></i></li>
-                            <li><i class="icon-39"></i></li>
-                            <li><i class="icon-39"></i></li>
-                            <li><i class="icon-39"></i></li>
-                            <li><i class="icon-40"></i></li>
+                            @for ($i = 1; $i <= 5; $i++)
+                            @if ($hotel->rating >= $i)
+                                <li><i class="icon-39"></i></li> <!-- Full star -->
+                            @else
+                                <li><i class="icon-40"></i></li> <!-- Empty star -->
+                            @endif
+                        @endfor
                         </ul>
                     </div>
                 </div>

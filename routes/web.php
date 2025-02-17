@@ -9,10 +9,12 @@ use App\Http\Controllers\Backend\NotificationController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
 use App\Http\Controllers\Backend\SellerController as BackendSellerController;
+use App\Http\Controllers\ChartTrackController;
 use App\Http\Controllers\CustomRegistrationController;
 use App\Http\Controllers\Frontend\BookPropertyController;
 use App\Http\Controllers\frontend\FeaturedPropertyController;
 use App\Http\Controllers\Frontend\GuestController;
+use App\Http\Controllers\Frontend\ListPropertyController;
 use App\Http\Controllers\Frontend\LocationController;
 use App\Http\Controllers\Frontend\OwnerPropertyController;
 use App\Http\Controllers\Frontend\PropertyReserveController;
@@ -20,10 +22,16 @@ use App\Http\Controllers\Frontend\SellerController;
 use App\Http\Controllers\Frontend\UserController as FrontendUserController;
 use App\Http\Controllers\Frontend\ViewingController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\ListDetailsController;
 use App\Http\Controllers\ShortletController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\GuestUserController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserTrackingController;
 use App\Http\Middleware\RedirectIfAuthenticated;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -43,8 +51,35 @@ Route::get('/', [UserController::class, 'Index'])->name('index');
 
 Route::group(["middleware" => "prevent-back-history"], function () {
 
+    Route::get('/users-status', [UserTrackingController::class, 'getUsersStatus']);
+    Route::get('/guest-status', [UserTrackingController::class, 'getGuestStatus']);
+    Route::get('/online-users', [UserTrackingController::class, 'getOnlineUsersCount']);
 
-    Route::get('/otp-input', [OtpController::class, 'otpInput'])->name('otp.input');
+    Route::get('/track-guest', [GuestUserController::class, 'trackGuestUser']);
+    Route::get('/online-guests', [GuestUserController::class, 'getOnlineGuests']);
+
+    Route::get('/api/locations2', [UserController::class, 'GetLocations2']);
+    Route::get('/properties/search2', [UserController::class, 'Search2'])->name('properties.search2');
+
+    Route::post('/track-action', [ChartTrackController::class, 'trackAction'])->name('track.action');
+    Route::get('/get-chart-data', [ChartTrackController::class, 'getChartData'])->name('chart.data');
+
+    Route::get('/list-property/details/{id}/{slug}', [ListDetailsController::class, 'listPropertyDetails'])->name('list.property.details');
+
+    // Route::get('/list-property/details/{id}/{slug}', [ListDetailsController::class, 'showPropertyDetails'])->name('show.property.details');
+
+    Route::post('/store/report/listing/{id}', [ListDetailsController::class, 'storeReportListing'])->name('store.report.listing');
+
+    Route::post('/store/feedback/{id}', [FeedbackController::class, 'storeFeedback'])->name('store.feedback');
+
+    Route::get('/feedback/{id}', [FeedbackController::class, 'showFeedback'])->name('feedback.detail');
+
+
+    Route::get('/request/property', [RequestController::class, 'requestProperty'])->name('request.property');
+
+    Route::post('/store/request/property', [RequestController::class, 'storeRequestProperty'])->name('store.request.property');
+
+    Route::get('/otp-input/{user}', [OtpController::class, 'otpInput'])->name('otp.input');
     Route::post('/verify-otp/user', [OtpController::class, 'verify'])->name('verify.otp');
 
     Route::get('/register/user', [CustomRegistrationController::class, 'create'])->name('register.user');
@@ -53,6 +88,10 @@ Route::group(["middleware" => "prevent-back-history"], function () {
     // Step 5: Complete
     Route::get('/view/hotel/{hotel}', [HotelController::class, 'viewHotel'])->name('view.hotel');
 
+    // Step 6: Complete
+    Route::get('/view/shortlet/{shortlet}', [ShortletController::class, 'viewShortlet'])->name('view.shortlet');
+
+
     Route::post('/send-guest-otp', [GuestController::class, 'sendOtp'])->name('guest.sendOtp');
     Route::get('/verify-otp', [GuestController::class, 'verifyOtpForm'])->name('guest.verifyOtpForm');
     Route::post('/verify-otp', [GuestController::class, 'verifyOtp'])->name('guest.verifyOtp');
@@ -60,9 +99,21 @@ Route::group(["middleware" => "prevent-back-history"], function () {
     // Route to display featured properties
     Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedProperties'])->name('featured.properties');
 
+    // Route to display featured properties
+    Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedHotel'])->name('featured.hotel');
+
+    // Route to display featured properties
+    Route::get('/features', [FeaturedPropertyController::class, 'showFeaturedShortlet'])->name('featured.shortlet');
+
+
     // Room Reservation
     Route::post('/calculate-price', [PropertyReserveController::class, 'calculatePrice']);
     Route::post('/check-availability', [PropertyReserveController::class, 'checkAvailability']);
+
+
+
+
+
 
     // Book Search Page
     Route::controller(BookPropertyController::class)->group(function () {
@@ -166,6 +217,28 @@ Route::group(["middleware" => "prevent-back-history"], function () {
     // })->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::middleware('auth')->group(function () {
+
+        // List Properties
+        Route::get('/apartment/flat', [ListPropertyController::class, 'apartmentFlat'])->name('apartment.flat');
+        // Store Properties
+        Route::post('/store/apartment/flat', [ListPropertyController::class, 'storeApartmentFlat'])->name('store.flat');
+
+        // List Properties
+        Route::get('/apartment/house', [ListPropertyController::class, 'apartmentHouse'])->name('apartment.house');
+        // Store Properties
+        Route::post('/store/apartment/house', [ListPropertyController::class, 'storeApartmentHouse'])->name('store.house');
+
+        // List Properties
+        Route::get('/land/property', [ListPropertyController::class, 'landProperty'])->name('land.property');
+        // Store Properties
+        Route::post('/store/land/property', [ListPropertyController::class, 'storeLandProperty'])->name('store.land');
+
+        // List Properties
+        Route::get('/commercial/property', [ListPropertyController::class, 'commercialProperty'])->name('commercial.property');
+        // Store Properties
+        Route::post('/store/commercial/property', [ListPropertyController::class, 'storeCommercialProperty'])->name('store.commercial');
+
+
         // Location controller
         Route::controller(LocationController::class)->group(function () {
             Route::get('/sell/my/property', 'SellMyProperty')->name('sell.my.property');
@@ -207,19 +280,19 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::post('/store/shortlet', [ShortletController::class, 'postStep1'])->name('shortlet.store');
 
         // Step 2: Add Facilities
-        Route::get('/facilities/{shortlet}', [ShortletController::class, 'createStep2'])->name('shortlet.facilities');
-        Route::post('/store/facilities/{shortlet}', [ShortletController::class, 'postStep2'])->name('shortlet.facilities.store');
+        Route::get('/shortlet/facilities/{shortlet}', [ShortletController::class, 'createStep2'])->name('shortlet.facilities');
+        Route::post('/shortlet/store/facilities/{shortlet}', [ShortletController::class, 'postStep2'])->name('shortlet.facilities.store');
 
         // Step 3: Add Rooms
-        Route::get('/rooms/{shortlet}', [ShortletController::class, 'createStep3'])->name('shortlet.rooms');
-        Route::post('/store/rooms/{shortlet}', [ShortletController::class, 'postStep3'])->name('shortlet.store.rooms');
+        Route::get('/shortlet/rooms/{shortlet}', [ShortletController::class, 'createStep3'])->name('shortlet.rooms');
+        Route::post('/shortlet/store/rooms/{shortlet}', [ShortletController::class, 'postStep3'])->name('shortlet.store.rooms');
 
         // Step 4: Photos
-        Route::get('/add/photos/{shortlet}', [ShortletController::class, 'createStep4'])->name('shortlet.photos');
-        Route::post('/store/photos/{shortlet}/{room}', [ShortletController::class, 'postStep4'])->name('shortlet.photos.store');
+        Route::get('/shortlet/add/photos/{shortlet}', [ShortletController::class, 'createStep4'])->name('shortlet.photos');
+        Route::post('/shortlet/store/photos/{shortlet}/{room}', [ShortletController::class, 'postStep4'])->name('shortlet.photos.store');
 
         // Step 5: Complete
-        Route::get('/complete/{shortlet}', [ShortletController::class, 'complete'])->name('shortlet.complete');
+        Route::get('/shortlet/complete/{shortlet}', [ShortletController::class, 'complete'])->name('shortlet.complete');
     });
 
     require __DIR__ . '/auth.php';
@@ -235,6 +308,11 @@ Route::group(["middleware" => "prevent-back-history"], function () {
         Route::get('/manage/sellers', [AdminController::class, 'ManageSellers'])->name('manage.sellers');
         Route::get('/change/status/{id}', [AdminController::class, 'ChangeStatus'])->name('change.status');
 
+        // Reques
+        Route::get('/all/request',  [AdminController::class, 'allRequest'])->name('all.request');
+
+//         Route::post('/track-action', [UserController::class, 'trackAction'])->name('track.action');
+// Route::get('/get-chart-data', [UserController::class, 'getChartData'])->name('chart.data');
 
         // Seller Route for Admin
         Route::controller(BackendSellerController::class)->group(function () {
@@ -375,6 +453,7 @@ Route::group(["middleware" => "prevent-back-history"], function () {
 
     // Seller Registration
     Route::post('/seller/registration', [SellerController::class, 'SellerRegister'])->name('seller.register');
+
 
 
     // Seller Route

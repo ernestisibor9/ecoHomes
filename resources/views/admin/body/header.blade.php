@@ -318,6 +318,9 @@
                     <li><a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}"><i
                                 class="bx bx-log-out-circle"></i><span>Logout</span></a>
                     </li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="{{ route('all.request') }}"><i
+                                class="bx bx-log-out-circle"></i><span>View Request</span></a>
+                    </li>
                 </ul>
             </div>
         </nav>

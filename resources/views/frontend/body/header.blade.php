@@ -1,58 +1,63 @@
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script>
-const pusher = new Pusher('01d01f2b254eac705136', {
-    cluster: 'eu',
-    forceTLS: true,
-});
+    const pusher = new Pusher('01d01f2b254eac705136', {
+        cluster: 'eu',
+        forceTLS: true,
+    });
 </script>
 
-        <!-- main header -->
-        <header class="main-header ">
-            <!-- header-top -->
-            <div class="header-top">
-                <div class="top-inner clearfix">
-                    <div class="left-column pull-left">
-                        <ul class="info clearfix">
-                            <li><i class="far fa-map-marker-alt"></i>Discover St, New York, NY 10012, USA</li>
-                            <li><i class="far fa-clock"></i>Mon - Sat  9.00 - 18.00</li>
-                            <li><i class="far fa-phone"></i><a href="tel:2512353256">+251-235-3256</a></li>
-                        </ul>
-                    </div>
-                    <div class="right-column pull-right">
-                        <ul class="social-links clearfix">
-                            <li><a href="index.html"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="index.html"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="index.html"><i class="fab fa-pinterest-p"></i></a></li>
-                            <li><a href="index.html"><i class="fab fa-google-plus-g"></i></a></li>
-                            <li><a href="index.html"><i class="fab fa-vimeo-v"></i></a></li>
-                        </ul>
-                        <div class="sign-box">
-                            <a href="{{ route('register') }}"><i class="fas fa-user"></i>Sign Up</a> &nbsp;
-                            <a href="{{ route('login') }}"><i class="fas fa-user"></i>Sign In</a>
-                        </div>
-                    </div>
+<!-- main header -->
+<header class="main-header ">
+    <!-- header-top -->
+    <div class="header-top">
+        <div class="top-inner clearfix">
+            <div class="left-column pull-left">
+                <ul class="info clearfix">
+                    <li><i class="far fa-map-marker-alt"></i>Discover St, New York, NY 10012, USA</li>
+                    <li><i class="far fa-clock"></i>Mon - Sat 9.00 - 18.00</li>
+                    <li><i class="far fa-phone"></i><a href="tel:2512353256">+251-235-3256</a></li>
+                </ul>
+            </div>
+            <div class="right-column pull-right">
+                <ul class="social-links clearfix">
+                    <li><a href="index.html"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="index.html"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="index.html"><i class="fab fa-pinterest-p"></i></a></li>
+                    <li><a href="index.html"><i class="fab fa-google-plus-g"></i></a></li>
+                    <li><a href="index.html"><i class="fab fa-vimeo-v"></i></a></li>
+                </ul>
+                <div class="sign-box">
+                    @auth
+                        <a href="{{ route('user.logout') }}"><i class="fas fa-user"></i> Logout</a>
+                    @else
+                        <a href="{{ url('register/user') }}"><i class="fas fa-user"></i> SignUp/Register</a> &nbsp;
+                        <a href="{{ route('login') }}"><i class="fas fa-user"></i> Sign In</a>
+                    @endauth
                 </div>
             </div>
-            <!-- header-lower -->
-            <div class="header-lower">
-                <div class="outer-box">
-                    <div class="main-box">
-                        <div class="logo-box">
-                            <figure class="logo"><a href="index.html"><img src="{{asset('frontend/assets/images/logo-2.png')}}" alt=""></a></figure>
-                        </div>
-                        <div class="menu-area clearfix">
-                            <!--Mobile Navigation Toggler-->
-                            <div class="mobile-nav-toggler">
-                                <i class="icon-bar"></i>
-                                <i class="icon-bar"></i>
-                                <i class="icon-bar"></i>
-                            </div>
-                            <nav class="main-menu navbar-expand-md navbar-light">
-                                <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
-                                    <ul class="navigation clearfix">
+        </div>
+    </div>
+    <!-- header-lower -->
+    <div class="header-lower">
+        <div class="outer-box">
+            <div class="main-box">
+                <div class="logo-box">
+                    <figure class="logo"><a href="index.html"><img
+                                src="{{ asset('frontend/assets/images/logo-2.png') }}" alt=""></a></figure>
+                </div>
+                <div class="menu-area clearfix">
+                    <!--Mobile Navigation Toggler-->
+                    <div class="mobile-nav-toggler">
+                        <i class="icon-bar"></i>
+                        <i class="icon-bar"></i>
+                        <i class="icon-bar"></i>
+                    </div>
+                    <nav class="main-menu navbar-expand-md navbar-light">
+                        <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
+                            <ul class="navigation clearfix">
 
-                                        <li class="current "><a href="{{url('/')}}"><span>Home</span></a>
-                                            {{-- <ul>
+                                <li class="current "><a href="{{ url('/') }}"><span>Home</span></a>
+                                    {{-- <ul>
                                                 <li><a href="index.html">Main Home</a></li>
                                                 <li><a href="index-2.html">Home Modern</a></li>
                                                 <li><a href="index-3.html">Home Map</a></li>
@@ -68,9 +73,9 @@ const pusher = new Pusher('01d01f2b254eac705136', {
                                                     </ul>
                                                 </li>
                                             </ul> --}}
-                                        </li>
-                                        {{-- <li><a href="#"><span>About</span></a></li> --}}
-                                        {{-- <li class="dropdown"><a href="index.html"><span>Listing</span></a>
+                                </li>
+                                {{-- <li><a href="#"><span>About</span></a></li> --}}
+                                {{-- <li class="dropdown"><a href="index.html"><span>Listing</span></a>
                                             <ul>
                                                 <li><a href="agents-list.html">Agents List</a></li>
                                                 <li><a href="agents-grid.html">Agents Grid</a></li>
@@ -91,7 +96,7 @@ const pusher = new Pusher('01d01f2b254eac705136', {
                                                 <li><a href="property-details-4.html">Property Details 04</a></li>
                                             </ul>
                                         </li> --}}
-                                        {{-- <li class="dropdown"><a href="index.html"><span>Pages</span></a>
+                                {{-- <li class="dropdown"><a href="index.html"><span>Pages</span></a>
                                             <div class="megamenu">
                                                 <div class="row clearfix">
                                                     <div class="col-xl-4 column">
@@ -136,86 +141,100 @@ const pusher = new Pusher('01d01f2b254eac705136', {
                                                 </div>
                                             </div>
                                         </li> --}}
-                                        {{-- <li class="dropdown"><a href="index.html"><span>Agency</span></a>
+                                {{-- <li class="dropdown"><a href="index.html"><span>Agency</span></a>
                                             <ul>
                                                 <li><a href="agency-list.html">Agency List</a></li>
                                                 <li><a href="agency-grid.html">Agency Grid</a></li>
                                                 <li><a href="agency-details.html">Agency Details</a></li>
                                             </ul>
                                         </li> --}}
-                                        <li class=""><a href="index.html"><span>Blog</span></a>
-                                            {{-- <ul>
+                                <li class=""><a href="#"><span>Blog</span></a>
+                                <li class=""><a href="{{ route('request.property') }}"><span>Request</span></a>
+                                    {{-- <ul>
                                                 <li><a href="blog-1.html">Blog 01</a></li>
                                                 <li><a href="blog-2.html">Blog 02</a></li>
                                                 <li><a href="blog-3.html">Blog 03</a></li>
                                                 <li><a href="blog-details.html">Blog Details</a></li>
                                             </ul> --}}
+                                </li>
+                                <li><a href="contact.html"><span>Contact</span></a></li>
+                                {{-- <li><a href="{{route('hotel.create')}}" class="theme-btn btn-one text-decoration-none"><span class="text-white"><span>+</span> List Your Property</span></a></li> --}}
+                                <li class="current dropdown  text-decoration-none"><a href="index.html"><span>List Your
+                                            Property</span></a>
+                                    <ul>
+                                        <li><a href="#" class="text-decoration-none">Hotel</a>
                                         </li>
-                                        <li><a href="contact.html"><span>Contact</span></a></li>
-                                         {{-- <li><a href="{{route('hotel.create')}}" class="theme-btn btn-one text-decoration-none"><span class="text-white"><span>+</span> List Your Property</span></a></li> --}}
-                                        <li class="current dropdown  text-decoration-none"><a href="index.html"><span>List Your Property</span></a>
-                                            <ul>
-                                                <li><a href="{{route('hotel.create')}}" class="text-decoration-none">Hotel</a></li>
-                                                <li><a href="index-2.html" class="text-decoration-none">Shortlet</a></li>
-                                                <li><a href="index-3.html" class="text-decoration-none">Market Property</a></li>
-                                            </ul>
+                                        <li><a href="#" class="text-decoration-none">Shortlet</a></li>
+                                        <li><a href="#" class="text-decoration-none">Advertise Property</a>
+                                        </li>
+                                        <li><a href="{{ route('apartment.flat') }}"
+                                                class="text-decoration-none">Flat</a> </li>
+                                        <li><a href="{{ route('apartment.house') }}"
+                                                class="text-decoration-none">House</a> </li>
+                                        <li><a href="{{ route('commercial.property') }}"
+                                                class="text-decoration-none">Commercial Property</a>
+                                        </li>
+                                        <li><a href="{{ route('land.property') }}" class="text-decoration-none">Land &
+                                                Plots </a>
                                         </li>
                                     </ul>
-                                </div>
-                            </nav>
                         </div>
-                        {{-- <div class="btn-box">
+                    </nav>
+                </div>
+                {{-- <div class="btn-box">
                             <a href="index.html" class="theme-btn btn-one"><span>+</span>Add Listing</a>
                         </div> --}}
-                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!--sticky Header-->
+    <div class="sticky-header">
+        <div class="outer-box">
+            <div class="main-box">
+                <div class="logo-box">
+                    <figure class="logo"><a href="index.html"><img
+                                src="{{ asset('frontend/assets/images/logo-2.png') }}" alt=""></a></figure>
+                </div>
+                <div class="menu-area clearfix">
+                    <nav class="main-menu clearfix">
+                        <!--Keep This Empty / Menu will come through Javascript-->
+                    </nav>
+                </div>
+                <div class="btn-box">
+                    <a href="index.html" class="theme-btn btn-one"><span>+</span>Add Listing</a>
                 </div>
             </div>
+        </div>
+    </div>
+</header>
+<!-- main-header end -->
 
-            <!--sticky Header-->
-            <div class="sticky-header">
-                <div class="outer-box">
-                    <div class="main-box">
-                        <div class="logo-box">
-                            <figure class="logo"><a href="index.html"><img src="{{asset('frontend/assets/images/logo-2.png')}}" alt=""></a></figure>
-                        </div>
-                        <div class="menu-area clearfix">
-                            <nav class="main-menu clearfix">
-                                <!--Keep This Empty / Menu will come through Javascript-->
-                            </nav>
-                        </div>
-                        <div class="btn-box">
-                            <a href="index.html" class="theme-btn btn-one"><span>+</span>Add Listing</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!-- main-header end -->
+<!-- Mobile Menu  -->
+<div class="mobile-menu">
+    <div class="menu-backdrop"></div>
+    <div class="close-btn"><i class="fas fa-times"></i></div>
 
-        <!-- Mobile Menu  -->
-        <div class="mobile-menu">
-            <div class="menu-backdrop"></div>
-            <div class="close-btn"><i class="fas fa-times"></i></div>
-
-            <nav class="menu-box">
-                <div class="nav-logo"><a href="index.html"><img src="{{asset('frontend/assets/images/logo-1.png')}}" alt="" title=""></a></div>
-                <div class="menu-outer"><!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header--></div>
-                <div class="contact-info">
-                    <h4>Contact Info</h4>
-                    <ul>
-                        <li>Chicago 12, Melborne City, USA</li>
-                        <li><a href="tel:+8801682648101">+88 01682648101</a></li>
-                        <li><a href="mailto:info@example.com">info@example.com</a></li>
-                    </ul>
-                </div>
-                <div class="social-links">
-                    <ul class="clearfix">
-                        <li><a href="index.html"><span class="fab fa-twitter"></span></a></li>
-                        <li><a href="index.html"><span class="fab fa-facebook-square"></span></a></li>
-                        <li><a href="index.html"><span class="fab fa-pinterest-p"></span></a></li>
-                        <li><a href="index.html"><span class="fab fa-instagram"></span></a></li>
-                        <li><a href="index.html"><span class="fab fa-youtube"></span></a></li>
-                    </ul>
-                </div>
-            </nav>
-        </div><!-- End Mobile Menu -->
+    <nav class="menu-box">
+        <div class="nav-logo"><a href="index.html"><img src="{{ asset('frontend/assets/images/logo-1.png') }}"
+                    alt="" title=""></a></div>
+        <div class="menu-outer"><!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header--></div>
+        <div class="contact-info">
+            <h4>Contact Info</h4>
+            <ul>
+                <li>Chicago 12, Melborne City, USA</li>
+                <li><a href="tel:+8801682648101">+88 01682648101</a></li>
+                <li><a href="mailto:info@example.com">info@example.com</a></li>
+            </ul>
+        </div>
+        <div class="social-links">
+            <ul class="clearfix">
+                <li><a href="index.html"><span class="fab fa-twitter"></span></a></li>
+                <li><a href="index.html"><span class="fab fa-facebook-square"></span></a></li>
+                <li><a href="index.html"><span class="fab fa-pinterest-p"></span></a></li>
+                <li><a href="index.html"><span class="fab fa-instagram"></span></a></li>
+                <li><a href="index.html"><span class="fab fa-youtube"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div><!-- End Mobile Menu -->

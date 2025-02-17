@@ -11,11 +11,11 @@ class RoomShortlet extends Model
 
     protected $guarded = [];
 
-
     public function shortlet()
     {
         return $this->belongsTo(Shortlet::class);
     }
+
 
 // In the Room model
 public function facilities()
@@ -25,11 +25,21 @@ public function facilities()
 
 public function photos()
 {
-    return $this->hasMany(CoverPhoto::class);
+    return $this->hasMany(CoverPhotoShortlet::class);
 }
 
 public function multiphotos()
 {
-    return $this->hasMany(MultiPhoto::class);
+    return $this->hasMany(MultiPhotoShortlet::class);
 }
+
+public function details()
+{
+    return $this->hasOne(ShortletDetail::class);
+}
+
+public function roomImages() {
+    return $this->hasMany(ShortletImage::class);
+}
+
 }

@@ -9,7 +9,7 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <h3 class="text-center text-title">Step 4: Upload Photos</h3>
-                        <form action="{{ route('shortlet.photos.store', ['hotel' => $hotel->id, 'room' => $room->id]) }}"
+                        <form action="{{ route('shortlet.photos.store', ['shortlet' => $shortlet->id, 'room' => $room->id]) }}"
                             method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="row mb-5 mt-4">
@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <a href="{{ route('hotel.rooms', ['hotel' => $hotel->id]) }}"
+                                <a href="{{ route('shortlet.rooms', ['shortlet' => $shortlet->id]) }}"
                                     class="theme-btn btn-one bg-danger text-decoration-none mr-5" id="backButton">Back</a>
                                     <button class="theme-btn btn-one" type="submit" id="nextButton">Next</button>
                                 </div>

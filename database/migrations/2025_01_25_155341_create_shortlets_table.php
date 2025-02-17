@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('shortlet_name'); // Hotel name
             $table->text('address'); // Detailed address
             $table->string('postal_code')->nullable();
-            $table->string('zip_code')->nullable(); // Optional zip/postal code
             $table->text('description')->nullable(); // Optional hotel description
             $table->string('channel_manager')->nullable();
             $table->string('number_of_shortlet')->nullable();
@@ -29,6 +28,21 @@ return new class extends Migration
             $table->foreign('user_id')
             ->references('id')->on('users')
             ->onDelete('cascade');
+
+            $table->unsignedBigInteger('country_id');
+            $table->unsignedBigInteger('state_id');
+            $table->unsignedBigInteger('city_id');
+
+            $table->foreign('country_id')
+            ->references('id')->on('countries')
+            ->onDelete('cascade');
+        $table->foreign('state_id')
+            ->references('id')->on('states')
+            ->onDelete('cascade');
+        $table->foreign('city_id')
+            ->references('id')->on('cities')
+            ->onDelete('cascade');
+
             $table->timestamps();
         });
     }

@@ -3,7 +3,7 @@
         margin-top: -140px;
     }
 </style>
-<section class="feature-style-three centred pb-110 services">
+<section class="feature-style-three centred pb-110 services mt-3">
     <div class="auto-container">
         <div class="sec-title">
             <h5>Our Services</h5>
@@ -11,11 +11,13 @@
         </div>
         <div class="three-item-carousel owl-carousel owl-theme owl-nav-none dots-style-one">
             <div class="feature-block-two">
-                <div class="inner-box">
-                    <div class="icon-box"><i class="icon-1"></i></div>
-                    <h4>Listing and Advertising</h4>
-                    <p>Showcase residential, commercial, and industrial properties available for sale or rent.</p>
-                </div>
+                <a href="{{route('sell.my.property.details')}}">
+                    <div class="inner-box">
+                        <div class="icon-box"><i class="icon-1"></i></div>
+                        <h4>Listing and Advertising</h4>
+                        <p>Showcase residential, commercial, and industrial properties available for sale or rent.</p>
+                    </div>
+                </a>
             </div>
             <div class="feature-block-two">
                 <div class="inner-box">

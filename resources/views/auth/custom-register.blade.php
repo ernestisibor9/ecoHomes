@@ -178,7 +178,7 @@
                 <div class="content-box clearfix">
                     <h1>Sign Up</h1>
                     <ul class="bread-crumb clearfix">
-                        <li><a href="index.html">Home</a></li>
+                        {{-- <li><a href="index.html">Home</a></li> --}}
                         <li>Sign Up</li>
                     </ul>
                 </div>
@@ -207,7 +207,8 @@
                                 <div class="tab active-tab" id="tab-1">
                                     <div class="inner-box">
                                         <h4>Sign up</h4>
-                                        <form action="{{ route('register.store') }}" method="post" class="default-form">
+                                        <form action="{{ route('register.store') }}" method="post"
+                                            class="default-form">
                                             @csrf
                                             <div class="form-group">
                                                 <label>Name</label>
@@ -253,6 +254,15 @@
                                                 @error('password_confirmation')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
+                                            </div>
+                                            <!-- OTP Delivery Method Selection -->
+                                            <div class="form-group">
+                                                <label>How would you like to receive your OTP?</label>
+                                                <div class="d-flex">
+                                                    <input type="radio" name="otp_delivery" value="email" checked> &nbsp;
+                                                    Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <input type="radio" name="otp_delivery" value="phone">&nbsp; Phone (SMS)
+                                                </div>
                                             </div>
                                             <div class="form-group message-btn">
                                                 <button type="submit" class="theme-btn btn-one">Sign up</button>

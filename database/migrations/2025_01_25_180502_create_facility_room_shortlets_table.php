@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('facility_room_shortlets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('room_shortlet_id');
             $table->unsignedBigInteger('facility_id');
 
             // Foreign key to the rooms table
-            $table->foreign('room_id')->references('id')->on('room_shortlets')->onDelete('cascade');
+            $table->foreign('room_shortlet_id')->references('id')->on('room_shortlets')->onDelete('cascade');
 
             // Foreign key to the facilities table
             $table->foreign('facility_id')->references('id')->on('facilities')->onDelete('cascade');

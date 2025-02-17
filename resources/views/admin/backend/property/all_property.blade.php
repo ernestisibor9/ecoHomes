@@ -62,6 +62,7 @@
                             </tr>
             </div>
             @endforeach
+            {{-- <p><i class="fa fa-eye"></i> {{ $property->views()->count() }} Views</p> --}}
             </tbody>
             </table>
 
@@ -90,6 +91,39 @@
             </div>
             </form>
         </div>
+    </div>
+
+    <h2>Users Status</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($users as $user)
+                <tr>
+                    <td>{{ $user->name }}</td>
+                    <td>
+                        @if ($user->is_online)
+                            <span class="badge bg-success">Online</span>
+                        @else
+                            <span class="badge bg-secondary">Offline (Last seen: {{ $user->last_seen->diffForHumans() }})</span>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <div class="container">
+        <h2>Guest Status</h2>
+        @if ($status === 'Online')
+            <span class="badge bg-success">Guest Online</span>
+        @else
+            <span class="badge bg-secondary">Guest Offline (Last seen: {{ $lastSeen->diffForHumans() }})</span>
+        @endif
     </div>
 </div>
 </div>

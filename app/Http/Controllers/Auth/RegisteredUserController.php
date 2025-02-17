@@ -36,20 +36,14 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'otp_delivery' => ['required', 'in:email,phone'], // Ensure user selects a valid option
         ]);
-
-            // Ensure the user is logged out
-    Auth::logout();
 
         // Generate OTP
         $otp = rand(100000, 999999);
         $otpExpiresAt = Carbon::now()->addMinutes(10); // OTP expiration time
-
-        dd($otp);
-        dd($otpExpiresAt);
-        exit();
 
         // Create the user
         $user = User::create([
@@ -61,20 +55,23 @@ class RegisteredUserController extends Controller
             'otp_expires_at' => $otpExpiresAt,
         ]);
 
-        // Send OTP via email
-        try {
-            Mail::to($user->email)->send(new \App\Mail\OtpMail($otp));
-        } catch (\Exception $e) {
-            Log::error("Email sending failed: " . $e->getMessage());
+        // Send OTP based on user selection
+        if ($request->otp_delivery === 'email') {
+            try {
+                Mail::to($user->email)->send(new \App\Mail\OtpMail($otp));
+            } catch (\Exception $e) {
+                Log::error("Email sending failed: " . $e->getMessage());
+            }
+        } else {
+            $this->sendOtpSms($user->phone, $otp);
         }
 
-        // Send OTP via SMS using Twilio
-        $this->sendOtpSms($user->phone, $otp);
-
         // Redirect to the OTP input page after successful registration
-        // Keep the user logged out at this point
-        return redirect()->route('otp.input', ['user' => $user->id]);
+        // return redirect()->route('otp.input', ['user' => $user->id]);
+        return redirect()->route('otp.input', ['user' => $user->id, 'otp_delivery' => $request->otp_delivery]);
+
     }
+
 
 
 
@@ -92,4 +89,5 @@ class RegisteredUserController extends Controller
             'body' => "Your OTP code is: $otp",
         ]);
     }
+
 }

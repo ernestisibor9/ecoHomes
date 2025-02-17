@@ -13,6 +13,25 @@
         }
     </style>
 
+    <style>
+        /* Style the preview container to display images in a row */
+        .preview-container {
+            display: flex;
+            gap: 10px;
+            /* Add spacing between the images */
+            flex-wrap: wrap;
+            /* Allow the images to wrap if there's not enough space */
+        }
+
+        /* Style the images to have a fixed size */
+        .preview-container img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            /* Maintain aspect ratio while filling the box */
+        }
+    </style>
+
     @include('components.progress-tracker', ['step' => 1])
 
 
@@ -22,7 +41,7 @@
                 <div class="card shadow p-2">
                     <div class="card-body">
                         <h3 class="card-title text-center">Step 3: Add Room</h3>
-                        <form action="{{ route('shortlet.store.rooms', $shortlet->id) }}" method="POST">
+                        <form action="{{ route('shortlet.store.rooms', $shortlet->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6">
@@ -142,23 +161,11 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label for="inputState" class="form-label">Bathroom items</label>
-                                    <select id="inputState" class="form-select" name="bathroom_item">
-                                        <option selected>Choose...</option>
-                                        <option value="Toilet Roll">Toilet Roll</option>
-                                        <option value="Soap">Soap</option>
-                                        <option value="Perfumes">Perfumes</option>
-                                        <option value="Toilet">Toilet</option>
-                                        <option value="Shower">Shower</option>
-                                        <option value="Bathtub">Bathtub</option>
-                                        <option value="Spatub">Spatub</option>
-                                        <option value="Hairdryer">Hairdryer</option>
-                                    </select>
-                                </div>
+
                                 <div class="col-md-6">
                                     <label for="inputState" class="form-label">Bed type</label>
-                                    <select id="inputState" class="form-select" name="bed_type">
+                                    <select id="inputState" class="form-select" name="bed_type"
+                                        onchange="showBedDetails(this.value)">
                                         <option selected>Choose...</option>
                                         <option value="King Bed">King Bed</option>
                                         <option value="Queen Bed">Queen Bed</option>
@@ -166,34 +173,23 @@
                                         <option value="Sofa Bed">Sofa Bed</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="inputEmail4" class="form-label">Price Per Night</label>
-                                    <input type="text" class="form-control" id="price_per_night"
-                                        oninput="calculatePercentage()" name="price_per_night">
-                                </div>
                                 <div class="col-md-6">
                                     <label for="inputState" class="form-label">How many rooms of this type do you
                                         have?</label>
                                     <input type="number" class="form-control" id="" name="number_of_rooms">
                                 </div>
                             </div>
-                            <div class="row mt-3" id="percentage-row" style="display: none;">
-                                <div class="col-md-12">
-                                    <label for="calculated_percentage" class="form-label">15% EcoHomes commission</label>
-                                    <input type="text" class="form-control" id="calculated_percentage"
-                                        name="calculated_percentage" readonly>
-                                </div>
-                            </div>
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="inputState" class="form-label">Describe the room</label>
                                     <textarea class="form-control" id="description" rows="3" name="description" required></textarea>
                                 </div>
                             </div>
+
                             <div id="room-container">
-                                <div class="room-group mb-3">
+                                <!-- Initial Room Group -->
+                                <div class="room-group mb-3" id="room-template">
                                     <label>Room Type</label>
                                     <select name="rooms[0][room_type]" class="form-control">
                                         <option value="Single">Single</option>
@@ -218,15 +214,41 @@
                                         <option value="6">6</option>
                                         <option value="7">7</option>
                                     </select>
+                                    <br><br>
+                                    <label>Price Per Night</label>
+                                    <input type="number" name="rooms[0][price_per_night]"
+                                        class="form-control price-per-night" placeholder="Enter price per night"
+                                        oninput="calculatePercentage(this)">
+
+                                    <div class="row mt-3 percentage-row" style="display: none;">
+                                        <div class="col-md-12">
+                                            <label for="calculated_percentage" class="form-label">15% EcoHomes
+                                                Commission</label>
+                                            <input type="text" class="form-control calculated-percentage" readonly>
+                                        </div>
+                                    </div>
+                                    <br><br>
+                                    <!-- Image Upload Fields -->
+                                    <label>Upload Images</label>
+                                    <div class="image-inputs">
+                                        <input type="file" name="rooms[0][images][]" class="form-control multiImg"
+                                            multiple onchange="handleImageUpload(this, 'preview_img_0')">
+                                    </div>
+                                    <div class="row preview-container" id="preview_img_0"></div>
+                                    <hr>
                                 </div>
                             </div>
+
+                            <!-- Add Room Button -->
                             <button type="button" id="add-room" class="btn btn-secondary">Add Another Room</button>
 
+                            <!-- Navigation Buttons -->
                             <div class="d-flex justify-content-center">
                                 <a href="{{ route('shortlet.facilities', ['shortlet' => $shortlet->id]) }}"
                                     class="theme-btn btn-one bg-danger text-decoration-none mr-5" id="backButton">Back</a>
                                 <button class="theme-btn btn-one" type="submit" id="nextButton">Next</button>
                             </div>
+
                     </div>
                     </form>
                 </div>
@@ -235,58 +257,71 @@
     </div>
     </div>
 
-    <script>
-        document.getElementById('add-room').addEventListener('click', function() {
-            const container = document.getElementById('room-container');
-            const index = container.children.length;
-            const roomGroup = `
-                <div class="room-group mb-3">
-                    <label>Room Type</label>
-                    <select name="rooms[${index}][room_type]" class="form-control">
-                                        <option value="Single">Single</option>
-                                        <option value="Double">Double</option>
-                                        <option value="Suite">Suite</option>
-                                        <option value="Twin">Twin</option>
-                                        <option value="Twin/Double">Twin/Double</option>
-                                        <option value="Triple">Triple</option>
-                                        <option value="Quad">Quad</option>
-                                        <option value="Family">Family</option>
-                                        <option value="Studio">Studio</option>
-                                        <option value="Apartment">Apartment</option>
-                    </select>
-
-                    <label>Room Capacity</label>
-                    <select name="rooms[${index}][room_capacity]" class="form-control">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                    </select>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', roomGroup);
-        });
-    </script>
 
     <script>
-        function calculatePercentage() {
-            const pricePerNight = parseFloat(document.getElementById('price_per_night').value);
+        // Handle the calculation of the 15% commission
+        function calculatePercentage(input) {
+            const price = parseFloat(input.value);
+            const commissionRow = input.closest('.room-group').querySelector('.percentage-row');
+            const commissionInput = commissionRow.querySelector('.calculated-percentage');
 
-            // Calculate 15% if the price is valid
-            const percentage = !isNaN(pricePerNight) ? (pricePerNight * 0.15).toFixed(2) : '';
-
-            // Display the percentage row when a valid price is entered
-            if (pricePerNight > 0) {
-                document.getElementById('percentage-row').style.display = 'block';
+            if (price && !isNaN(price)) {
+                const commission = (price * 0.15).toFixed(2); // 15% commission
+                commissionInput.value = `$${commission}`;
+                commissionRow.style.display = 'block'; // Show the commission row
             } else {
-                document.getElementById('percentage-row').style.display = 'none';
+                commissionRow.style.display = 'none'; // Hide if price is not entered
             }
+        }
 
-            // Update the calculated percentage field
-            document.getElementById('calculated_percentage').value = percentage;
+        // Add event listeners for images in newly added rooms
+        let roomCount = 1; // Start at 1 since the first room is already there
+        document.getElementById('add-room').addEventListener('click', function() {
+            const roomTemplate = document.getElementById('room-template');
+            const newRoom = roomTemplate.cloneNode(true);
+
+            // Update name attributes with the new room count
+            newRoom.innerHTML = newRoom.innerHTML.replace(/\[0\]/g, `[${roomCount}]`);
+
+            // Clear values of input fields in the cloned room
+            newRoom.querySelector('.price-per-night').value = '';
+            newRoom.querySelector('.multiImg').value = ''; // Clear the file input
+
+            // Generate a unique ID for the preview container
+            const previewContainer = newRoom.querySelector('.preview-container');
+            previewContainer.id = `preview_img_${roomCount}`;
+
+            // Add event listener for image input in the cloned room
+            const imageInput = newRoom.querySelector('.multiImg');
+            imageInput.addEventListener('change', function() {
+                handleImageUpload(this, previewContainer.id);
+            });
+
+            // Append the cloned room to the room container
+            document.getElementById('room-container').appendChild(newRoom);
+            roomCount++;
+        });
+
+        // Handle image upload and preview for each room
+        function handleImageUpload(input, previewContainerId) {
+            const data = input.files;
+            const previewContainer = document.getElementById(previewContainerId);
+            previewContainer.innerHTML = ''; // Clear previous previews
+
+            Array.from(data).forEach(file => {
+                if (/(\.|\/)(gif|jpeg|png|webp)$/i.test(file.type)) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.classList.add('thumb');
+                        img.src = e.target.result;
+                        img.width = 150;
+                        img.height = 130;
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
         }
     </script>
 @endsection

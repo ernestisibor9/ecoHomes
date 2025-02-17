@@ -76,7 +76,7 @@
                                 <li><a href="index.html"><i class="fab fa-vimeo-v"></i></a></li>
                             </ul>
                             <div class="sign-box">
-                                <a href="{{ route('register') }}"><i class="fas fa-user"></i>Sign Up</a> &nbsp;
+                                <a href="{{ route('register.user') }}"><i class="fas fa-user"></i>Sign Up</a> &nbsp;
                                 <a href="{{ route('login') }}"><i class="fas fa-user"></i>Sign In</a>
                             </div>
                         </div>
@@ -199,6 +199,7 @@
                         <div class="sec-title">
                             <h5>Login</h5>
                             <h2>Sign In With EcoHomes</h2>
+                            <a href="{{route('register.user')}}" class="text-decoration-none">Click here to SignUp if you don't have an account</a>
                         </div>
                         <div class="tabs-box">
                             {{-- <div class="tab-btn-box">
@@ -238,13 +239,13 @@
                                         <div class="othre-text">
                                             <p>Don't have an account? <a href="{{ route('register') }}">Sign up</a>
                                             </p>
+                                            <div class="othre-text">
+                                                <a href="{{ route('password.email') }}" class="btn-text">Forgot
+                                                    password?</a>
+                                            </div>
                                             <p><a href="{{ route('expert.solution.details') }}">Click here </a> to
                                                 connect with our experts</p>
                                             <p>Or contact us directly via +234 806 014 3255</p>
-                                        </div>
-                                        <div class="othre-text">
-                                            <a href="{{ route('password.email') }}" class="btn-text">Forgot
-                                                password?</a>
                                         </div>
                                     </div>
                                 </div>

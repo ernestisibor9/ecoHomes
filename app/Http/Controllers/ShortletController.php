@@ -12,6 +12,7 @@ use App\Models\RoomShortlet;
 use App\Models\Shortlet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ShortletController extends Controller
 {
@@ -41,7 +42,7 @@ class ShortletController extends Controller
                     'countries' => $countries,
                     'steps' => $this->steps,
                     'current' => $currentStep
-                ]);
+                ], compact('countries'));
             } else {
                 return redirect()->route('login')->with($notification);
             }
@@ -57,11 +58,15 @@ class ShortletController extends Controller
                 'shortlet_name' => 'required|string|max:255',
                 'address' => 'required|string|max:500',
                 'postal_code' => 'nullable|string|max:20',
-                'zip_code' => 'nullable|string|max:20',
-                'description' => 'nullable|string',
-                'channel_manager' => 'nullable|string',
-                'number_of_shortlet' => 'nullable',
-                'children' => 'nullable|string',
+
+                'country_id' => 'required',
+                'state_id' => 'required',
+                'city_id' => 'nullable',
+
+                'description' => 'required|string',
+                'channel_manager' => 'required|string',
+                'number_of_shortlet' => 'required',
+                'children' => 'required|string',
                 'pet' => 'nullable|string',
                 'language' => 'nullable|string',
                 'guest_facilities' => 'nullable|array', // Validate facilities as an array
@@ -79,26 +84,27 @@ class ShortletController extends Controller
             $shortlet = Shortlet::create($data);
 
             // Redirect to the facilities step
-            return redirect()->route('shortlet.facilities', ['Shortlet' => $shortlet->id]);
+            return redirect()->route('shortlet.facilities', ['shortlet' => $shortlet->id]);
         }
 
 
-        // Step 2: Add Facilities
-        public function createStep2($shortletId)
-        {
-            // Eager load the facilities relationship
-            $shortlet = Shortlet::with('facilities')->findOrFail($shortletId);
-            $facilities = FacilityShortlet::all();
+    // Step 2: Add Facilities
+    public function createStep2($shortletId)
+    {
+        // Eager load the facilities relationship
+        $shortlet = Shortlet::with('facilities')->findOrFail($shortletId);
+        $facilities = Facility::all();
 
-            $currentStep = 2;
+        $currentStep = 2;
 
-            return view('frontend.shortlet.facilities', [
-                'shortlet' => $shortlet,
-                'facilities' => $facilities,
-                'steps' => $this->steps,
-                'current' => $currentStep,
-            ]);
-        }
+        return view('frontend.shortlet.facilities', [
+            'shortlet' => $shortlet,
+            'facilities' => $facilities,
+            'steps' => $this->steps,
+            'current' => $currentStep,
+        ]);
+    }
+
 
         public function postStep2(Request $request, $shortletId)
         {
@@ -132,45 +138,60 @@ class ShortletController extends Controller
 
         public function postStep3(Request $request, $shortletId)
         {
-            $request->validate([
-                'rooms' => 'required|array',
-                'rooms.*.room_type' => 'required',
-                'rooms.*.room_capacity' => 'required|integer',
-                'guest_facilities' => 'nullable|array',
-                'guest_facilities.*' => 'string',
-                'bathroom_item' => 'required|string',
-                'bed_type' => 'required|string',
-                'smoking' => 'required|string',
-                'bathroom_status' => 'required|string',
-                'description' => 'required|string',
-                'number_of_rooms' => 'required',
-                'price_per_night' => 'required',
-            ]);
-
             $shortlet = Shortlet::findOrFail($shortletId);
 
-            // $price = 0.15 * $request->price_per_night;
+            $validated = $request->validate([
+                'room_name' => 'required|string|max:255',
+                'number_of_guest' => 'required|integer',
+                'smoking' => 'required|string|in:Yes,No',
+                'bathroom_status' => 'required|string|in:Yes,No',
+                'guest_facilities' => 'array',
+                'bed_type' => 'required|string',
+                'number_of_rooms' => 'required|integer',
+                'description' => 'required|string',
+                'rooms.*.room_type' => 'required|string',
+                'rooms.*.room_capacity' => 'required|integer',
+                'rooms.*.price_per_night' => 'required|numeric',
+                'rooms.*.images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate image files
+            ]);
 
-            foreach ($request->rooms as $room) {
-                RoomShortlet::create([
-                    'shortlet_id' => $shortlet->id,
+            foreach ($request->rooms as $roomData) {
+                $room = $shortlet->rooms()->create([
                     'room_name' => $request->room_name,
                     'number_of_guest' => $request->number_of_guest,
-                    'bathroom_item' => $request->bathroom_item,
                     'smoking' => $request->smoking,
-                    'number_of_rooms' => $request->number_of_rooms,
-                    'price_per_night' => $request->price_per_night,
                     'bathroom_status' => $request->bathroom_status,
-                    'bed_type' => $request->bed_type,
-                    'description' => $request->description,
-                    'room_type' => $room['room_type'],
-                    'room_capacity' => $room['room_capacity'],
                     'guest_facilities' => $request->guest_facilities ? json_encode($request->guest_facilities) : null,
+                    'bed_type' => $request->bed_type,
+                    'number_of_rooms' => $request->number_of_rooms,
+                    'description' => $request->description,
+                ]);
+
+                if (isset($roomData['images'])) {
+                    foreach ($roomData['images'] as $image) {
+                        if ($image->isValid()) {
+                            $imagePath = $image->store('shortlets', 'public');
+                            Log::info('Image uploaded: ' . $imagePath);
+                            $room->roomImages()->create([
+                                'image_path' => $imagePath, // 'room_id' will automatically be populated as the foreign key
+                            ]);
+                        } else {
+                            Log::error('Invalid image: ' . $image->getClientOriginalName());
+                        }
+
+                    }
+                }
+
+                $room->details()->create([
+                    'room_type' => $roomData['room_type'],
+                    'room_capacity' => $roomData['room_capacity'],
+                    'price_per_night' => $roomData['price_per_night'],
                 ]);
             }
 
             return redirect()->route('shortlet.photos', ['shortlet' => $shortlet->id]);
         }
+
 
 
         // Step 4: Photos
@@ -183,7 +204,7 @@ class ShortletController extends Controller
             $currentStep = 4;
 
             if (!$room) {
-                return redirect()->route('Shortlet.rooms', ['shortlet' => $shortletId])
+                return redirect()->route('shortlet.rooms', ['shortlet' => $shortletId])
                     ->with('error', 'Please add a room before uploading photos.');
             }
 
@@ -224,8 +245,8 @@ class ShortletController extends Controller
 
                     // Save the cover photo path in the database
                     CoverPhotoShortlet::create([
-                        'Shortlet_id' => $shortletId,
-                        'room_id' => $roomId, // Assuming you have room_id available in the request
+                        'shortlet_id' => $shortletId,
+                        'room_shortlet_id' => $roomId, // Assuming you have room_id available in the request
                         'photo_name' => $save_url, // Save the file path
                     ]);
                 }
@@ -241,8 +262,8 @@ class ShortletController extends Controller
 
                         // Save the multiple photo path in the database
                         MultiPhotoShortlet::create([
-                            'Shortlet_id' => $shortletId,
-                            'room_id' => $roomId, // Assuming you have room_id available in the request
+                            'shortlet_id' => $shortletId,
+                            'room_shortlet_id' => $roomId, // Assuming you have room_id available in the request
                             'multi_photo_name' => $save_url2, // Save the file path
                         ]);
                     }
@@ -259,25 +280,25 @@ class ShortletController extends Controller
         }
 
         // // Step 4: Complete
-        public function complete($ShortletId)
+        public function complete($shortletId)
         {
-            $Shortlet = Shortlet::findOrFail($ShortletId);
+            $shortlet = Shortlet::findOrFail($shortletId);
             $currentStep = 5;
 
-            return view('frontend.Shortlet.complete', [
-                'Shortlet' => $Shortlet,
+            return view('frontend.shortlet.complete', [
+                'shortlet' => $shortlet,
                 'steps' => $this->steps,
                 'current' => $currentStep
             ]);
         }
 
         // View Shortlet
-        public function viewShortlet($ShortletId)
+        public function viewShortlet($shortletId)
         {
-            $Shortlet = Shortlet::with(['facilities', 'rooms'])->findOrFail($ShortletId);
-            $rooms = Room::where('Shortlet_id', $ShortletId)->get();
+            $shortlet = Shortlet::with(['facilities', 'rooms'])->findOrFail($shortletId);
+            $rooms = RoomShortlet::where('shortlet_id', $shortletId)->get();
             $room = $rooms->first(); // Get the first room
            // dd($room);
-            return view('frontend.Shortlet.view_Shortlet', compact('Shortlet', 'room'));
+            return view('frontend.shortlet.view_shortlet', compact('shortlet', 'room'));
         }
 }

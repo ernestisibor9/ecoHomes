@@ -37,10 +37,10 @@ return new class extends Migration
             $table->decimal('eco_home_service_fee', 8, 2)->default(0)->nullable();
 
 
-            $table->unsignedBigInteger('seller_id');
-            $table->foreign('seller_id')
-                ->references('id')->on('sell_my_properties')
-                ->onDelete('cascade');
+            // $table->unsignedBigInteger('seller_id');
+            // $table->foreign('seller_id')
+            //     ->references('id')->on('sell_my_properties')
+            //     ->onDelete('cascade');
 
             $table->unsignedBigInteger('country_id');
             $table->unsignedBigInteger('state_id');

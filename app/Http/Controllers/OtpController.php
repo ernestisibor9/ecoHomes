@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Auth;
 class OtpController extends Controller
 {
     // otpInput
-    public function otpInput()
+    public function otpInput(Request $request)
     {
-        return view('auth.otp-input');
+        $otpDelivery = $request->query('otp_delivery', 'email'); // Default to email if not provided
+        return view('auth.otp-input', compact('otpDelivery'));
     }
+
     //
     public function verify(Request $request)
     {

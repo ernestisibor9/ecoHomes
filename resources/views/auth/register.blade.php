@@ -197,12 +197,12 @@
                             <h2>Sign Up With EcoHomes</h2>
                         </div>
                         <div class="tabs-box">
-                            {{-- <div class="tab-btn-box">
+                            <div class="tab-btn-box">
                                 <ul class="tab-btns tab-buttons centred clearfix">
                                     <li class="tab-btn active-btn" data-tab="#tab-1">Agent</li>
                                     <li class="tab-btn" data-tab="#tab-2">User</li>
                                 </ul>
-                            </div> --}}
+                            </div>
                             <div class="tabs-content">
                                 <div class="tab active-tab" id="tab-1">
                                     <div class="inner-box">
@@ -254,8 +254,12 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
-                                            <div class="form-group message-btn">
-                                                <button type="submit" class="theme-btn btn-one">Sign up</button>
+                                            <!-- OTP Delivery Method Selection -->
+                                            <div class="form-group">
+                                                <label>How would you like to receive your OTP?</label><br>
+                                                <input type="radio" name="otp_delivery" value="email" checked>
+                                                Email <br>
+                                                <input type="radio" name="otp_delivery" value="phone"> Phone (SMS)
                                             </div>
                                         </form>
                                         <div class="othre-text">

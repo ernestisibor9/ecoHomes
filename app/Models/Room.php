@@ -17,20 +17,29 @@ class Room extends Model
     }
 
 
-// In the Room model
-public function facilities()
-{
-    return $this->belongsToMany(Facility::class, 'facility_room', 'room_id', 'facility_id');
-}
+    // In the Room model
+    public function facilities()
+    {
+        return $this->belongsToMany(Facility::class, 'facility_room', 'room_id', 'facility_id');
+    }
 
-public function photos()
-{
-    return $this->hasMany(CoverPhoto::class);
-}
+    public function photos()
+    {
+        return $this->hasMany(CoverPhoto::class);
+    }
 
-public function multiphotos()
-{
-    return $this->hasMany(MultiPhoto::class);
-}
+    public function multiphotos()
+    {
+        return $this->hasMany(MultiPhoto::class);
+    }
 
+    public function details()
+    {
+        return $this->hasOne(RoomDetail::class);
+    }
+
+    public function roomImages()
+    {
+        return $this->hasMany(RoomImage::class);
+    }
 }

@@ -25,7 +25,7 @@
                                                 value="{{ $facility->id }}"
                                                 id="facility-{{ $facility->id }}"
                                                 class="form-check-input"
-                                                {{ $hotel->facilities->contains($facility->id) ? 'checked' : '' }}
+                                                {{ $shortlet->facilities->contains($facility->id) ? 'checked' : '' }}
                                             >
                                             <label for="facility-{{ $facility->id }}" class="form-check-label">
                                                 {{ $facility->name }}

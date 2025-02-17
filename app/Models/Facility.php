@@ -20,4 +20,15 @@ class Facility extends Model
     {
         return $this->belongsToMany(Room::class, 'facility_room', 'facility_id', 'room_id');
     }
+
+
+    public function shortlets()
+    {
+        return $this->belongsToMany(Shortlet::class, 'facility_shortlet');
+    }
+    // In the Facility model
+    public function roomshortlet()
+    {
+        return $this->belongsToMany(RoomShortlet::class, 'facility_room', 'facility_id', 'room_id');
+    }
 }

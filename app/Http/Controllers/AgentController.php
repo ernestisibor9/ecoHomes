@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client; // For making API requests
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rules;
 
 class AgentController extends Controller
 {
@@ -55,57 +56,54 @@ class AgentController extends Controller
     // }
     public function store(Request $request)
     {
-        // Validate the registration fields (not OTP here)
         $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'otp_delivery' => ['required', 'in:email,phone'], // Ensure user selects a valid option
         ]);
 
-        // Create a new user
-        $user = new User();
-        $user->name = $request->name;
-        $user->phone = $request->phone;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-
-        // Generate OTP and set expiry time (e.g., 5 minutes)
+        // Generate OTP
         $otp = rand(100000, 999999);
-        $otpExpiresAt = Carbon::now()->addMinutes(10);
+        $otpExpiresAt = Carbon::now()->addMinutes(10); // OTP expiration time
 
-        // Store OTP and expiry time in the user record
-        $user->otp = $otp;
-        $user->otp_expires_at = $otpExpiresAt;
-        $user->save();
+        // Create the user
+        $user = User::create([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'otp' => $otp,
+            'otp_expires_at' => $otpExpiresAt,
+        ]);
 
-        // Send OTP via email
-        try {
-            Mail::to($user->email)->send(new \App\Mail\OtpMail($otp));
-        } catch (\Exception $e) {
-            Log::error("Email sending failed: " . $e->getMessage());
+        // Send OTP based on user selection
+        if ($request->otp_delivery === 'email') {
+            try {
+                Mail::to($user->email)->send(new \App\Mail\OtpMail($otp));
+            } catch (\Exception $e) {
+                Log::error("Email sending failed: " . $e->getMessage());
+            }
+        } else {
+            $this->sendOtpSms($user->phone, $otp);
         }
 
+        // Redirect to the OTP input page after successful registration
+        // return redirect()->route('otp.input', ['user' => $user->id]);
+        return redirect()->route('otp.input', ['user' => $user->id, 'otp_delivery' => $request->otp_delivery]);
 
-        // Send OTP to the user via SMS or email
-        $this->sendOtpSms($user->phone, $otp);
-
-        // Redirect the user to the OTP input page
-        return redirect()->route('otp.input')->with('info', 'Please check your phone for the OTP.');
     }
 
 
     private function sendOtpSms(string $phone, int $otp): void
     {
-        // Retrieve Twilio credentials from the environment
         $twilioSid = env('TWILIO_SID');
         $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
         $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
 
-        // Create a new Twilio client
         $twilio = new \Twilio\Rest\Client($twilioSid, $twilioAuthToken);
 
-        // Send the SMS
         $twilio->messages->create($phone, [
             'from' => $twilioPhoneNumber,
             'body' => "Your OTP code is: $otp",

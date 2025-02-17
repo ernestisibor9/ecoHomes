@@ -7,6 +7,9 @@ use App\Models\Amenities;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Facility;
+use App\Models\ListProperty;
+use App\Models\PropertyView;
+use Illuminate\Support\Facades\Http;
 use App\Models\MultiImage;
 use App\Models\Property;
 use App\Models\PropertyType;
@@ -82,7 +85,7 @@ class PropertyController extends Controller
             // Calculate fees if price_per_night is provided
             $cleaning_fee = $eco_home_service_fee = 0;
             if ($request->price_per_night) {
-               // $cleaning_fee = 0.05 * $request->price_per_night;
+                // $cleaning_fee = 0.05 * $request->price_per_night;
                 $eco_home_service_fee = 0.10 * $request->price_per_night;
             }
 
@@ -169,73 +172,73 @@ class PropertyController extends Controller
     }
     // update.property
     public function UpdateProperty(Request $request)
-{
-    // Validate the request
-    $validatedData = $request->validate([
-        'ptype_id' => 'nullable|integer|exists:property_types,id',
-        'property_name' => 'nullable|string|max:255',
-        'property_status' => 'nullable|string|in:book,rent,buy,lease', // Adjust based on your statuses
-        'price' => 'nullable|numeric|min:0',
-        'price_per_night' => 'nullable|numeric|min:0',
-        'cleaning_fees' => 'nullable|numeric|min:0',
-        'eco_home_service_fee' => 'nullable|numeric|min:0',
-        'short_desc' => 'nullable|string|max:500',
-        'long_desc' => 'nullable|string',
-        'bedrooms' => 'nullable|integer|min:0',
-        'bathrooms' => 'nullable|integer|min:0',
-        'garage' => 'nullable|integer|min:0',
-        'property_video' => 'nullable',
-        'address' => 'nullable|string|max:255',
-        'featured' => 'nullable',
-        'hot' => 'nullable',
-        'hotel_owner' => 'nullable|string',
-        'room_number' => 'nullable|integer',
-        'room_size' => 'nullable|string',
-    ]);
+    {
+        // Validate the request
+        $validatedData = $request->validate([
+            'ptype_id' => 'nullable|integer|exists:property_types,id',
+            'property_name' => 'nullable|string|max:255',
+            'property_status' => 'nullable|string|in:book,rent,buy,lease', // Adjust based on your statuses
+            'price' => 'nullable|numeric|min:0',
+            'price_per_night' => 'nullable|numeric|min:0',
+            'cleaning_fees' => 'nullable|numeric|min:0',
+            'eco_home_service_fee' => 'nullable|numeric|min:0',
+            'short_desc' => 'nullable|string|max:500',
+            'long_desc' => 'nullable|string',
+            'bedrooms' => 'nullable|integer|min:0',
+            'bathrooms' => 'nullable|integer|min:0',
+            'garage' => 'nullable|integer|min:0',
+            'property_video' => 'nullable',
+            'address' => 'nullable|string|max:255',
+            'featured' => 'nullable',
+            'hot' => 'nullable',
+            'hotel_owner' => 'nullable|string',
+            'room_number' => 'nullable|integer',
+            'room_size' => 'nullable|string',
+        ]);
 
-    $propertyId = $request->id;
+        $propertyId = $request->id;
 
-    // Calculate additional fees if price_per_night is provided
-    $cleaningFee = $ecoHomeServiceFee = null;
-    if ($request->price_per_night) {
-        $cleaningFee = 0.05 * $request->price_per_night;
-        $ecoHomeServiceFee = 0.10 * $request->price_per_night;
+        // Calculate additional fees if price_per_night is provided
+        $cleaningFee = $ecoHomeServiceFee = null;
+        if ($request->price_per_night) {
+            $cleaningFee = 0.05 * $request->price_per_night;
+            $ecoHomeServiceFee = 0.10 * $request->price_per_night;
+        }
+
+        // Update the property
+        Property::findOrFail($propertyId)->update([
+            'ptype_id' => $request->ptype_id,
+            // 'amenities_id' => $amenities, // Uncomment and set if amenities are being updated
+            'property_name' => $request->property_name,
+            'property_slug' => $request->property_name ? Str::slug($request->property_name) : null,
+            'property_status' => $request->property_status,
+            'price' => $request->price,
+            'price_per_night' => $request->price_per_night,
+            'cleaning_fee' => $cleaningFee,
+            'eco_home_service_fee' => $ecoHomeServiceFee,
+            'short_description' => $request->short_desc,
+            'long_description' => $request->long_desc,
+            'bedrooms' => $request->bedrooms,
+            'bathrooms' => $request->bathrooms,
+            'garage' => $request->garage,
+            'property_video' => $request->property_video,
+            'address' => $request->address,
+            'featured' => $request->featured,
+            'hot' => $request->hot,
+            'hotel_owner' => $request->hotel_owner,
+            'room_number' => $request->room_number,
+            'room_size' => $request->room_size,
+            'updated_at' => Carbon::now(),
+        ]);
+
+        // Notification
+        $notification = [
+            'message' => 'Property Updated Successfully',
+            'alert-type' => 'success',
+        ];
+
+        return redirect()->route('all.property')->with($notification);
     }
-
-    // Update the property
-    Property::findOrFail($propertyId)->update([
-        'ptype_id' => $request->ptype_id,
-        // 'amenities_id' => $amenities, // Uncomment and set if amenities are being updated
-        'property_name' => $request->property_name,
-        'property_slug' => $request->property_name ? Str::slug($request->property_name) : null,
-        'property_status' => $request->property_status,
-        'price' => $request->price,
-        'price_per_night' => $request->price_per_night,
-        'cleaning_fee' => $cleaningFee,
-        'eco_home_service_fee' => $ecoHomeServiceFee,
-        'short_description' => $request->short_desc,
-        'long_description' => $request->long_desc,
-        'bedrooms' => $request->bedrooms,
-        'bathrooms' => $request->bathrooms,
-        'garage' => $request->garage,
-        'property_video' => $request->property_video,
-        'address' => $request->address,
-        'featured' => $request->featured,
-        'hot' => $request->hot,
-        'hotel_owner' => $request->hotel_owner,
-        'room_number' => $request->room_number,
-        'room_size' => $request->room_size,
-        'updated_at' => Carbon::now(),
-    ]);
-
-    // Notification
-    $notification = [
-        'message' => 'Property Updated Successfully',
-        'alert-type' => 'success',
-    ];
-
-    return redirect()->route('all.property')->with($notification);
-}
 
     // UpdatePropertyThumbnail
     public function UpdatePropertyThumbnail(Request $request)
@@ -377,4 +380,51 @@ class PropertyController extends Controller
         $cities = City::where('state_id', $stateId)->get();
         return json_encode($cities);
     }
+
+
+
+
+    ///////////////////////////////////////////////////////
+    // public function ShowProperty($id, $slug)
+    // {
+    //     $property = ListProperty::findOrFail($id);
+    //     $userId = auth()->check() ? auth()->id() : null;
+    //     $ipAddress = request()->ip();
+
+    //     // Check if this view already exists (prevent duplicate views)
+    //     $existingView = PropertyView::where('list_property_id', $id)
+    //         ->where(function ($query) use ($userId, $ipAddress) {
+    //             $query->where('user_id', $userId)
+    //                 ->orWhere('ip_address', $ipAddress);
+    //         })->first();
+
+    //     if (!$existingView) {
+    //         // Fetch location using Geolocation-DB API
+    //         $location = 'Unknown';
+    //         try {
+    //             $apiKey = 'e2bfd850-e6d9-11ef-bc40-012fd2b64c41';
+    //             $response = Http::get("https://geolocation-db.com/json/{$apiKey}/{$ipAddress}");
+
+    //             if ($response->successful()) {
+    //                 $data = $response->json();
+    //                 if (isset($data['city'], $data['country_name'])) {
+    //                     $location = "{$data['city']}, {$data['country_name']}";
+    //                 }
+    //             }
+    //         } catch (\Exception $e) {
+    //             // Fallback to 'Unknown' in case of failure
+    //             return redirect()->back()->with('error', $e->getMessage());
+    //         }
+
+    //         // Store the property view
+    //         PropertyView::create([
+    //             'list_property_id' => $id,
+    //             'user_id' => $userId,
+    //             'ip_address' => $ipAddress,
+    //             'location' => $location
+    //         ]);
+    //     }
+
+    //     return view('admin.backend.property.all_property', compact('property'));
+    // }
 }
